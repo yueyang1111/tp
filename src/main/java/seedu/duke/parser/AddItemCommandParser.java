@@ -4,23 +4,38 @@ import seedu.duke.command.AddItemCommand;
 import seedu.duke.command.Command;
 
 public class AddItemCommandParser {
-    public Command parse(String input) {
-        String[] tokens = input.split(" ");
+    protected String itemName = null;
+    protected String categoryName = null;
+    protected String bin = null;
+    protected int quantity = 0;
 
-        String itemName = null;
-        String categoryName = null;
-        String bin = null;
-        int quantity = 0;
+    protected String brand = "N/A";
+    protected String expiryDate = "N/A";
+    protected String size = "N/A";
+    protected boolean isRipe = false;
+    protected boolean isLeafy = false;
+    protected boolean isLiquid = false;
 
-        String brand = "N/A";
-        String expiryDate = "N/A";
-        String size = "N/A";
-        boolean isRipe = false;
-        boolean isLeafy = false;
-        boolean isLiquid = false;
+    private String[] splitToken(String input) {
+        return input.split("/", 2);
+    }
 
-        for (String token : tokens) {
-            String[] parts = token.split("/", 2);
+    private void resetFields() {
+        itemName = null;
+        categoryName = null;
+        bin = null;
+        quantity = 0;
+        brand = "N/A";
+        expiryDate = "N/A";
+        size = "N/A";
+        isRipe = false;
+        isLeafy = false;
+        isLiquid = false;
+    }
+
+    private void parseFields(String[] words) {
+        for (String token : words) {
+            String[] parts = splitToken(token);
             String fieldName = parts[0];
             String fieldValue = parts.length > 1 ? parts[1] : "";
 
@@ -56,12 +71,37 @@ public class AddItemCommandParser {
                 isLiquid = Boolean.parseBoolean(fieldValue);
                 break;
             default:
-                System.out.println("Unknown field: " + token);
                 break;
             }
         }
+    }
 
+    private Command buildCommand() {
         return new AddItemCommand(itemName, categoryName, bin, quantity,
                 brand, expiryDate, size, isRipe, isLeafy, isLiquid);
+    }
+
+    public Command handleFruit(String[] words) {
+        resetFields();
+        parseFields(words);
+        return buildCommand();
+    }
+
+    public Command handleSnack(String[] words) {
+        resetFields();
+        parseFields(words);
+        return buildCommand();
+    }
+
+    public Command handleToiletries(String[] words) {
+        resetFields();
+        parseFields(words);
+        return buildCommand();
+    }
+
+    public Command handleVegetables(String[] words) {
+        resetFields();
+        parseFields(words);
+        return buildCommand();
     }
 }

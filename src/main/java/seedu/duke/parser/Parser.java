@@ -1,11 +1,12 @@
 package seedu.duke.parser;
 
 import seedu.duke.command.Command;
+import seedu.duke.command.ListCommand;
 
 public class Parser {
 
     public Command parse(String input) {
-        String trimmed = input.trim();
+        String trimmed = input.trim().toLowerCase();
 
         // if (trimmed.isEmpty()) {
         //     throw new IllegalArgumentException("Input cannot be empty.");
@@ -20,7 +21,7 @@ public class Parser {
             return new AddCommandParser().parse(addInput);
 
         case "list":
-            return new ListCommandParser().parse();
+            return new ListCommand();
 
 
 
