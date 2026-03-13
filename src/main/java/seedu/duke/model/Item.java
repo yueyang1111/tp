@@ -5,7 +5,7 @@ public class Item {
     private int quantity;
     private String binLocation;
 
-    protected Item(String name, int quantity, String binLocation) {
+    public Item(String name, int quantity, String binLocation) {
         this.name = name;
         this.quantity = quantity;
         this.binLocation = binLocation;
