@@ -39,6 +39,12 @@ public class Inventory {
         return findCategoryByName(categoryName) != null;
     }
 
+    public void printInventory() {
+        for (int i = 0; i < inventory.size(); i++) {
+            System.out.println((i + 1) + "." + inventory.get(i));
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
