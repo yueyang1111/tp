@@ -5,7 +5,15 @@ import seedu.duke.parser.DateParser;
 import seedu.duke.parser.FieldParser;
 
 public class VegetableParser {
-    public static ParsedVegetableFields parse(String input) throws DukeException {
+    public final String expiryDate;
+    public final boolean isLeafy;
+
+    public VegetableParser(String expiryDate, boolean isLeafy) {
+        this.expiryDate = expiryDate;
+        this.isLeafy = isLeafy;
+    }
+
+    public static VegetableParser parse(String input) throws DukeException {
         String expiryDate = FieldParser.extractField(input, "expiryDate/", "isLeafy/");
         if (expiryDate == null || expiryDate.trim().isEmpty()) {
             throw new DukeException("Missing expiry date for vegetable.");
@@ -22,6 +30,6 @@ public class VegetableParser {
         }
         boolean isLeafy = Boolean.parseBoolean(leafyString);
 
-        return new ParsedVegetableFields(expiryDate, isLeafy);
+        return new VegetableParser(expiryDate, isLeafy);
     }
 }

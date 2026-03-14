@@ -4,7 +4,15 @@ import seedu.duke.exception.DukeException;
 import seedu.duke.parser.FieldParser;
 
 public class ToiletriesParser {
-    public static ParsedToiletriesFields parse(String input) throws DukeException {
+    public final String brand;
+    public final boolean isLiquid;
+
+    public ToiletriesParser(String brand, boolean isLiquid) {
+        this.brand = brand;
+        this.isLiquid = isLiquid;
+    }
+
+    public static ToiletriesParser parse(String input) throws DukeException {
         String brand = FieldParser.extractField(input, "brand/", "isLiquid/");
         if (brand == null || brand.trim().isEmpty()) {
             throw new DukeException("Missing brand for toiletries.");
@@ -20,6 +28,6 @@ public class ToiletriesParser {
         }
         boolean isLiquid = Boolean.parseBoolean(liquidString);
 
-        return new ParsedToiletriesFields(brand, isLiquid);
+        return new ToiletriesParser(brand, isLiquid);
     }
 }
