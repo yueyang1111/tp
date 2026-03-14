@@ -191,7 +191,7 @@ public class UI {
         System.out.println("    e.g. add item/apple "
                 + "category/fruits bin/A-10 qty/40");
         System.out.println("         "
-                + "expiryDate/10-03-2026 size/big "
+                + "expiryDate/2026-10-03 size/big "
                 + "isRipe/true");
         System.out.println();
         System.out.println("  Add Vegetable:");
@@ -202,7 +202,7 @@ public class UI {
         System.out.println("    e.g. add item/spinach "
                 + "category/vegetables bin/C-01 qty/20");
         System.out.println("         "
-                + "expiryDate/15-03-2026 isLeafy/true");
+                + "expiryDate/2026-10-03 isLeafy/true");
         System.out.println();
         System.out.println("  Add Snack:");
         System.out.println("    add item/ITEM "
@@ -212,7 +212,7 @@ public class UI {
         System.out.println("    e.g. add item/chips "
                 + "category/snacks bin/D-05 qty/50");
         System.out.println("         "
-                + "brand/Lays expiryDate/20-06-2026");
+                + "brand/Lays expiryDate/2026-10-03");
         System.out.println();
         System.out.println("  Add Toiletries:");
         System.out.println("    add item/ITEM "
