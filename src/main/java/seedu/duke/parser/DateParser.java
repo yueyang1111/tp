@@ -18,7 +18,7 @@ public class DateParser {
         try {
             LocalDate.parse(date.trim(), FORMATTER);
         } catch (DateTimeParseException e) {
-            throw new DukeException("Invalid date. PLease use yyyy-M-d.");
+            throw new DukeException("Invalid date. Please use yyyy-M-d.");
         }
     }
 }
