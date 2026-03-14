@@ -3,12 +3,14 @@ package seedu.duke;
 import java.util.Scanner;
 
 import seedu.duke.command.Command;
+import seedu.duke.exception.DukeException;
 import seedu.duke.model.Category;
 import seedu.duke.model.Inventory;
 import seedu.duke.parser.Parser;
+import seedu.duke.ui.UI;
 
 public class Duke {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws DukeException {
         String logo = " ____        _        \n"
                 + "|  _ \\ _   _| | _____ \n"
                 + "| | | | | | | |/ / _ \\\n"
@@ -20,6 +22,7 @@ public class Duke {
 
         Parser parser = new Parser();
         Scanner scanner = new Scanner(System.in);
+        UI ui = new UI();
 
         System.out.println("Hello from\n" + logo);
         System.out.println("Hello! Welcome to InventoryDock!");
@@ -27,13 +30,18 @@ public class Duke {
 
         while (scanner.hasNextLine()) {
             String input = scanner.nextLine();
-            Command command = parser.parse(input);
+            try {
+                Command command = parser.parse(input);
 
-            if (command == null) {
-                continue;
+                if (command == null) {
+                    continue;
+                }
+
+                command.execute(inventory);
+            } catch (DukeException e) {
+                ui.printError(e.getMessage());
             }
 
-            command.execute(inventory);
         }
 
         scanner.close();

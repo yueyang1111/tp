@@ -1,30 +1,43 @@
 package seedu.duke.parser;
 
 import seedu.duke.command.Command;
+import seedu.duke.exception.DukeException;
 
 public class AddCommandParser {
+    public Command parse(String input) throws DukeException {
+        String trimmed = input.trim();
+        if (trimmed.isEmpty()) {
+            throw new DukeException("Incomplete add command.");
+        }
 
-    public Command parse(String input) {
-        String[] words = input.split(" ");
-        String categoryToken = words[1];
+        String itemName = FieldParser.extractField(trimmed, "item/", "category/");
+        if (itemName == null || itemName.trim().isEmpty()) {
+            throw new DukeException("Missing item name.");
+        }
 
-        String[] categoryTokenParts = categoryToken.split("/", 2);
-        String category = categoryTokenParts[1];
+        String afterCategory = FieldParser.extractField(trimmed, "category/", null);
+        if (afterCategory == null || afterCategory.trim().isEmpty()) {
+            throw new DukeException("Missing category.");
+        }
+
+        String category = afterCategory.split(" ", 2)[0].trim().toLowerCase();
+        if (category.isEmpty()) {
+            throw new DukeException("Missing category.");
+        }
 
         AddItemCommandParser parser = new AddItemCommandParser();
 
         switch (category) {
         case "fruits":
-            return parser.handleFruit(words);
+            return parser.handleFruit(trimmed);
         case "snacks":
-            return parser.handleSnack(words);
+            return parser.handleSnack(trimmed);
         case "toiletries":
-            return parser.handleToiletries(words);
+            return parser.handleToiletries(trimmed);
         case "vegetables":
-            return parser.handleVegetables(words);
+            return parser.handleVegetables(trimmed);
         default:
-            System.out.println("Unknown category: " + category);
-            return null;
+            throw new DukeException("Unknown category: " + category);
         }
     }
 }
