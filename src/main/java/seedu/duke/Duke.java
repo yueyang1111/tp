@@ -16,7 +16,6 @@ public class Duke {
         inventory = new Inventory();
         parser = new Parser(ui);
 
-        // Initialize default categories
         inventory.addCategories(new Category("fruits"));
         inventory.addCategories(new Category("vegetables"));
         inventory.addCategories(new Category("toiletries"));

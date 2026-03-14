@@ -4,11 +4,6 @@ import seedu.duke.model.Category;
 import seedu.duke.model.Inventory;
 import seedu.duke.ui.UI;
 
-/**
- * Deletes a category from the inventory.
- * If the category has items, prompts the user for confirmation
- * to clear all items before deleting.
- */
 public class DeleteCategoryCommand extends Command {
     private final String categoryName;
 
@@ -26,15 +21,16 @@ public class DeleteCategoryCommand extends Command {
         }
 
         if (!category.isEmpty()) {
-            ui.showDeleteCategoryConfirmation(categoryName, category.getItemCount());
+            ui.showDeleteCategoryConfirmation(
+                    categoryName, category.getItemCount());
             String response = ui.readCommand();
 
-            if (response == null || !response.trim().equalsIgnoreCase("yes")) {
+            if (response == null
+                    || !response.trim().equalsIgnoreCase("yes")) {
                 ui.showDeleteCategoryCancelled(categoryName);
                 return;
             }
 
-            // Clear all items before deleting
             category.getItems().clear();
             ui.showCategoryItemsCleared(categoryName);
         }

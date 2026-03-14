@@ -23,7 +23,8 @@ public class DeleteCommandParser {
         String[] parts = input.split("/", 2);
 
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
-            ui.showInvalidInput("Missing name. Use: delete item/ITEM or delete category/CATEGORY");
+            ui.showInvalidInput(
+                    "Missing name. Use: delete item/ITEM or delete category/CATEGORY");
             return null;
         }
 

@@ -21,9 +21,10 @@ public class AddItemCommand extends Command {
     private final boolean isLeafy;
     private final boolean isLiquid;
 
-    public AddItemCommand(String itemName, String categoryName, String bin, int quantity,
-                          String brand, String expiryDate, String size,
-                          boolean isRipe, boolean isLeafy, boolean isLiquid) {
+    public AddItemCommand(String itemName, String categoryName, String bin,
+                          int quantity, String brand, String expiryDate,
+                          String size, boolean isRipe, boolean isLeafy,
+                          boolean isLiquid) {
         this.itemName = itemName;
         this.categoryName = categoryName;
         this.bin = bin;

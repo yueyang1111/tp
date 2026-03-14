@@ -22,7 +22,6 @@ public class Parser {
             return null;
         }
 
-        // Only lowercase the command word, preserve original casing for arguments
         String[] parts = trimmed.split(" ", 2);
         String commandWord = parts[0].toLowerCase();
         String arguments = parts.length > 1 ? parts[1].trim() : "";
@@ -30,19 +29,14 @@ public class Parser {
         switch (commandWord) {
             case "add":
                 return new AddCommandParser(ui).parse(arguments);
-
             case "delete":
                 return new DeleteCommandParser(ui).parse(arguments);
-
             case "list":
                 return new ListCommand();
-
             case "help":
                 return new HelpCommand();
-
             case "bye":
                 return new ExitCommand();
-
             default:
                 ui.showUnknownCommand();
                 return null;

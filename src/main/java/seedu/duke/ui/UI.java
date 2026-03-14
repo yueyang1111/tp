@@ -13,7 +13,8 @@ import java.util.Scanner;
  */
 public class UI {
 
-    private static final String DIVIDER = "____________________________________________________________";
+    private static final String DIVIDER =
+            "____________________________________________________________";
     private static final String LOGO =
             " ____        _        \n"
                     + "|  _ \\ _   _| | _____ \n"
@@ -87,12 +88,14 @@ public class UI {
     }
 
     public void showEmptyInput() {
-        showError("Input cannot be empty. Type 'help' to see available commands.");
+        showError(
+                "Input cannot be empty. Type 'help' to see available commands.");
     }
 
     // ==================== Add Command Messages ====================
 
-    public void showItemAdded(String itemName, int quantity, String categoryName, String bin) {
+    public void showItemAdded(String itemName, int quantity,
+                              String categoryName, String bin) {
         showDivider();
         System.out.println("Added item: " + itemName
                 + " (qty: " + quantity + ")"
@@ -111,7 +114,8 @@ public class UI {
 
     public void showItemDeleted(String itemName, String categoryName) {
         showDivider();
-        System.out.println("Deleted item: " + itemName + " from category: " + categoryName);
+        System.out.println("Deleted item: " + itemName
+                + " from category: " + categoryName);
         showDivider();
     }
 
@@ -125,26 +129,33 @@ public class UI {
         showError("Item not found: " + itemName);
     }
 
-    public void showDeleteCategoryConfirmation(String categoryName, int itemCount) {
+    public void showDeleteCategoryConfirmation(String categoryName,
+                                               int itemCount) {
         showDivider();
-        System.out.println("Category '" + categoryName + "' still has " + itemCount + " item(s).");
-        System.out.println("Are you sure you want to delete all items and remove this category?");
+        System.out.println("Category '" + categoryName
+                + "' still has " + itemCount + " item(s).");
+        System.out.println("Are you sure you want to delete all items "
+                + "and remove this category?");
         System.out.print("Type 'yes' to confirm: ");
     }
 
     public void showDeleteCategoryCancelled(String categoryName) {
-        System.out.println("Cancelled. Category '" + categoryName + "' was not deleted.");
+        System.out.println("Cancelled. Category '"
+                + categoryName + "' was not deleted.");
     }
 
     public void showCategoryItemsCleared(String categoryName) {
-        System.out.println("Cleared all items from category: " + categoryName);
+        System.out.println(
+                "Cleared all items from category: " + categoryName);
     }
 
     // ==================== Update Command Messages ====================
 
-    public void showQuantityUpdated(String itemName, int oldQty, int newQty) {
+    public void showQuantityUpdated(String itemName,
+                                    int oldQty, int newQty) {
         showDivider();
-        System.out.println("Updated " + itemName + ": " + oldQty + " -> " + newQty);
+        System.out.println("Updated " + itemName
+                + ": " + oldQty + " -> " + newQty);
         showDivider();
     }
 
@@ -165,7 +176,8 @@ public class UI {
                     + " (" + cat.getItemCount() + " items)");
             List<Item> items = cat.getItems();
             for (int j = 0; j < items.size(); j++) {
-                System.out.println("   " + (j + 1) + ". " + items.get(j));
+                System.out.println("   " + (j + 1)
+                        + ". " + items.get(j));
             }
         }
         showDivider();
@@ -183,20 +195,40 @@ public class UI {
         System.out.println("  --- Adding Items ---");
         System.out.println();
         System.out.println("  Add Fruit:");
-        System.out.println("    add item/ITEM category/fruits bin/BIN qty/QTY expiryDate/DATE size/SIZE isRipe/BOOL");
-        System.out.println("    e.g. add item/apple category/fruits bin/A-10 qty/40 expiryDate/10-03-2026 size/big isRipe/true");
+        System.out.println("    add item/ITEM category/fruits "
+                + "bin/BIN qty/QTY");
+        System.out.println("        expiryDate/DATE "
+                + "size/SIZE isRipe/BOOL");
+        System.out.println("    e.g. add item/apple "
+                + "category/fruits bin/A-10 qty/40");
+        System.out.println("         expiryDate/10-03-2026 "
+                + "size/big isRipe/true");
         System.out.println();
         System.out.println("  Add Vegetable:");
-        System.out.println("    add item/ITEM category/vegetables bin/BIN qty/QTY expiryDate/DATE isLeafy/BOOL");
-        System.out.println("    e.g. add item/spinach category/vegetables bin/C-01 qty/20 expiryDate/15-03-2026 isLeafy/true");
+        System.out.println("    add item/ITEM category/vegetables "
+                + "bin/BIN qty/QTY");
+        System.out.println("        expiryDate/DATE isLeafy/BOOL");
+        System.out.println("    e.g. add item/spinach "
+                + "category/vegetables bin/C-01 qty/20");
+        System.out.println("         expiryDate/15-03-2026 "
+                + "isLeafy/true");
         System.out.println();
         System.out.println("  Add Snack:");
-        System.out.println("    add item/ITEM category/snacks bin/BIN qty/QTY brand/BRAND expiryDate/DATE");
-        System.out.println("    e.g. add item/chips category/snacks bin/D-05 qty/50 brand/Lays expiryDate/20-06-2026");
+        System.out.println("    add item/ITEM category/snacks "
+                + "bin/BIN qty/QTY");
+        System.out.println("        brand/BRAND expiryDate/DATE");
+        System.out.println("    e.g. add item/chips "
+                + "category/snacks bin/D-05 qty/50");
+        System.out.println("         brand/Lays "
+                + "expiryDate/20-06-2026");
         System.out.println();
         System.out.println("  Add Toiletries:");
-        System.out.println("    add item/ITEM category/toiletries bin/BIN qty/QTY brand/BRAND isLiquid/BOOL");
-        System.out.println("    e.g. add item/shampoo category/toiletries bin/E-02 qty/15 brand/Dove isLiquid/true");
+        System.out.println("    add item/ITEM category/toiletries "
+                + "bin/BIN qty/QTY");
+        System.out.println("        brand/BRAND isLiquid/BOOL");
+        System.out.println("    e.g. add item/shampoo "
+                + "category/toiletries bin/E-02 qty/15");
+        System.out.println("         brand/Dove isLiquid/true");
         System.out.println();
         System.out.println("  --- Other Commands ---");
         System.out.println();
@@ -205,7 +237,8 @@ public class UI {
         System.out.println("    e.g. delete item/banana");
         System.out.println();
         System.out.println("  delete category/CATEGORY");
-        System.out.println("    - Deletes a category and its items (prompts for confirmation)");
+        System.out.println("    - Deletes a category "
+                + "(prompts for confirmation)");
         System.out.println("    e.g. delete category/fruits");
         System.out.println();
         System.out.println("  list");

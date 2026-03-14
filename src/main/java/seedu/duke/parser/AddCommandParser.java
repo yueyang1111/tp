@@ -13,11 +13,11 @@ public class AddCommandParser {
     }
 
     public Command parse(String input) {
-        // Extract category from the input string
         String category = FieldParser.extractField(input, "category/", "bin/");
 
         if (category == null || category.trim().isEmpty()) {
-            ui.showInvalidInput("Missing category. Use: add item/ITEM category/CATEGORY bin/BIN qty/QTY");
+            ui.showInvalidInput(
+                    "Missing category. Use: add item/ITEM category/CATEGORY bin/BIN qty/QTY");
             return null;
         }
 

@@ -88,7 +88,8 @@ public class AddItemCommandParser {
             throw new DukeException("Missing ripeness for fruit.");
         }
 
-        if (!(ripeString.equalsIgnoreCase("true") || ripeString.equalsIgnoreCase("false"))) {
+        if (!(ripeString.equalsIgnoreCase("true")
+                || ripeString.equalsIgnoreCase("false"))) {
             throw new DukeException("Ripeness must be true or false");
         }
         isRipe = Boolean.parseBoolean(ripeString);
@@ -117,7 +118,8 @@ public class AddItemCommandParser {
             throw new DukeException("Missing liquid field for toiletries.");
         }
 
-        if (!(liquidString.equalsIgnoreCase("true") || liquidString.equalsIgnoreCase("false"))) {
+        if (!(liquidString.equalsIgnoreCase("true")
+                || liquidString.equalsIgnoreCase("false"))) {
             throw new DukeException("Liquid field must be true or false.");
         }
         isLiquid = Boolean.parseBoolean(liquidString);
@@ -134,7 +136,8 @@ public class AddItemCommandParser {
             throw new DukeException("Missing leafy field for vegetable.");
         }
 
-        if (!(leafyString.equalsIgnoreCase("true") || leafyString.equalsIgnoreCase("false"))) {
+        if (!(leafyString.equalsIgnoreCase("true")
+                || leafyString.equalsIgnoreCase("false"))) {
             throw new DukeException("Leafy field must be true or false.");
         }
         isLeafy = Boolean.parseBoolean(leafyString);
@@ -147,8 +150,9 @@ public class AddItemCommandParser {
 
     public Command handleFruit(String input) throws DukeException {
         resetFields();
-        validateOrder(input, new String[]{"item/", "category/", "bin/", "qty/",
-                "expiryDate/", "size/", "isRipe/"});
+        String[] fruitFields = {"item/", "category/", "bin/", "qty/",
+                "expiryDate/", "size/", "isRipe/"};
+        validateOrder(input, fruitFields);
         parseCommonFields(input);
         parseFruitFields(input);
         return buildCommand();
@@ -156,8 +160,9 @@ public class AddItemCommandParser {
 
     public Command handleSnack(String input) throws DukeException {
         resetFields();
-        validateOrder(input, new String[]{"item/", "category/", "bin/", "qty/",
-                "brand/", "expiryDate/"});
+        String[] snackFields = {"item/", "category/", "bin/", "qty/",
+                "brand/", "expiryDate/"};
+        validateOrder(input, snackFields);
         parseCommonFields(input);
         parseSnackFields(input);
         return buildCommand();
@@ -165,8 +170,9 @@ public class AddItemCommandParser {
 
     public Command handleToiletries(String input) throws DukeException {
         resetFields();
-        validateOrder(input, new String[]{"item/", "category/", "bin/", "qty/",
-                "brand/", "isLiquid/"});
+        String[] toiletriesFields = {"item/", "category/", "bin/", "qty/",
+                "brand/", "isLiquid/"};
+        validateOrder(input, toiletriesFields);
         parseCommonFields(input);
         parseToiletriesFields(input);
         return buildCommand();
@@ -174,8 +180,9 @@ public class AddItemCommandParser {
 
     public Command handleVegetables(String input) throws DukeException {
         resetFields();
-        validateOrder(input, new String[]{"item/", "category/", "bin/", "qty/",
-                "expiryDate/", "isLeafy/"});
+        String[] vegetableFields = {"item/", "category/", "bin/", "qty/",
+                "expiryDate/", "isLeafy/"};
+        validateOrder(input, vegetableFields);
         parseCommonFields(input);
         parseVegetableFields(input);
         return buildCommand();
