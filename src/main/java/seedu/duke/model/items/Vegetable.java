@@ -24,8 +24,8 @@ public class Vegetable extends Item {
         this.expiryDate = expiryDate;
     }
 
-    public void setLeafy(boolean leafy) {
-        isLeafy = leafy;
+    public void setLeafy(boolean isLeafy) {
+        this.isLeafy = isLeafy;
     }
 
     @Override

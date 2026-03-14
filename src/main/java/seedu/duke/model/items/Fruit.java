@@ -35,8 +35,8 @@ public class Fruit extends Item {
         return isRipe;
     }
 
-    public void setRipe(boolean ripe) {
-        isRipe = ripe;
+    public void setRipe(boolean isRipe) {
+        this.isRipe = isRipe;
     }
 
     @Override

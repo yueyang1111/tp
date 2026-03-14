@@ -5,7 +5,17 @@ import seedu.duke.parser.DateParser;
 import seedu.duke.parser.FieldParser;
 
 public class FruitParser {
-    public static ParsedFruitFields parse(String input) throws DukeException {
+    public final String expiryDate;
+    public final String size;
+    public final boolean isRipe;
+
+    public FruitParser(String expiryDate, String size, boolean isRipe) {
+        this.expiryDate = expiryDate;
+        this.size = size;
+        this.isRipe = isRipe;
+    }
+
+    public static FruitParser parse(String input) throws DukeException {
         String expiryDate = FieldParser.extractField(input, "expiryDate/", "size/");
         if (expiryDate == null || expiryDate.trim().isEmpty()) {
             throw new DukeException("Missing expiry date for fruit.");
@@ -27,6 +37,6 @@ public class FruitParser {
         }
         boolean isRipe = Boolean.parseBoolean(ripeString);
 
-        return new ParsedFruitFields(expiryDate, size, isRipe);
+        return new FruitParser(expiryDate, size, isRipe);
     }
 }

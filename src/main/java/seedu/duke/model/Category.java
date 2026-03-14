@@ -41,6 +41,9 @@ public class Category {
     }
 
     public void removeItem(int index) {
+        if (index < 0 || index >= items.size()) {
+            throw new IndexOutOfBoundsException("Invalid item index");
+        }
         items.remove(index);
     }
 

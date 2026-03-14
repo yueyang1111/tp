@@ -18,18 +18,31 @@ public class AddCommandParser {
             throw new DukeException("Input is empty.");
         }
 
-        String itemName = FieldParser.extractField(trimmedInput, "item/", "category/");
-        if (itemName == null || itemName.trim().isEmpty()) {
+        String[] tokens = trimmedInput.split(" ");
+
+        String itemName = null;
+        String category = null;
+
+        for (String token : tokens) {
+
+            if (token.startsWith("item/")) {
+                itemName = token.substring("item/".length()).trim();
+            }
+
+            if (token.startsWith("category/")) {
+                category = token.substring("category/".length()).trim().toLowerCase();
+            }
+
+            if (itemName != null && category != null) {
+                break;
+            }
+        }
+
+        if (itemName == null || itemName.isEmpty()) {
             throw new DukeException("Missing item name.");
         }
 
-        String afterCategory = FieldParser.extractField(trimmedInput, "category/", null);
-        if (afterCategory == null || afterCategory.trim().isEmpty()) {
-            throw new DukeException("Missing category.");
-        }
-
-        String category = afterCategory.split(" ", 2)[0].trim().toLowerCase();
-        if (category.isEmpty()) {
+        if (category == null || category.isEmpty()) {
             throw new DukeException("Missing category.");
         }
 

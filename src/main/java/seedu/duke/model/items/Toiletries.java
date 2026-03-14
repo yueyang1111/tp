@@ -24,8 +24,8 @@ public class Toiletries extends Item {
         this.brand = brand;
     }
 
-    public void setLiquid(boolean liquid) {
-        isLiquid = liquid;
+    public void setLiquid(boolean isLiquid) {
+        this.isLiquid = isLiquid;
     }
 
     @Override
