@@ -14,6 +14,8 @@ public class VegetableParser {
     }
 
     public static VegetableParser parse(String input) throws DukeException {
+        assert input != null : "VegetableParser received null inputs.";
+
         String expiryDate = FieldParser.extractField(input, "expiryDate/", "isLeafy/");
         if (expiryDate == null || expiryDate.trim().isEmpty()) {
             throw new DukeException("Missing expiry date for vegetable.");

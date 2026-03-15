@@ -4,6 +4,9 @@ import seedu.duke.exception.DukeException;
 
 public class InputValidator {
     public static void validateRequiredFields(String input, String... fields) throws DukeException {
+        assert input != null : "InputValidator received null input.";
+        assert fields != null && fields.length > 0 : "Fields must be provide for validation.";
+
         for (String field : fields) {
             if (!input.contains(field)) {
                 throw new DukeException("Missing required field: " + field);
@@ -13,6 +16,9 @@ public class InputValidator {
 
     public static void validateOrder(
             String input, String... fields) throws DukeException {
+        assert input != null : "InputValidator received null input.";
+        assert fields != null && fields.length > 0 : "Fields must be provide for validation.";
+
         int previous = -1;
 
         for (String field : fields) {

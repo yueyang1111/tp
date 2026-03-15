@@ -14,6 +14,8 @@ public class SnackParser {
     }
 
     public static SnackParser parse(String input) throws DukeException {
+        assert input != null : "SnackParser received null inputs.";
+
         String brand = FieldParser.extractField(input, "brand/", "expiryDate/");
         if (brand == null || brand.trim().isEmpty()) {
             throw new DukeException("Missing brand for snack.");

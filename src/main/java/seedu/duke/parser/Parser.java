@@ -16,6 +16,8 @@ public class Parser {
     }
 
     public Command parse(String input) throws DukeException {
+        assert input != null : "Parser received null input.";
+
         String trimmed = input.trim();
 
         if (trimmed.isEmpty()) {

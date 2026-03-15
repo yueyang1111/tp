@@ -18,6 +18,8 @@ public class CommonFieldParser {
     }
 
     public static CommonFieldParser parse(String input, String fieldAfterQty) throws DukeException {
+        assert input != null : "CommonFieldParser received null input.";
+
         String itemName = FieldParser.extractField(
                 input, "item/", "category/");
         String categoryName = FieldParser.extractField(

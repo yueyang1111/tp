@@ -13,6 +13,8 @@ public class ToiletriesParser {
     }
 
     public static ToiletriesParser parse(String input) throws DukeException {
+        assert input != null : "ToiletriesParser received null inputs.";
+
         String brand = FieldParser.extractField(input, "brand/", "isLiquid/");
         if (brand == null || brand.trim().isEmpty()) {
             throw new DukeException("Missing brand for toiletries.");

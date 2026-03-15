@@ -13,6 +13,8 @@ public class AddCommandParser {
     }
 
     public Command parse(String input) throws DukeException {
+        assert input != null : "AddCommandParser received null input.";
+
         String trimmedInput = input.trim();
         if (trimmedInput.isEmpty()) {
             throw new DukeException("Input is empty.");
