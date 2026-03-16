@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ToiletriesParser {
-    private static Logger logger = Logger.getLogger("ToiletriesParser");
+    private static Logger logger = Logger.getLogger(ToiletriesParser.class.getName());
 
     public final String brand;
     public final boolean isLiquid;

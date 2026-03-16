@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class VegetableParser {
-    private static Logger logger = Logger.getLogger("VegetableParser");
+    private static Logger logger = Logger.getLogger(VegetableParser.class.getName());
 
     public final String expiryDate;
     public final boolean isLeafy;
