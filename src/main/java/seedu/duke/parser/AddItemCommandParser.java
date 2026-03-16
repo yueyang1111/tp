@@ -17,9 +17,7 @@ import seedu.duke.parser.category.VegetableParser;
 
 public class AddItemCommandParser {
     public Command handleFruit(String input) throws DukeException {
-        InputValidator.validateRequiredFields(input, "item/", "category/", "bin/", "qty/",
-                "expiryDate/", "size/", "isRipe/");
-        InputValidator.validateOrder(input, "item/", "category/", "bin/", "qty/",
+        InputValidator.validate(input, "item/", "category/", "bin/", "qty/",
                 "expiryDate/", "size/", "isRipe/");
 
         CommonFieldParser commonFields = CommonFieldParser.parse(input, "expiryDate/");
@@ -31,9 +29,7 @@ public class AddItemCommandParser {
     }
 
     public Command handleSnack(String input) throws DukeException {
-        InputValidator.validateRequiredFields(input, "item/", "category/", "bin/", "qty/",
-                "brand/", "expiryDate/");
-        InputValidator.validateOrder(input, "item/", "category/", "bin/", "qty/",
+        InputValidator.validate(input, "item/", "category/", "bin/", "qty/",
                 "brand/", "expiryDate/");
 
         CommonFieldParser commonFields = CommonFieldParser.parse(input, "brand/");
@@ -45,9 +41,7 @@ public class AddItemCommandParser {
     }
 
     public Command handleToiletries(String input) throws DukeException {
-        InputValidator.validateRequiredFields(input, "item/", "category/", "bin/", "qty/",
-                "brand/", "isLiquid/");
-        InputValidator.validateOrder(input, "item/", "category/", "bin/", "qty/",
+        InputValidator.validate(input, "item/", "category/", "bin/", "qty/",
                 "brand/", "isLiquid/");
 
         CommonFieldParser commonFields = CommonFieldParser.parse(input, "brand/");
@@ -59,9 +53,7 @@ public class AddItemCommandParser {
     }
 
     public Command handleVegetables(String input) throws DukeException {
-        InputValidator.validateRequiredFields(input, "item/", "category/", "bin/", "qty/",
-                "expiryDate/", "isLeafy/");
-        InputValidator.validateOrder(input, "item/", "category/", "bin/", "qty/",
+        InputValidator.validate(input, "item/", "category/", "bin/", "qty/",
                 "expiryDate/", "isLeafy/");
 
         CommonFieldParser commonFields = CommonFieldParser.parse(input, "expiryDate/");
