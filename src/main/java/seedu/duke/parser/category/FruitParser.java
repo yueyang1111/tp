@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FruitParser {
-    private static Logger logger = Logger.getLogger("FruitParser");
+    private static Logger logger = Logger.getLogger(FruitParser.class.getName());
 
     public final String expiryDate;
     public final String size;

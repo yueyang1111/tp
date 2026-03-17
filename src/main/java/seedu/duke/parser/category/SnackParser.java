@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SnackParser {
-    private static Logger logger = Logger.getLogger("SnackParser");
+    private static Logger logger = Logger.getLogger(SnackParser.class.getName());
     public final String brand;
     public final String expiryDate;
 
