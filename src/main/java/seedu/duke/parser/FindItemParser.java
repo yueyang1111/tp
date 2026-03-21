@@ -43,12 +43,12 @@ public class FindItemParser {
         String name = parts[1].trim();
 
         switch (type) {
-//        case "category":
-//            logger.log(Level.INFO, "Parsed find item command for: " + name);
-//            return new FindItemByKeywordCommand(name);
-//        case "keyword":
-//            logger.log(Level.INFO, "Parsed find category command for: " + name);
-//            return new FindItemByCategroyCommand(name);
+        case "category":
+            logger.log(Level.INFO, "Parsed find item command for: " + name);
+            //return new FindItemByKeywordCommand(name);
+        case "keyword":
+            logger.log(Level.INFO, "Parsed find category command for: " + name);
+            //return new FindItemByCategoryCommand(name);
         case "expirydate":
             logger.log(Level.INFO, "Parsed find expiryDate command for: " + name);
             return new FindItemByExpiryDateCommand(name);
