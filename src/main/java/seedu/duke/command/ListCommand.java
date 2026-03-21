@@ -12,7 +12,7 @@ public class ListCommand extends Command {
     public void execute(Inventory inventory, UI ui) {
         assert inventory != null : "ListCommand received null inventory.";
         assert ui != null : "ListCommand received null UI.";
-        logger.log(Level.INFO, "Executing ListCommand.");
+        logger.log(Level.INFO, "Listing inventory.");
         ui.showInventory(inventory);
     }
 }

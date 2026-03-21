@@ -18,7 +18,7 @@ public class AddCommandParser {
 
     public Command parse(String input) throws DukeException {
         assert input != null : "AddCommandParser received null input.";
-        logger.log(Level.INFO, "Parsing add command input.");
+        logger.log(Level.FINE, "Parsing add command input.");
 
         String trimmedInput = input.trim();
         if (trimmedInput.isEmpty()) {
@@ -57,7 +57,7 @@ public class AddCommandParser {
         }
 
         AddItemCommandParser parser = new AddItemCommandParser();
-        logger.log(Level.INFO, "Dispatching add command for category: " + category);
+        logger.log(Level.INFO, "Processing add command for category: " + category);
 
         switch (category) {
         case "fruits":

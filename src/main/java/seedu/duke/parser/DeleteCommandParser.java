@@ -19,7 +19,7 @@ public class DeleteCommandParser {
 
     public Command parse(String input) {
         assert input != null : "DeleteCommandParser received null input.";
-        logger.log(Level.INFO, "Processing delete command.");
+        logger.log(Level.FINE, "Parsing delete command.");
 
         if (input.isEmpty()) {
             logger.log(Level.WARNING, "Delete command missing target.");
@@ -44,10 +44,10 @@ public class DeleteCommandParser {
 
         switch (type) {
         case "item":
-            logger.log(Level.INFO, "Parsed delete item command for: " + name);
+            logger.log(Level.FINE, "Parsed delete item command for: " + name);
             return new DeleteItemCommand(name);
         case "category":
-            logger.log(Level.INFO, "Parsed delete category command for: " + name);
+            logger.log(Level.FINE, "Parsed delete category command for: " + name);
             return new DeleteCategoryCommand(name);
         default:
             logger.log(Level.WARNING, "Unknown delete type: " + type);

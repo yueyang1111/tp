@@ -22,7 +22,7 @@ public class AddItemCommandParser {
 
     public Command handleFruit(String input) throws DukeException {
         assert input != null : "AddItemCommandParser received null fruit input.";
-        logger.log(Level.INFO, "Parsing add-item command for fruits.");
+        logger.log(Level.FINE, "Parsing add-item command for fruits.");
         InputValidator.validate(input, "item/", "category/", "bin/", "qty/",
                 "expiryDate/", "size/", "isRipe/");
 
@@ -31,13 +31,13 @@ public class AddItemCommandParser {
         Item item = new Fruit(commonFields.itemName, commonFields.quantity, commonFields.bin,
                 fruitFields.expiryDate, fruitFields.size, fruitFields.isRipe);
 
-        logger.log(Level.INFO, "Created fruit item command for category: " + commonFields.categoryName);
+        logger.log(Level.FINE, "Built fruit add command for category: " + commonFields.categoryName);
         return new AddItemCommand(commonFields.categoryName, item);
     }
 
     public Command handleSnack(String input) throws DukeException {
         assert input != null : "AddItemCommandParser received null snack input.";
-        logger.log(Level.INFO, "Parsing add-item command for snacks.");
+        logger.log(Level.FINE, "Parsing add-item command for snacks.");
         InputValidator.validate(input, "item/", "category/", "bin/", "qty/",
                 "brand/", "expiryDate/");
 
@@ -46,13 +46,13 @@ public class AddItemCommandParser {
         Item item = new Snack(commonFields.itemName, commonFields.quantity, commonFields.bin,
                 snackFields.brand, snackFields.expiryDate);
 
-        logger.log(Level.INFO, "Created snack item command for category: " + commonFields.categoryName);
+        logger.log(Level.FINE, "Built snack add command for category: " + commonFields.categoryName);
         return new AddItemCommand(commonFields.categoryName, item);
     }
 
     public Command handleToiletries(String input) throws DukeException {
         assert input != null : "AddItemCommandParser received null toiletries input.";
-        logger.log(Level.INFO, "Parsing add-item command for toiletries.");
+        logger.log(Level.FINE, "Parsing add-item command for toiletries.");
         InputValidator.validate(input, "item/", "category/", "bin/", "qty/",
                 "brand/", "isLiquid/", "expiryDate/");
 
@@ -61,13 +61,13 @@ public class AddItemCommandParser {
         Item item = new Toiletries(commonFields.itemName, commonFields.quantity, commonFields.bin,
                 toiletriesFields.brand, toiletriesFields.isLiquid, toiletriesFields.expiryDate);
 
-        logger.log(Level.INFO, "Created toiletries item command for category: " + commonFields.categoryName);
+        logger.log(Level.FINE, "Built toiletries add command for category: " + commonFields.categoryName);
         return new AddItemCommand(commonFields.categoryName, item);
     }
 
     public Command handleVegetables(String input) throws DukeException {
         assert input != null : "AddItemCommandParser received null vegetable input.";
-        logger.log(Level.INFO, "Parsing add-item command for vegetables.");
+        logger.log(Level.FINE, "Parsing add-item command for vegetables.");
         InputValidator.validate(input, "item/", "category/", "bin/", "qty/",
                 "expiryDate/", "isLeafy/");
 
@@ -76,7 +76,7 @@ public class AddItemCommandParser {
         Item item = new Vegetable(commonFields.itemName, commonFields.quantity, commonFields.bin,
                 vegetableFields.expiryDate, vegetableFields.isLeafy);
 
-        logger.log(Level.INFO, "Created vegetable item command for category: " + commonFields.categoryName);
+        logger.log(Level.FINE, "Built vegetable add command for category: " + commonFields.categoryName);
         return new AddItemCommand(commonFields.categoryName, item);
     }
 }

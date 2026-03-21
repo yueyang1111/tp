@@ -18,7 +18,7 @@ public class SnackParser {
 
     public static SnackParser parse(String input) throws DukeException {
         assert input != null : "SnackParser received null inputs.";
-        logger.log(Level.INFO, "Processing Snack special fields.");
+        logger.log(Level.FINE, "Processing snack special fields.");
 
         String brand = FieldParser.extractField(input, "brand/", "expiryDate/");
         if (brand == null || brand.trim().isEmpty()) {
@@ -33,7 +33,7 @@ public class SnackParser {
         }
         DateParser.validateDate(expiryDate);
 
-        logger.log(Level.INFO, "End of processing snack.");
+        logger.log(Level.FINE, "Finished processing snack special fields.");
         return new SnackParser(brand, expiryDate);
     }
 }

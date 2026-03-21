@@ -19,7 +19,7 @@ public class VegetableParser {
 
     public static VegetableParser parse(String input) throws DukeException {
         assert input != null : "VegetableParser received null inputs.";
-        logger.log(Level.INFO, "Processing Vegetable special fields.");
+        logger.log(Level.FINE, "Processing vegetable special fields.");
 
         String expiryDate = FieldParser.extractField(input, "expiryDate/", "isLeafy/");
         if (expiryDate == null || expiryDate.trim().isEmpty()) {
@@ -40,7 +40,7 @@ public class VegetableParser {
         }
         boolean isLeafy = Boolean.parseBoolean(leafyString);
 
-        logger.log(Level.INFO, "End of processing vegetable.");
+        logger.log(Level.FINE, "Finished processing vegetable special fields.");
         return new VegetableParser(expiryDate, isLeafy);
     }
 }
