@@ -6,8 +6,9 @@ public class Toiletries extends Item {
     private String brand;
     private boolean isLiquid;
 
-    public Toiletries(String name, int quantity, String binLocation, String brand, boolean isLiquid) {
-        super(name, quantity, binLocation);
+    public Toiletries(String name, int quantity, String binLocation, String brand,
+                      boolean isLiquid, String expiryDate) {
+        super(name,quantity,binLocation,expiryDate);
         this.brand = brand;
         this.isLiquid = isLiquid;
     }
@@ -27,6 +28,7 @@ public class Toiletries extends Item {
     public void setLiquid(boolean isLiquid) {
         this.isLiquid = isLiquid;
     }
+
 
     @Override
     public String toString() {

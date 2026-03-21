@@ -16,7 +16,19 @@ public class DateParser {
         }
 
         try {
-            LocalDate.parse(date.trim(), FORMATTER);
+            parseDate(date);
+        } catch (DateTimeParseException e) {
+            throw new DukeException("Invalid date. Please use yyyy-M-d.");
+        }
+    }
+
+    public static LocalDate parseDate(String date) throws DukeException {
+        if (date == null || date.trim().isEmpty()) {
+            throw new DukeException("Missing expiry date");
+        }
+
+        try {
+            return LocalDate.parse(date.trim(), FORMATTER);
         } catch (DateTimeParseException e) {
             throw new DukeException("Invalid date. Please use yyyy-M-d.");
         }

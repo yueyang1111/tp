@@ -127,4 +127,24 @@ public class AddItemCommandParserTest {
                 () -> parser.handleFruit(input));
         assertEquals("Quantity must be a positive integer.", e.getMessage());
     }
+
+    @Test
+    public void handleToiletries_validInput_success() {
+        AddItemCommandParser parser = new AddItemCommandParser();
+        String input = "item/shampoo category/toiletries bin/E-02 qty/15 "
+                + "brand/Dove isLiquid/true expiryDate/2026-03-20";
+
+        assertDoesNotThrow(() -> parser.handleToiletries(input));
+    }
+
+    @Test
+    public void handleToiletries_missingExpiryDateField_throwsException() {
+        AddItemCommandParser parser = new AddItemCommandParser();
+        String input = "item/shampoo category/toiletries bin/E-02 qty/15 "
+                + "brand/Dove isLiquid/true";
+
+        DukeException e = assertThrows(DukeException.class,
+                () -> parser.handleToiletries(input));
+        assertEquals("Missing required field: expiryDate/", e.getMessage());
+    }
 }

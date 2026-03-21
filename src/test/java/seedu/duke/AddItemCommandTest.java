@@ -19,7 +19,7 @@ public class AddItemCommandTest {
         Inventory inventory = new Inventory();
         Category fruits = new Category("fruits");
         inventory.addCategories(fruits);
-        Item item = new Item("Apple", 5, "A1");
+        Item item = new Item("Apple", 5, "A1", null);
         AddItemCommand command = new AddItemCommand("fruits", item);
         TestUI ui = new TestUI();
 
@@ -36,7 +36,7 @@ public class AddItemCommandTest {
     @Test
     public void execute_missingCategory_throwsException() {
         Inventory inventory = new Inventory();
-        Item item = new Item("Apple", 5, "A1");
+        Item item = new Item("Apple", 5, "A1", null);
         AddItemCommand command = new AddItemCommand("fruits", item);
         TestUI ui = new TestUI();
 

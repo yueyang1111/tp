@@ -54,12 +54,12 @@ public class AddItemCommandParser {
         assert input != null : "AddItemCommandParser received null toiletries input.";
         logger.log(Level.INFO, "Parsing add-item command for toiletries.");
         InputValidator.validate(input, "item/", "category/", "bin/", "qty/",
-                "brand/", "isLiquid/");
+                "brand/", "isLiquid/", "expiryDate/");
 
         CommonFieldParser commonFields = CommonFieldParser.parse(input, "brand/");
         ToiletriesParser toiletriesFields = ToiletriesParser.parse(input);
         Item item = new Toiletries(commonFields.itemName, commonFields.quantity, commonFields.bin,
-                toiletriesFields.brand, toiletriesFields.isLiquid);
+                toiletriesFields.brand, toiletriesFields.isLiquid, toiletriesFields.expiryDate);
 
         logger.log(Level.INFO, "Created toiletries item command for category: " + commonFields.categoryName);
         return new AddItemCommand(commonFields.categoryName, item);

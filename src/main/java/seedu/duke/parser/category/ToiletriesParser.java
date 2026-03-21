@@ -1,6 +1,7 @@
 package seedu.duke.parser.category;
 
 import seedu.duke.exception.DukeException;
+import seedu.duke.parser.DateParser;
 import seedu.duke.parser.FieldParser;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -10,10 +11,12 @@ public class ToiletriesParser {
 
     public final String brand;
     public final boolean isLiquid;
+    public final String expiryDate;
 
-    public ToiletriesParser(String brand, boolean isLiquid) {
+    public ToiletriesParser(String brand, boolean isLiquid, String expiryDate) {
         this.brand = brand;
         this.isLiquid = isLiquid;
+        this.expiryDate = expiryDate;
     }
 
     public static ToiletriesParser parse(String input) throws DukeException {
@@ -26,7 +29,7 @@ public class ToiletriesParser {
             throw new DukeException("Missing brand for toiletries.");
         }
 
-        String liquidString = FieldParser.extractField(input, "isLiquid/", null);
+        String liquidString = FieldParser.extractField(input, "isLiquid/", "expiryDate/");
         if (liquidString == null || liquidString.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing liquid field for toiletries.");
             throw new DukeException("Missing liquid field for toiletries.");
@@ -38,7 +41,14 @@ public class ToiletriesParser {
         }
         boolean isLiquid = Boolean.parseBoolean(liquidString);
 
+        String expiryDate = FieldParser.extractField(input, "expiryDate/", null);
+        if (expiryDate == null || expiryDate.trim().isEmpty()) {
+            logger.log(Level.WARNING, "Missing expiry date for toiletries.");
+            throw new DukeException("Missing expiry date for toiletries.");
+        }
+        DateParser.validateDate(expiryDate);
+
         logger.log(Level.INFO, "End of processing toiletries.");
-        return new ToiletriesParser(brand, isLiquid);
+        return new ToiletriesParser(brand, isLiquid, expiryDate);
     }
 }
