@@ -17,7 +17,7 @@ public class ListCommandTest {
     public void execute_nonEmptyInventory_callsUiWithInventory() {
         Inventory inventory = new Inventory();
         Category fruits = new Category("fruits");
-        fruits.addItem(new Item("Apple", 5, "A1"));
+        fruits.addItem(new Item("Apple", 5, "A1", null));
         inventory.addCategories(fruits);
         ListCommand command = new ListCommand();
         TestUI ui = new TestUI();

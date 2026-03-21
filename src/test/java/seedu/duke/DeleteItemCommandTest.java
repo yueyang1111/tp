@@ -24,9 +24,9 @@ public class DeleteItemCommandTest {
         fruitsCategory = new Category("fruits");
         vegetablesCategory = new Category("vegetables");
 
-        fruitsCategory.addItem(new Item("apple", 40, "A-10"));
-        fruitsCategory.addItem(new Item("banana", 30, "B-10"));
-        vegetablesCategory.addItem(new Item("carrot", 20, "C-5"));
+        fruitsCategory.addItem(new Item("apple", 40, "A-10", null));
+        fruitsCategory.addItem(new Item("banana", 30, "B-10", null));
+        vegetablesCategory.addItem(new Item("carrot", 20, "C-5", null));
 
         inventory.addCategories(fruitsCategory);
         inventory.addCategories(vegetablesCategory);
@@ -93,7 +93,7 @@ public class DeleteItemCommandTest {
 
     @Test
     public void execute_sameNameDifferentCategories_deletesFirstMatch() {
-        vegetablesCategory.addItem(new Item("apple", 10, "V-1"));
+        vegetablesCategory.addItem(new Item("apple", 10, "V-1", null));
         DeleteItemCommand command = new DeleteItemCommand("apple");
         TestUI ui = new TestUI();
 
@@ -111,7 +111,7 @@ public class DeleteItemCommandTest {
         new DeleteItemCommand("apple").execute(inventory, ui);
         assertNull(fruitsCategory.findItemByName("apple"));
 
-        fruitsCategory.addItem(new Item("apple", 50, "A-20"));
+        fruitsCategory.addItem(new Item("apple", 50, "A-20", null));
         assertNotNull(fruitsCategory.findItemByName("apple"));
         assertEquals(50, fruitsCategory.findItemByName("apple").getQuantity());
     }

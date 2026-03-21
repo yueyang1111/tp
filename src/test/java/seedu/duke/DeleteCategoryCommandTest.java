@@ -24,9 +24,9 @@ public class DeleteCategoryCommandTest {
         fruitsCategory = new Category("fruits");
         vegetablesCategory = new Category("vegetables");
 
-        fruitsCategory.addItem(new Item("apple", 40, "A-10"));
-        fruitsCategory.addItem(new Item("banana", 30, "B-10"));
-        vegetablesCategory.addItem(new Item("carrot", 20, "C-5"));
+        fruitsCategory.addItem(new Item("apple", 40, "A-10", null));
+        fruitsCategory.addItem(new Item("banana", 30, "B-10", null));
+        vegetablesCategory.addItem(new Item("carrot", 20, "C-5", null));
 
         inventory.addCategories(fruitsCategory);
         inventory.addCategories(vegetablesCategory);
@@ -112,7 +112,7 @@ public class DeleteCategoryCommandTest {
         command.execute(inventory, ui);
         assertTrue(fruitsCategory.isEmpty());
 
-        fruitsCategory.addItem(new Item("mango", 15, "A-20"));
+        fruitsCategory.addItem(new Item("mango", 15, "A-20", null));
 
         assertEquals(1, fruitsCategory.getItemCount());
         assertEquals("mango", fruitsCategory.getItem(0).getName());
