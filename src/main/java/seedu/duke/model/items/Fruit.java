@@ -8,7 +8,7 @@ public class Fruit extends Item {
 
     public Fruit(String name, int quantity, String binLocation,
                  String expiryDate, String size, boolean isRipe) {
-        super(name, quantity, binLocation,expiryDate);
+        super(name,quantity,binLocation,expiryDate);
         this.size = size;
         this.isRipe = isRipe;
     }

@@ -8,7 +8,7 @@ public class Toiletries extends Item {
 
     public Toiletries(String name, int quantity, String binLocation, String brand,
                       boolean isLiquid, String expiryDate) {
-        super(name, quantity, binLocation, expiryDate);
+        super(name,quantity,binLocation,expiryDate);
         this.brand = brand;
         this.isLiquid = isLiquid;
     }

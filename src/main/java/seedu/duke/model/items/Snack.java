@@ -6,7 +6,7 @@ public class Snack extends Item {
     private String brand;
 
     public Snack(String name, int quantity, String binLocation, String brand, String expiryDate) {
-        super(name, quantity, binLocation, expiryDate);
+        super(name,quantity,binLocation,expiryDate);
         this.brand = brand;
     }
 

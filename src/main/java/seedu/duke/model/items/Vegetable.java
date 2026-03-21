@@ -6,7 +6,7 @@ public class Vegetable extends Item {
     private boolean isLeafy;
 
     public Vegetable(String name, int quantity, String binLocation, String expiryDate, boolean isLeafy) {
-        super(name, quantity, binLocation,expiryDate);
+        super(name,quantity,binLocation,expiryDate);
         this.isLeafy = isLeafy;
     }
 
