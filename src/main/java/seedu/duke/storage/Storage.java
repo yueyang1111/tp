@@ -17,13 +17,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Storage {
+    private static final Logger logger = Logger.getLogger(Storage.class.getName());
     private final File dataFile;
 
     public Storage(String filePath) {
         assert filePath != null : "Storage received null file path.";
         this.dataFile = new File(filePath);
+        logger.log(Level.INFO, "Storage initialized with file path: " + dataFile.getPath());
     }
 
     private void createFile() throws IOException {
@@ -35,6 +39,7 @@ public class Storage {
             parent.mkdirs();
         }
         dataFile.createNewFile();
+        logger.log(Level.INFO, "Created storage file: " + dataFile.getPath());
     }
 
     public void load(Inventory inventory, UI ui) throws DukeException {
@@ -44,15 +49,19 @@ public class Storage {
             createFile();
             List<String> lines = Files.readAllLines(dataFile.toPath());
             AddItemCommandParser addItemCommandParser = new AddItemCommandParser();
+            logger.log(Level.INFO, "Loading inventory from storage file: " + dataFile.getPath());
 
             for (String line : lines) {
                 try {
                     Command command = parseStoredLine(line, addItemCommandParser);
                     command.execute(inventory, null);
                 } catch (DukeException e) {
+                    logger.log(Level.WARNING, "Skipped corrupted line: " + line
+                            + " Reason: " + e.getMessage());
                     ui.showSkippedLine(line, e.getMessage());
                 }
             }
+            logger.log(Level.INFO, "Finished loading inventory.");
         } catch (IOException e) {
             throw new DukeException("Unable to read storage file.");
         }
@@ -103,6 +112,7 @@ public class Storage {
         try {
             createFile();
             Files.write(dataFile.toPath(), lines);
+            logger.log(Level.INFO, "Saved inventory to storage file.");
         } catch (IOException e) {
             throw new DukeException("Unable to save inventory.");
         }
