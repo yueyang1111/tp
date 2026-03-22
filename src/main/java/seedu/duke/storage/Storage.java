@@ -53,28 +53,21 @@ public class Storage {
     private void parseLine(String line, Inventory inventory) throws DukeException {
         String[] parts = line.split("\\|");
 
-        if (parts.length < 5) {
-            throw new DukeException("Corrupted line.");
-        }
+        StorageCommonFields common = StorageCommonFields.parse(parts);
 
-        String itemName = parts[0].trim();
-        String categoryName = parts[1].trim().toLowerCase();
-        String bin = parts[2].trim();
-        int quantity = Integer.parseInt(parts[3].trim());
-
-        Category category = inventory.findCategoryByName(categoryName);
+        Category category = inventory.findCategoryByName(common.categoryName);
         if (category == null) {
             throw new DukeException("Category not found.");
         }
 
         Item item;
 
-        switch (categoryName) {
+        switch (common.categoryName) {
         case "fruits":
             if (parts.length != 7) {
                 throw new DukeException("Invalid fruit line.");
             }
-            item = new Fruit(itemName, quantity, bin,
+            item = new Fruit(common.itemName, common.quantity, common.bin,
                     parts[4].trim(), parts[5].trim(),
                     Boolean.parseBoolean(parts[6].trim()));
             break;
@@ -82,14 +75,14 @@ public class Storage {
             if (parts.length != 6) {
                 throw new DukeException("Invalid snack line.");
             }
-            item = new Snack(itemName, quantity, bin,
+            item = new Snack(common.itemName, common.quantity, common.bin,
                     parts[4].trim(), parts[5].trim());
             break;
         case "toiletries":
             if (parts.length != 7) {
                 throw new DukeException("Invalid toiletries line.");
             }
-            item = new Toiletries(itemName, quantity, bin,
+            item = new Toiletries(common.itemName, common.quantity, common.bin,
                     parts[4].trim(), Boolean.parseBoolean(parts[5].trim()),
                     parts[6].trim());
             break;
@@ -97,7 +90,7 @@ public class Storage {
             if (parts.length != 6) {
                 throw new DukeException("Invalid vegetable line.");
             }
-            item = new Vegetable(itemName, quantity, bin,
+            item = new Vegetable(common.itemName, common.quantity, common.bin,
                     parts[4].trim(), Boolean.parseBoolean(parts[5].trim()));
             break;
         default:
