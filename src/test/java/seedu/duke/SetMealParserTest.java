@@ -11,23 +11,23 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class SetMealParserTest {
     @Test
     public void parse_validInput_success() {
-        String input = "expiryDate/2026-06-01 mealType/Western foodSize/Large minToUnfreeze/20 isSpicy/false";
+        String input = "expiryDate/2026-06-01 mealType/Western foodSize/Large";
         assertDoesNotThrow(() -> SetMealParser.parse(input));
     }
 
     @Test
     public void parse_missingFoodSize_throwsException() {
-        String input = "expiryDate/2026-06-01 mealType/Western foodSize/ minToUnfreeze/20 isSpicy/false";
+        String input = "expiryDate/2026-06-01 mealType/Western foodSize/";
         DukeException e = assertThrows(DukeException.class,
                 () -> SetMealParser.parse(input));
         assertEquals("Missing foodSize for set meal.", e.getMessage());
     }
 
     @Test
-    public void parse_invalidMinToUnfreeze_throwsException() {
-        String input = "expiryDate/2026-06-01 mealType/Western foodSize/Large minToUnfreeze/abc isSpicy/false";
+    public void parse_missingMealType_throwsException() {
+        String input = "expiryDate/2026-06-01 mealType/ foodSize/Large";
         DukeException e = assertThrows(DukeException.class,
                 () -> SetMealParser.parse(input));
-        assertEquals("minToUnfreeze must be an integer.", e.getMessage());
+        assertEquals("Missing mealType for set meal.", e.getMessage());
     }
 }
