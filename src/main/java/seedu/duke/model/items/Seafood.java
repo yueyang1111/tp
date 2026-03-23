@@ -29,19 +29,10 @@ public class Seafood extends Item {
         this.seafoodType = seafoodType;
     }
 
-    public boolean isFrozen() {
-        return isFrozen;
-    }
-
-    public void setFrozen(boolean isFrozen) {
-        this.isFrozen = isFrozen;
-    }
-
     @Override
     public String toString() {
         return "[Seafood] " + super.toString()
                 + ", Seafood Type: " + seafoodType
-                + ", Origin: " + origin
-                + ", Frozen: " + isFrozen;
+                + ", Origin: " + origin;
     }
 }
