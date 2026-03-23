@@ -3,6 +3,7 @@ package seedu.duke.parser.category;
 import seedu.duke.exception.DukeException;
 import seedu.duke.parser.DateParser;
 import seedu.duke.parser.FieldParser;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,13 +12,11 @@ public class SweetsParser {
 
     public final String expiryDate;
     public final String brand;
-    public final String ingradient;
     public final String sweetnessLevel;
 
-    public SweetsParser(String expiryDate, String brand, String ingradient, String sweetnessLevel) {
+    public SweetsParser(String expiryDate, String brand, String sweetnessLevel) {
         this.expiryDate = expiryDate;
         this.brand = brand;
-        this.ingradient = ingradient;
         this.sweetnessLevel = sweetnessLevel;
     }
 
@@ -32,16 +31,10 @@ public class SweetsParser {
         }
         DateParser.validateDate(expiryDate);
 
-        String brand = FieldParser.extractField(input, "brand/", "ingradient/");
+        String brand = FieldParser.extractField(input, "brand/", "sweetnessLevel/");
         if (brand == null || brand.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing brand for sweets.");
             throw new DukeException("Missing brand for sweets.");
-        }
-
-        String ingradient = FieldParser.extractField(input, "ingradient/", "sweetnessLevel/");
-        if (ingradient == null || ingradient.trim().isEmpty()) {
-            logger.log(Level.WARNING, "Missing ingradient for sweets.");
-            throw new DukeException("Missing ingradient for sweets.");
         }
 
         String sweetnessLevel = FieldParser.extractField(input, "sweetnessLevel/", null);
@@ -51,6 +44,6 @@ public class SweetsParser {
         }
 
         logger.log(Level.INFO, "End of processing sweets.");
-        return new SweetsParser(expiryDate, brand, ingradient, sweetnessLevel);
+        return new SweetsParser(expiryDate, brand, sweetnessLevel);
     }
 }
