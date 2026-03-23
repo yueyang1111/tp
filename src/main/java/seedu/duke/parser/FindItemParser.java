@@ -1,14 +1,14 @@
 package seedu.duke.parser;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import seedu.duke.command.Command;
 import seedu.duke.command.FindItemByExpiryDateCommand;
 import seedu.duke.ui.UI;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 public class FindItemParser {
-    private static Logger logger = Logger.getLogger(DeleteCommandParser.class.getName());
+    private static final Logger logger = Logger.getLogger(FindItemParser.class.getName());
 
     private final UI ui;
 
@@ -41,24 +41,28 @@ public class FindItemParser {
 
         String type = parts[0].trim().toLowerCase();
         String name = parts[1].trim();
+        
 
         switch (type) {
         case "category":
-            logger.log(Level.INFO, "Parsed find item command for: " + name);
-            //return new FindItemByKeywordCommand(name);
+            logger.log(Level.INFO, "Find by category not implemented yet: " + name);
+            ui.showInvalidInput("find category is not implemented yet.");
+            return null;
         case "keyword":
-            logger.log(Level.INFO, "Parsed find category command for: " + name);
-            //return new FindItemByCategoryCommand(name);
+            logger.log(Level.INFO, "Find by keyword not implemented yet: " + name);
+            ui.showInvalidInput("find keyword is not implemented yet.");
+            return null;
         case "expirydate":
             logger.log(Level.INFO, "Parsed find expiryDate command for: " + name);
             return new FindItemByExpiryDateCommand(name);
         default:
             logger.log(Level.WARNING, "Unknown find type: " + type);
-            ui.showInvalidInput("Unknown find type: '" + type
-                    + "Use: find item/ITEM "
-                    + "or find category/CATEGORY"
+            ui.showInvalidInput("Unknown find type: '" + type + "'. "
+                    + "Use: find category/CATEGORY "
+                    + "or find keyword/KEYWORD "
                     + "or find expiryDate/DATE");
             return null;
         }
+
     }
 }
