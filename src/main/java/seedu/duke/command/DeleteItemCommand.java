@@ -23,15 +23,14 @@ public class DeleteItemCommand extends Command {
         assert inventory != null : "DeleteItemCommand received null inventory.";
         assert ui != null : "DeleteItemCommand received null UI.";
         assert itemName != null : "DeleteItemCommand received null item name.";
-        logger.log(Level.INFO, "Attempting to delete item: " + itemName);
-
         List<Category> categories = inventory.getCategories();
 
         for (Category category : categories) {
             Item item = category.findItemByName(itemName);
             if (item != null) {
                 category.getItems().remove(item);
-                logger.log(Level.INFO, "Deleted item " + itemName + " from category " + category.getName());
+                logger.log(Level.INFO, "Deleted item '" + itemName
+                        + "' from category '" + category.getName() + "'.");
                 ui.showItemDeleted(itemName,
                         category.getName());
                 return;

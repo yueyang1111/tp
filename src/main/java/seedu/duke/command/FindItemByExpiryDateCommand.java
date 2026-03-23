@@ -28,8 +28,6 @@ public class FindItemByExpiryDateCommand extends Command {
         assert inventory != null : "FindItemCommand received null inventory.";
         assert ui != null : "FindItemCommand received null UI.";
         assert expiryDateInput != null : "FindItemCommand received null expiry date.";
-        logger.log(Level.INFO, "Attempting to find items expiring by: " + expiryDateInput);
-
         LocalDate cutoffDate = DateParser.parseDate(expiryDateInput);
         List<String> matches = new ArrayList<>();
 
@@ -54,6 +52,9 @@ public class FindItemByExpiryDateCommand extends Command {
             ui.showMessage("No items found expiring by " + expiryDateInput + ".");
             return;
         }
+
+        logger.log(Level.INFO, "Found " + matches.size()
+                + " item(s) expiring by " + expiryDateInput + ".");
 
         ui.showDivider();
         ui.showMessage("Items expiring by " + expiryDateInput + ":");

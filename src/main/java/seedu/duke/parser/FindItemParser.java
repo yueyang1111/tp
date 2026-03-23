@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import seedu.duke.command.Command;
+import seedu.duke.command.FindItemByCategoryCommand;
 import seedu.duke.command.FindItemByExpiryDateCommand;
 import seedu.duke.ui.UI;
 
@@ -18,8 +19,6 @@ public class FindItemParser {
 
     public Command parse(String input) {
         assert input != null : "FindCommandParser received null input.";
-        logger.log(Level.INFO, "Processing Find command.");
-
         if (input.isEmpty()) {
             logger.log(Level.WARNING, "Find command missing target.");
             ui.showInvalidInput("Please specify what to find. "
@@ -53,7 +52,6 @@ public class FindItemParser {
             ui.showInvalidInput("find keyword is not implemented yet.");
             return null;
         case "expirydate":
-            logger.log(Level.INFO, "Parsed find expiryDate command for: " + name);
             return new FindItemByExpiryDateCommand(name);
         default:
             logger.log(Level.WARNING, "Unknown find type: " + type);
