@@ -30,6 +30,13 @@ public class PetFood extends Item {
     }
 
     @Override
+    public String toStorageString(String categoryName) {
+        return super.toStorageString(categoryName)
+                + " petType/" + petType
+                + " brand/" + brand;
+    }
+
+    @Override
     public String toString() {
         return "[PetFood] " + super.toString()
                 + ", Pet Type: " + petType

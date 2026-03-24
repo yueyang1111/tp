@@ -48,10 +48,11 @@ public class Item {
     }
 
     public String toStorageString(String categoryName) {
-        return "item/" + name
-                + " category/" + categoryName
+        return "category/" + categoryName
+                + " item/" + name
                 + " bin/" + binLocation
-                + " qty/" + quantity;
+                + " qty/" + quantity
+                + " expiryDate/" + expiryDate;
     }
 
     @Override

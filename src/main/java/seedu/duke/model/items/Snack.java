@@ -21,8 +21,7 @@ public class Snack extends Item {
     @Override
     public String toStorageString(String categoryName) {
         return super.toStorageString(categoryName)
-                + " brand/" + brand
-                + " expiryDate/" + getExpiryDate();
+                + " brand/" + brand;
     }
 
     @Override

@@ -4,18 +4,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import seedu.duke.exception.DukeException;
-import seedu.duke.parser.DateParser;
 import seedu.duke.parser.FieldParser;
 
 public class AccessoriesParser {
     private static final Logger logger = Logger.getLogger(AccessoriesParser.class.getName());
 
-    public final String expiryDate;
     public final String type;
     public final String material;
 
-    public AccessoriesParser(String expiryDate, String type, String material) {
-        this.expiryDate = expiryDate;
+    public AccessoriesParser(String type, String material) {
         this.type = type;
         this.material = material;
     }
@@ -23,13 +20,6 @@ public class AccessoriesParser {
     public static AccessoriesParser parse(String input) throws DukeException {
         assert input != null : "AccessoriesParser received null input.";
         logger.log(Level.INFO, "Processing Accessories special fields.");
-
-        String expiryDate = FieldParser.extractField(input, "expiryDate/", "type/");
-        if (expiryDate == null || expiryDate.trim().isEmpty()) {
-            logger.log(Level.WARNING, "Missing expiry date for accessories.");
-            throw new DukeException("Missing expiry date for accessories.");
-        }
-        DateParser.validateDate(expiryDate);
 
         String type = FieldParser.extractField(input, "type/", "material/");
         if (type == null || type.trim().isEmpty()) {
@@ -44,6 +34,6 @@ public class AccessoriesParser {
         }
 
         logger.log(Level.INFO, "End of processing accessories.");
-        return new AccessoriesParser(expiryDate, type, material);
+        return new AccessoriesParser(type, material);
     }
 }

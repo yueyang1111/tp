@@ -30,6 +30,13 @@ public class Burger extends Item {
     }
 
     @Override
+    public String toStorageString(String categoryName) {
+        return super.toStorageString(categoryName)
+                + " isSpicy/" + isSpicy
+                + " pattyType/" + pattyType;
+    }
+
+    @Override
     public String toString() {
         return "[Burger] " + super.toString()
                 + ", Spicy: " + isSpicy

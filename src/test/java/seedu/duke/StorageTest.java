@@ -100,10 +100,10 @@ public class StorageTest {
         Storage storage = new Storage(FILE_PATH);
 
         List<String> lines = List.of(
-                "item/apple category/fruits bin/A-10 qty/3 expiryDate/2026-03-20 size/big isRipe/true",
-                "item/spinach category/vegetables bin/V-01 qty/4 expiryDate/2026-03-18 isLeafy/true",
+                "category/fruits item/apple bin/A-10 qty/3 expiryDate/2026-03-20 size/big isRipe/true",
+                "category/vegetables item/spinach bin/V-01 qty/4 expiryDate/2026-03-18 isLeafy/true",
                 "Corrupted line.",
-                "item/chips category/snacks bin/S-07 qty/6 brand/lays expiryDate/2026-06-01"
+                "category/snacks item/chips bin/S-07 qty/6 expiryDate/2026-06-01 brand/lays"
         );
 
         Files.write(Path.of(FILE_PATH), lines);

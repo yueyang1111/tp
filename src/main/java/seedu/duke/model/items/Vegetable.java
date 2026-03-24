@@ -21,7 +21,6 @@ public class Vegetable extends Item {
     @Override
     public String toStorageString(String categoryName) {
         return super.toStorageString(categoryName)
-                + " expiryDate/" + getExpiryDate()
                 + " isLeafy/" + isLeafy;
     }
 

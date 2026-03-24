@@ -31,6 +31,13 @@ public class IceCream extends Item {
     }
 
     @Override
+    public String toStorageString(String categoryName) {
+        return super.toStorageString(categoryName)
+                + " flavour/" + flavour
+                + " isDairyFree/" + isDairyFree;
+    }
+
+    @Override
     public String toString() {
         return "[IceCream] " + super.toString()
                 + ", Flavour: " + flavour

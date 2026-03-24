@@ -33,8 +33,7 @@ public class Toiletries extends Item {
     public String toStorageString(String categoryName) {
         return super.toStorageString(categoryName)
                 + " brand/" + brand
-                + " isLiquid/" + isLiquid
-                + " expiryDate/" + getExpiryDate();
+                + " isLiquid/" + isLiquid;
     }
 
     @Override

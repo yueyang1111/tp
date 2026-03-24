@@ -75,7 +75,7 @@ public class AddCommandParser {
         case "drinks":
             return parser.handleDrinks(input);
         case "icecream":
-            return parser.handleIcecream(input);
+            return parser.handleIceCream(input);
         case "sweets":
             return parser.handleSweets(input);
         case "burger":

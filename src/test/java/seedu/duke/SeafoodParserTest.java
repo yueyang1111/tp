@@ -11,13 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class SeafoodParserTest {
     @Test
     public void parse_validInput_success() {
-        String input = "expiryDate/2026-03-30 seafoodType/Fish origin/Norway";
+        String input = "seafoodType/Fish origin/Norway";
         assertDoesNotThrow(() -> SeafoodParser.parse(input));
     }
 
     @Test
     public void parse_missingOrigin_throwsException() {
-        String input = "expiryDate/2026-03-30 seafoodType/Fish origin/";
+        String input = "seafoodType/Fish origin/";
         DukeException e = assertThrows(DukeException.class,
                 () -> SeafoodParser.parse(input));
         assertEquals("Missing origin for seafood.", e.getMessage());
@@ -25,7 +25,7 @@ public class SeafoodParserTest {
 
     @Test
     public void parse_missingSeafoodType_throwsException() {
-        String input = "expiryDate/2026-03-30 seafoodType/ origin/Norway";
+        String input = "seafoodType/ origin/Norway";
         DukeException e = assertThrows(DukeException.class,
                 () -> SeafoodParser.parse(input));
         assertEquals("Missing seafoodType for seafood.", e.getMessage());

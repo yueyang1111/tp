@@ -74,6 +74,24 @@ public class Storage {
             return parser.handleToiletries(line);
         case "vegetables":
             return parser.handleVegetables(line);
+        case "drinks":
+            return parser.handleDrinks(line);
+        case "icecream":
+            return parser.handleIceCream(line);
+        case "sweets":
+            return parser.handleSweets(line);
+        case "burger":
+            return parser.handleBurger(line);
+        case "setmeal":
+            return parser.handleSetMeal(line);
+        case "seafood":
+            return parser.handleSeafood(line);
+        case "meat":
+            return parser.handleMeat(line);
+        case "petfood":
+            return parser.handlePetFood(line);
+        case "accessories":
+            return parser.handleAccessories(line);
         default:
             throw new DukeException("Unknown category in storage.");
         }

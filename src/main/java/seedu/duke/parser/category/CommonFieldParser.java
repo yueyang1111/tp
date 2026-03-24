@@ -1,6 +1,7 @@
 package seedu.duke.parser.category;
 
 import seedu.duke.exception.DukeException;
+import seedu.duke.parser.DateParser;
 import seedu.duke.parser.FieldParser;
 
 public class CommonFieldParser {
@@ -8,22 +9,24 @@ public class CommonFieldParser {
     public final String categoryName;
     public final String bin;
     public final int quantity;
+    public final String expiryDate;
 
     private CommonFieldParser(String itemName, String categoryName,
-                              String bin, int quantity) {
+                              String bin, int quantity, String expiryDate) {
         this.itemName = itemName;
         this.categoryName = categoryName;
         this.bin = bin;
         this.quantity = quantity;
+        this.expiryDate = expiryDate;
     }
 
-    public static CommonFieldParser parse(String input, String fieldAfterQty) throws DukeException {
+    public static CommonFieldParser parse(String input, String fieldAfterExpiry) throws DukeException {
         assert input != null : "CommonFieldParser received null input.";
 
-        String itemName = FieldParser.extractField(
-                input, "item/", "category/");
         String categoryName = FieldParser.extractField(
-                input, "category/", "bin/");
+                input, "category/", "item/");
+        String itemName = FieldParser.extractField(
+                input, "item/", "bin/");
 
         String bin = FieldParser.extractField(input, "bin/", "qty/");
         if (bin == null || bin.trim().isEmpty()) {
@@ -31,14 +34,11 @@ public class CommonFieldParser {
         }
 
         String quantityString = FieldParser.extractField(
-                input, "qty/", fieldAfterQty);
+                input, "qty/", "expiryDate/");
         if (quantityString == null
                 || quantityString.trim().isEmpty()) {
             throw new DukeException("Missing quantity.");
         }
-
-        quantityString = quantityString.trim().split(" ", 2)[0];
-
         int quantity;
         try {
             quantity = Integer.parseInt(quantityString);
@@ -52,6 +52,13 @@ public class CommonFieldParser {
                     "Quantity must be a positive integer.");
         }
 
-        return new CommonFieldParser(itemName, categoryName, bin, quantity);
+        String expiryDate = FieldParser.extractField(
+                input, "expiryDate/", fieldAfterExpiry);
+        if (expiryDate == null || expiryDate.trim().isEmpty()) {
+            throw new DukeException("Missing expiry date.");
+        }
+        DateParser.validateDate(expiryDate);
+
+        return new CommonFieldParser(itemName, categoryName, bin, quantity, expiryDate);
     }
 }

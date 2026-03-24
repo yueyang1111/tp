@@ -1,7 +1,6 @@
 package seedu.duke.parser.category;
 
 import seedu.duke.exception.DukeException;
-import seedu.duke.parser.DateParser;
 import seedu.duke.parser.FieldParser;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,22 +8,14 @@ import java.util.logging.Logger;
 public class VegetableParser {
     private static Logger logger = Logger.getLogger(VegetableParser.class.getName());
 
-    public final String expiryDate;
     public final boolean isLeafy;
 
-    public VegetableParser(String expiryDate, boolean isLeafy) {
-        this.expiryDate = expiryDate;
+    public VegetableParser(boolean isLeafy) {
         this.isLeafy = isLeafy;
     }
 
     public static VegetableParser parse(String input) throws DukeException {
         assert input != null : "VegetableParser received null inputs.";
-        String expiryDate = FieldParser.extractField(input, "expiryDate/", "isLeafy/");
-        if (expiryDate == null || expiryDate.trim().isEmpty()) {
-            logger.log(Level.WARNING, "Missing expiry date for vegetable.");
-            throw new DukeException("Missing expiry date for vegetable.");
-        }
-        DateParser.validateDate(expiryDate);
 
         String leafyString = FieldParser.extractField(input, "isLeafy/", null);
         if (leafyString == null || leafyString.trim().isEmpty()) {
@@ -38,6 +29,6 @@ public class VegetableParser {
         }
         boolean isLeafy = Boolean.parseBoolean(leafyString);
 
-        return new VegetableParser(expiryDate, isLeafy);
+        return new VegetableParser(isLeafy);
     }
 }

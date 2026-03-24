@@ -30,6 +30,13 @@ public class Accessories extends Item {
     }
 
     @Override
+    public String toStorageString(String categoryName) {
+        return super.toStorageString(categoryName)
+                + " type/" + type
+                + " material/" + material;
+    }
+
+    @Override
     public String toString() {
         return "[Accessories] " + super.toString()
                 + ", Type: " + type
