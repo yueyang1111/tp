@@ -2,6 +2,7 @@ package seedu.duke;
 
 import seedu.duke.command.Command;
 import seedu.duke.exception.DukeException;
+import seedu.duke.logging.LoggerConfig;
 import seedu.duke.model.Category;
 import seedu.duke.model.Inventory;
 import seedu.duke.parser.Parser;
@@ -20,15 +21,36 @@ public class Duke {
         parser = new Parser(ui);
         storage = new Storage("./data/inventory.txt");
 
-        inventory.addCategories(new Category("fruits"));
-        inventory.addCategories(new Category("vegetables"));
-        inventory.addCategories(new Category("toiletries"));
-        inventory.addCategories(new Category("snacks"));
+        String[] categoryNames = {
+            "fruits",
+            "vegetables",
+            "toiletries",
+            "snacks",
+            "drinks",
+            "icecream",
+            "sweets",
+            "burger",
+            "setmeal",
+            "seafood",
+            "meat",
+            "petfood",
+            "accessories"
+        };
+
+        for (String categoryName : categoryNames) {
+            inventory.addCategories(new Category(categoryName));
+        }
 
         storage.load(inventory, ui);
     }
 
-    public void run() throws DukeException {
+    public static void main(String[] args) throws DukeException {
+        LoggerConfig logger = new LoggerConfig("./logs/logger.txt");
+        logger.setup();
+        new Duke().run();
+    }
+
+    public void run() {
         ui.showWelcome();
 
         String input;
@@ -53,9 +75,5 @@ public class Duke {
 
         ui.showGoodbye();
         ui.close();
-    }
-
-    public static void main(String[] args) throws DukeException {
-        new Duke().run();
     }
 }

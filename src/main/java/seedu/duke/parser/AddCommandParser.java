@@ -1,10 +1,11 @@
 package seedu.duke.parser;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import seedu.duke.command.Command;
 import seedu.duke.exception.DukeException;
 import seedu.duke.ui.UI;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class AddCommandParser {
     private static final Logger logger = Logger.getLogger(AddCommandParser.class.getName());
@@ -71,6 +72,24 @@ public class AddCommandParser {
             return parser.handleToiletries(input);
         case "vegetables":
             return parser.handleVegetables(input);
+        case "drinks":
+            return parser.handleDrinks(input);
+        case "icecream":
+            return parser.handleIcecream(input);
+        case "sweets":
+            return parser.handleSweets(input);
+        case "burger":
+            return parser.handleBurger(input);
+        case "setmeal":
+            return parser.handleSetMeal(input);
+        case "seafood":
+            return parser.handleSeafood(input);
+        case "meat":
+            return parser.handleMeat(input);
+        case "petfood":
+            return parser.handlePetFood(input);
+        case "accessories":
+            return parser.handleAccessories(input);
         default:
             logger.log(Level.WARNING, "Unknown add command category: " + category);
             throw new DukeException("Unknown category: " + category);

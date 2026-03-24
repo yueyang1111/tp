@@ -31,3 +31,4 @@ public class SnackParserTest {
         assertEquals("Missing expiry date for snack.", e.getMessage());
     }
 }
+
