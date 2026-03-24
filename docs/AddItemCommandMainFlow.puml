@@ -1,0 +1,79 @@
+@startuml
+title Sequence Diagram for AddItemCommand (Main Control Flow Only)
+
+autonumber
+hide footbox
+
+actor User
+participant UI
+participant Duke
+participant Parser
+participant AddCommandParser
+participant AddItemCommandParser
+participant AddItemCommand
+participant Inventory
+participant Category
+
+User -> UI: enter add command
+activate UI
+UI -> Duke: input
+activate Duke
+Duke -> Parser: parse(input)
+activate Parser
+
+alt input starts with add
+    Parser -> AddCommandParser: parse(arguments)
+    activate AddCommandParser
+    AddCommandParser -> AddCommandParser: validateRequiredFields(input)
+    AddCommandParser -> AddCommandParser: extractCategory(input)
+
+    alt category = fruits
+        AddCommandParser -> AddItemCommandParser: handleFruit(input)
+        activate AddItemCommandParser
+        AddItemCommandParser -> AddItemCommandParser: InputValidator.validate(...)
+        AddItemCommandParser -> AddItemCommandParser: CommonFieldParser.parse(...)
+        AddItemCommandParser -> AddItemCommandParser: FruitParser.parse(...)
+        AddItemCommandParser -> AddItemCommand: create(categoryName, item)
+        activate AddItemCommand
+        AddItemCommand --> AddItemCommandParser: command
+        deactivate AddItemCommand
+        AddItemCommandParser --> AddCommandParser: command
+        deactivate AddItemCommandParser
+    else category = snacks / toiletries / vegetables
+        AddCommandParser -> AddItemCommandParser: handleCategory(input)
+        activate AddItemCommandParser
+        AddItemCommandParser --> AddCommandParser: command
+        deactivate AddItemCommandParser
+    end
+
+    AddCommandParser --> Parser: command
+    deactivate AddCommandParser
+    Parser --> Duke: command
+    deactivate Parser
+
+    Duke -> AddItemCommand: execute(inventory, ui)
+    activate AddItemCommand
+    AddItemCommand -> Inventory: findCategoryByName(categoryName)
+    activate Inventory
+    loop for each category in inventory
+        Inventory -> Category: getName()/compare name
+        activate Category
+        Category --> Inventory: category name
+        deactivate Category
+    end
+    Inventory --> AddItemCommand: matching category
+    deactivate Inventory
+    AddItemCommand -> Category: addItem(item)
+    activate Category
+    Category --> AddItemCommand
+    deactivate Category
+    AddItemCommand -> UI: showItemAdded(...)
+    activate UI
+    UI --> User: display confirmation
+    deactivate UI
+    deactivate AddItemCommand
+end
+
+deactivate Duke
+deactivate UI
+@enduml
