@@ -1,6 +1,7 @@
 package seedu.duke.parser;
 
 import seedu.duke.command.Command;
+import seedu.duke.command.FindItemByKeywordCommand;
 import seedu.duke.command.FindItemByCategoryCommand;
 import seedu.duke.command.FindItemByExpiryDateCommand;
 import seedu.duke.ui.UI;
@@ -43,7 +44,7 @@ public class FindItemParser {
 
         switch (type) {
         case "keyword":
-//            return new findItemByKeywordCommand(name);
+            return new FindItemByKeywordCommand(name);
         case "category":
             return new FindItemByCategoryCommand(name);
         case "expirydate":
