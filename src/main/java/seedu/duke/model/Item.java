@@ -13,7 +13,6 @@ public class Item {
         this.binLocation = binLocation;
         this.expiryDate = expiryDate;
     }
-    // getters and setters
 
     public String getName() {
         return name;

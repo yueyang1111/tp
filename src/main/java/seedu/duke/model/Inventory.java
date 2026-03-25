@@ -10,7 +10,7 @@ public class Inventory {
         inventory = new ArrayList<>();
     }
 
-    public void addCategories(Category category) {
+    public void addCategory(Category category) {
         inventory.add(category);
     }
 

@@ -18,7 +18,7 @@ public class ListCommandTest {
         Inventory inventory = new Inventory();
         Category fruits = new Category("fruits");
         fruits.addItem(new Item("Apple", 5, "A1", null));
-        inventory.addCategories(fruits);
+        inventory.addCategory(fruits);
         ListCommand command = new ListCommand();
         TestUI ui = new TestUI();
 

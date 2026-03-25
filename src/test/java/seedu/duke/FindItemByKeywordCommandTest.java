@@ -41,9 +41,9 @@ public class FindItemByKeywordCommandTest {
         drinksCategory.addItem(new Drinks("apple_juice", 24, "F-01",
                 "2026-10-03", "Marigold", "Apple"));
 
-        inventory.addCategories(fruitsCategory);
-        inventory.addCategories(snacksCategory);
-        inventory.addCategories(drinksCategory);
+        inventory.addCategory(fruitsCategory);
+        inventory.addCategory(snacksCategory);
+        inventory.addCategory(drinksCategory);
     }
 
     @Test

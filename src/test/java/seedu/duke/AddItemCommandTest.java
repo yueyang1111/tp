@@ -18,7 +18,7 @@ public class AddItemCommandTest {
     public void execute_validCategoryAndItem_itemAddedAndUiUpdated() throws DukeException {
         Inventory inventory = new Inventory();
         Category fruits = new Category("fruits");
-        inventory.addCategories(fruits);
+        inventory.addCategory(fruits);
         Item item = new Item("Apple", 5, "A1", null);
         AddItemCommand command = new AddItemCommand("fruits", item);
         TestUI ui = new TestUI();
@@ -48,7 +48,7 @@ public class AddItemCommandTest {
     @Test
     public void execute_nullItem_throwsException() {
         Inventory inventory = new Inventory();
-        inventory.addCategories(new Category("fruits"));
+        inventory.addCategory(new Category("fruits"));
         AddItemCommand command = new AddItemCommand("fruits", null);
         TestUI ui = new TestUI();
 

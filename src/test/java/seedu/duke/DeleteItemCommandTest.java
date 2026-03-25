@@ -28,8 +28,8 @@ public class DeleteItemCommandTest {
         fruitsCategory.addItem(new Item("banana", 30, "B-10", null));
         vegetablesCategory.addItem(new Item("carrot", 20, "C-5", null));
 
-        inventory.addCategories(fruitsCategory);
-        inventory.addCategories(vegetablesCategory);
+        inventory.addCategory(fruitsCategory);
+        inventory.addCategory(vegetablesCategory);
     }
 
     @Test

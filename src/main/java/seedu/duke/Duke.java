@@ -38,7 +38,7 @@ public class Duke {
         };
 
         for (String categoryName : categoryNames) {
-            inventory.addCategories(new Category(categoryName));
+            inventory.addCategory(new Category(categoryName));
         }
 
         storage.load(inventory, ui);

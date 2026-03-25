@@ -40,9 +40,9 @@ public class FindItemByExpiryDateCommandTest {
                 "Lays", "2026-3-21"));
         toiletriesCategory.addItem(new Toiletries("shampoo", 5, "C-1",
                 "Dove", true, "2026-4-1"));
-        inventory.addCategories(fruitsCategory);
-        inventory.addCategories(snacksCategory);
-        inventory.addCategories(toiletriesCategory);
+        inventory.addCategory(fruitsCategory);
+        inventory.addCategory(snacksCategory);
+        inventory.addCategory(toiletriesCategory);
     }
 
     @Test
@@ -96,7 +96,7 @@ public class FindItemByExpiryDateCommandTest {
         Category vegetablesCategory = new Category("vegetables");
         vegetablesCategory.addItem(new Vegetable("spinach", 7, "D-1",
                 "2026-3-20", true));
-        inventory.addCategories(vegetablesCategory);
+        inventory.addCategory(vegetablesCategory);
 
         FindItemByExpiryDateCommand command = new FindItemByExpiryDateCommand("2026-3-21");
         TestUI ui = new TestUI();

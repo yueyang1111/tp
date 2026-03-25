@@ -31,10 +31,10 @@ public class StorageTest {
 
     private Inventory createInventory() {
         Inventory inventory = new Inventory();
-        inventory.addCategories(new Category("fruits"));
-        inventory.addCategories(new Category("vegetables"));
-        inventory.addCategories(new Category("toiletries"));
-        inventory.addCategories(new Category("snacks"));
+        inventory.addCategory(new Category("fruits"));
+        inventory.addCategory(new Category("vegetables"));
+        inventory.addCategory(new Category("toiletries"));
+        inventory.addCategory(new Category("snacks"));
         return inventory;
     }
 
