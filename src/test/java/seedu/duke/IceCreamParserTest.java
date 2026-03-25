@@ -11,13 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class IceCreamParserTest {
     @Test
     public void parse_validInput_success() {
-        String input = "expiryDate/2026-03-28 flavour/Vanilla isDairyFree/false";
+        String input = "flavour/Vanilla isDairyFree/false";
         assertDoesNotThrow(() -> IceCreamParser.parse(input));
     }
 
     @Test
     public void parse_missingFlavour_throwsException() {
-        String input = "expiryDate/2026-03-28 flavour/ isDairyFree/false";
+        String input = "flavour/ isDairyFree/false";
         DukeException e = assertThrows(DukeException.class,
                 () -> IceCreamParser.parse(input));
         assertEquals("Missing flavour for ice cream.", e.getMessage());
@@ -25,7 +25,7 @@ public class IceCreamParserTest {
 
     @Test
     public void parse_invalidBoolean_throwsException() {
-        String input = "expiryDate/2026-03-28 flavour/Vanilla isDairyFree/maybe";
+        String input = "flavour/Vanilla isDairyFree/maybe";
         DukeException e = assertThrows(DukeException.class,
                 () -> IceCreamParser.parse(input));
         assertEquals("isDairyFree must be true or false", e.getMessage());

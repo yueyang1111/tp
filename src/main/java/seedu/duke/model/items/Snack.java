@@ -19,6 +19,12 @@ public class Snack extends Item {
     }
 
     @Override
+    public String toStorageString(String categoryName) {
+        return super.toStorageString(categoryName)
+                + " brand/" + brand;
+    }
+
+    @Override
     public String toString() {
         return "[Snack] " + super.toString()
                 + ", Brand: " + brand;

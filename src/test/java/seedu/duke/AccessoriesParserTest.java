@@ -11,13 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class AccessoriesParserTest {
     @Test
     public void parse_validInput_success() {
-        String input = "expiryDate/2027-01-01 type/Clip material/Plastic";
+        String input = "type/Clip material/Plastic";
         assertDoesNotThrow(() -> AccessoriesParser.parse(input));
     }
 
     @Test
     public void parse_missingType_throwsException() {
-        String input = "expiryDate/2027-01-01 type/ material/Plastic";
+        String input = "type/ material/Plastic";
         DukeException e = assertThrows(DukeException.class,
                 () -> AccessoriesParser.parse(input));
         assertEquals("Missing type for accessories.", e.getMessage());
@@ -25,7 +25,7 @@ public class AccessoriesParserTest {
 
     @Test
     public void parse_missingMaterial_throwsException() {
-        String input = "expiryDate/2027-01-01 type/Clip material/";
+        String input = "type/Clip material/";
         DukeException e = assertThrows(DukeException.class,
                 () -> AccessoriesParser.parse(input));
         assertEquals("Missing material for accessories.", e.getMessage());

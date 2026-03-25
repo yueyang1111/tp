@@ -1,7 +1,6 @@
 package seedu.duke.parser.category;
 
 import seedu.duke.exception.DukeException;
-import seedu.duke.parser.DateParser;
 import seedu.duke.parser.FieldParser;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,24 +8,16 @@ import java.util.logging.Logger;
 public class FruitParser {
     private static Logger logger = Logger.getLogger(FruitParser.class.getName());
 
-    public final String expiryDate;
     public final String size;
     public final boolean isRipe;
 
-    public FruitParser(String expiryDate, String size, boolean isRipe) {
-        this.expiryDate = expiryDate;
+    public FruitParser(String size, boolean isRipe) {
         this.size = size;
         this.isRipe = isRipe;
     }
 
     public static FruitParser parse(String input) throws DukeException {
         assert input != null : "FruitParser received null input.";
-        String expiryDate = FieldParser.extractField(input, "expiryDate/", "size/");
-        if (expiryDate == null || expiryDate.trim().isEmpty()) {
-            logger.log(Level.WARNING, "Missing expiry date for fruit.");
-            throw new DukeException("Missing expiry date for fruit.");
-        }
-        DateParser.validateDate(expiryDate);
 
         String size = FieldParser.extractField(input, "size/", "isRipe/");
         if (size == null || size.trim().isEmpty()) {
@@ -46,7 +37,7 @@ public class FruitParser {
         }
         boolean isRipe = Boolean.parseBoolean(ripeString);
 
-        return new FruitParser(expiryDate, size, isRipe);
+        return new FruitParser(size, isRipe);
     }
 }
 

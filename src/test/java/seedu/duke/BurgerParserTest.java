@@ -11,13 +11,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class BurgerParserTest {
     @Test
     public void parse_validInput_success() {
-        String input = "expiryDate/2026-03-25 isSpicy/true pattyType/Chicken";
+        String input = "isSpicy/true pattyType/Chicken";
         assertDoesNotThrow(() -> BurgerParser.parse(input));
     }
 
     @Test
     public void parse_missingPattyType_throwsException() {
-        String input = "expiryDate/2026-03-25 isSpicy/true pattyType/";
+        String input = "isSpicy/true pattyType/";
         DukeException e = assertThrows(DukeException.class,
                 () -> BurgerParser.parse(input));
         assertEquals("Missing pattyType for burger.", e.getMessage());
@@ -25,7 +25,7 @@ public class BurgerParserTest {
 
     @Test
     public void parse_invalidSpicyValue_throwsException() {
-        String input = "expiryDate/2026-03-25 isSpicy/maybe pattyType/Chicken";
+        String input = "isSpicy/maybe pattyType/Chicken";
         DukeException e = assertThrows(DukeException.class,
                 () -> BurgerParser.parse(input));
         assertEquals("isSpicy must be true or false", e.getMessage());

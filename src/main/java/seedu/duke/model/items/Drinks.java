@@ -5,8 +5,6 @@ import seedu.duke.model.Item;
 public class Drinks extends Item {
     private String brand;
     private String flavour;
-    private int volume;
-
 
     public Drinks(String name, int quantity, String binLocation, String expiryDate,
                   String brand, String flavour) {
@@ -31,6 +29,12 @@ public class Drinks extends Item {
         this.flavour = flavour;
     }
 
+    @Override
+    public String toStorageString(String categoryName) {
+        return super.toStorageString(categoryName)
+                + " brand/" + brand
+                + " flavour/" + flavour;
+    }
 
     @Override
     public String toString() {

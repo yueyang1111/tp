@@ -6,17 +6,20 @@ import seedu.duke.logging.LoggerConfig;
 import seedu.duke.model.Category;
 import seedu.duke.model.Inventory;
 import seedu.duke.parser.Parser;
+import seedu.duke.storage.Storage;
 import seedu.duke.ui.UI;
 
 public class Duke {
     private final Inventory inventory;
     private final UI ui;
     private final Parser parser;
+    private final Storage storage;
 
-    public Duke() {
+    public Duke() throws DukeException {
         ui = new UI();
         inventory = new Inventory();
         parser = new Parser(ui);
+        storage = new Storage("./data/inventory.txt");
 
         String[] categoryNames = {
             "fruits",
@@ -37,6 +40,8 @@ public class Duke {
         for (String categoryName : categoryNames) {
             inventory.addCategories(new Category(categoryName));
         }
+
+        storage.load(inventory, ui);
     }
 
     public static void main(String[] args) throws DukeException {
@@ -45,7 +50,7 @@ public class Duke {
         new Duke().run();
     }
 
-    public void run() throws DukeException {
+    public void run() {
         ui.showWelcome();
 
         String input;
@@ -62,6 +67,7 @@ public class Duke {
                 }
 
                 command.execute(inventory, ui);
+                storage.save(inventory);
             } catch (DukeException e) {
                 ui.showError(e.getMessage());
             }

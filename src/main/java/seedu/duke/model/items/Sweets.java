@@ -31,6 +31,13 @@ public class Sweets extends Item {
     }
 
     @Override
+    public String toStorageString(String categoryName) {
+        return super.toStorageString(categoryName)
+                + " brand/" + brand
+                + " sweetnessLevel/" + sweetnessLevel;
+    }
+
+    @Override
     public String toString() {
         return "[Sweets] " + super.toString()
                 + ", Brand: " + brand

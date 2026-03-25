@@ -174,6 +174,13 @@ public class UI {
         showDivider();
     }
 
+    public void showSkippedLine(String line, String reason) {
+        showDivider();
+        System.out.println("Skip corrupted line: " + line);
+        System.out.println("Reason: " + reason);
+        showDivider();
+    }
+
     public void showHelp() {
         showDivider();
         System.out.println("Available commands:");

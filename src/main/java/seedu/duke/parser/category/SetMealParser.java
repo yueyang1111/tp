@@ -1,7 +1,6 @@
 package seedu.duke.parser.category;
 
 import seedu.duke.exception.DukeException;
-import seedu.duke.parser.DateParser;
 import seedu.duke.parser.FieldParser;
 
 import java.util.logging.Level;
@@ -10,12 +9,10 @@ import java.util.logging.Logger;
 public class SetMealParser {
     private static final Logger logger = Logger.getLogger(SetMealParser.class.getName());
 
-    public final String expiryDate;
     public final String mealType;
     public final String foodSize;
 
-    public SetMealParser(String expiryDate, String mealType, String foodSize) {
-        this.expiryDate = expiryDate;
+    public SetMealParser(String mealType, String foodSize) {
         this.mealType = mealType;
         this.foodSize = foodSize;
     }
@@ -23,13 +20,6 @@ public class SetMealParser {
     public static SetMealParser parse(String input) throws DukeException {
         assert input != null : "SetMealParser received null input.";
         logger.log(Level.INFO, "Processing SetMeal special fields.");
-
-        String expiryDate = FieldParser.extractField(input, "expiryDate/", "mealType/");
-        if (expiryDate == null || expiryDate.trim().isEmpty()) {
-            logger.log(Level.WARNING, "Missing expiry date for set meal.");
-            throw new DukeException("Missing expiry date for set meal.");
-        }
-        DateParser.validateDate(expiryDate);
 
         String mealType = FieldParser.extractField(input, "mealType/", "foodSize/");
         if (mealType == null || mealType.trim().isEmpty()) {
@@ -44,6 +34,6 @@ public class SetMealParser {
         }
 
         logger.log(Level.INFO, "End of processing set meal.");
-        return new SetMealParser(expiryDate, mealType, foodSize);
+        return new SetMealParser(mealType, foodSize);
     }
 }

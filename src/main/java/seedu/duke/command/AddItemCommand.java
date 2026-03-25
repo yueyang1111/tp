@@ -23,7 +23,6 @@ public class AddItemCommand extends Command {
     @Override
     public void execute(Inventory inventory, UI ui) throws DukeException {
         assert inventory != null : "AddItemCommand received null inventory.";
-        assert ui != null : "AddItemCommand received null UI.";
         Category category = inventory.findCategoryByName(categoryName);
 
         if (category == null) {
@@ -39,7 +38,9 @@ public class AddItemCommand extends Command {
         category.addItem(item);
         logger.log(Level.INFO, "Added item '" + item.getName()
                 + "' to category '" + category.getName() + "'.");
-        ui.showItemAdded(item.getName(), item.getQuantity(),
-                category.getName(), item.getBinLocation());
+        if (ui != null) {
+            ui.showItemAdded(item.getName(), item.getQuantity(),
+                    category.getName(), item.getBinLocation());
+        }
     }
 }

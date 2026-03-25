@@ -12,7 +12,7 @@ public class AddItemCommandParserTest {
     @Test
     public void handleFruit_validInput_success() {
         AddItemCommandParser parser = new AddItemCommandParser();
-        String input = "item/apple category/fruits bin/A-10 qty/3 "
+        String input = "category/fruits item/apple bin/A-10 qty/3 "
                 + "expiryDate/2026-03-20 size/big isRipe/true";
 
         assertDoesNotThrow(() -> parser.handleFruit(input));
@@ -43,7 +43,7 @@ public class AddItemCommandParserTest {
     @Test
     public void handleFruit_missingBinField_throwsException() {
         AddItemCommandParser parser = new AddItemCommandParser();
-        String input = "item/apple category/fruits qty/3 "
+        String input = "category/fruits item/apple qty/3 "
                 + "expiryDate/2026-03-20 size/big isRipe/true";
 
         DukeException e = assertThrows(DukeException.class,
@@ -54,7 +54,7 @@ public class AddItemCommandParserTest {
     @Test
     public void handleFruit_missingQuantityField_throwsException() {
         AddItemCommandParser parser = new AddItemCommandParser();
-        String input = "item/apple category/fruits bin/A-10 "
+        String input = "category/fruits item/apple bin/A-10 "
                 + "expiryDate/2026-03-20 size/big isRipe/true";
 
         DukeException e = assertThrows(DukeException.class,
@@ -65,7 +65,7 @@ public class AddItemCommandParserTest {
     @Test
     public void handleFruit_missingExpiryDateField_throwsException() {
         AddItemCommandParser parser = new AddItemCommandParser();
-        String input = "item/apple category/fruits bin/A-10 qty/3 "
+        String input = "category/fruits item/apple bin/A-10 qty/3 "
                 + "size/big isRipe/true";
 
         DukeException e = assertThrows(DukeException.class,
@@ -76,7 +76,7 @@ public class AddItemCommandParserTest {
     @Test
     public void handleFruit_missingSizeField_throwsException() {
         AddItemCommandParser parser = new AddItemCommandParser();
-        String input = "item/apple category/fruits bin/A-10 qty/3 "
+        String input = "category/fruits item/apple bin/A-10 qty/3 "
                 + "expiryDate/2026-03-20 isRipe/true";
 
         DukeException e = assertThrows(DukeException.class,
@@ -87,7 +87,7 @@ public class AddItemCommandParserTest {
     @Test
     public void handleFruit_missingRipenessField_throwsException() {
         AddItemCommandParser parser = new AddItemCommandParser();
-        String input = "item/apple category/fruits bin/A-10 qty/3 "
+        String input = "category/fruits item/apple bin/A-10 qty/3 "
                 + "expiryDate/2026-03-20 size/big";
 
         DukeException e = assertThrows(DukeException.class,
@@ -98,7 +98,7 @@ public class AddItemCommandParserTest {
     @Test
     public void handleFruit_wrongFieldOrder_throwsException() {
         AddItemCommandParser parser = new AddItemCommandParser();
-        String input = "item/apple category/fruits bin/A-10 qty/3 "
+        String input = "category/fruits item/apple bin/A-10 qty/3 "
                 + "expiryDate/2026-03-20 isRipe/true size/big";
 
         DukeException e = assertThrows(DukeException.class,
@@ -109,7 +109,7 @@ public class AddItemCommandParserTest {
     @Test
     public void handleFruit_nonIntegerQuantity_throwsException() {
         AddItemCommandParser parser = new AddItemCommandParser();
-        String input = "item/apple category/fruits bin/A-10 qty/hi "
+        String input = "category/fruits item/apple bin/A-10 qty/hi "
                 + "expiryDate/2026-03-20 size/big isRipe/true";
 
         DukeException e = assertThrows(DukeException.class,
@@ -120,7 +120,7 @@ public class AddItemCommandParserTest {
     @Test
     public void handleFruit_nonPositiveQuantity_throwsException() {
         AddItemCommandParser parser = new AddItemCommandParser();
-        String input = "item/apple category/fruits bin/A-10 qty/-3 "
+        String input = "category/fruits item/apple bin/A-10 qty/-3 "
                 + "expiryDate/2026-03-20 size/big isRipe/true";
 
         DukeException e = assertThrows(DukeException.class,
@@ -131,8 +131,8 @@ public class AddItemCommandParserTest {
     @Test
     public void handleToiletries_validInput_success() {
         AddItemCommandParser parser = new AddItemCommandParser();
-        String input = "item/shampoo category/toiletries bin/E-02 qty/15 "
-                + "brand/Dove isLiquid/true expiryDate/2026-03-20";
+        String input = "category/toiletries item/shampoo bin/E-02 qty/15 "
+                + "expiryDate/2026-03-20 brand/Dove isLiquid/true";
 
         assertDoesNotThrow(() -> parser.handleToiletries(input));
     }
@@ -140,7 +140,7 @@ public class AddItemCommandParserTest {
     @Test
     public void handleToiletries_missingExpiryDateField_throwsException() {
         AddItemCommandParser parser = new AddItemCommandParser();
-        String input = "item/shampoo category/toiletries bin/E-02 qty/15 "
+        String input = "category/toiletries item/shampoo bin/E-02 qty/15 "
                 + "brand/Dove isLiquid/true";
 
         DukeException e = assertThrows(DukeException.class,

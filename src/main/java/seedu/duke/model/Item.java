@@ -47,6 +47,14 @@ public class Item {
         return expiryDate;
     }
 
+    public String toStorageString(String categoryName) {
+        return "category/" + categoryName
+                + " item/" + name
+                + " bin/" + binLocation
+                + " qty/" + quantity
+                + " expiryDate/" + expiryDate;
+    }
+
     @Override
     public String toString() {
         return String.format(

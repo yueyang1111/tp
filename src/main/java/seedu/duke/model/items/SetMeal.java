@@ -30,6 +30,13 @@ public class SetMeal extends Item {
     }
 
     @Override
+    public String toStorageString(String categoryName) {
+        return super.toStorageString(categoryName)
+                + " mealType/" + mealType
+                + " foodSize/" + foodSize;
+    }
+
+    @Override
     public String toString() {
         return "[SetMeal] " + super.toString()
                 + ", Meal Type: " + mealType

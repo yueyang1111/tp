@@ -1,7 +1,6 @@
 package seedu.duke.parser.category;
 
 import seedu.duke.exception.DukeException;
-import seedu.duke.parser.DateParser;
 import seedu.duke.parser.FieldParser;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,12 +8,10 @@ import java.util.logging.Logger;
 public class BurgerParser {
     private static final Logger logger = Logger.getLogger(BurgerParser.class.getName());
 
-    public final String expiryDate;
     public final boolean isSpicy;
     public final String pattyType;
 
-    public BurgerParser(String expiryDate, boolean isSpicy, String pattyType) {
-        this.expiryDate = expiryDate;
+    public BurgerParser(boolean isSpicy, String pattyType) {
         this.isSpicy = isSpicy;
         this.pattyType = pattyType;
     }
@@ -22,13 +19,6 @@ public class BurgerParser {
     public static BurgerParser parse(String input) throws DukeException {
         assert input != null : "BurgerParser received null input.";
         logger.log(Level.INFO, "Processing Burger special fields.");
-
-        String expiryDate = FieldParser.extractField(input, "expiryDate/", "isSpicy/");
-        if (expiryDate == null || expiryDate.trim().isEmpty()) {
-            logger.log(Level.WARNING, "Missing expiry date for burger.");
-            throw new DukeException("Missing expiry date for burger.");
-        }
-        DateParser.validateDate(expiryDate);
 
         String spicyString = FieldParser.extractField(input, "isSpicy/", "pattyType/");
         if (spicyString == null || spicyString.trim().isEmpty()) {
@@ -49,6 +39,6 @@ public class BurgerParser {
         }
 
         logger.log(Level.INFO, "End of processing burger.");
-        return new BurgerParser(expiryDate, isSpicy, pattyType);
+        return new BurgerParser(isSpicy, pattyType);
     }
 }

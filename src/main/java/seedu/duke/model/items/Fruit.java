@@ -30,6 +30,13 @@ public class Fruit extends Item {
     }
 
     @Override
+    public String toStorageString(String categoryName) {
+        return super.toStorageString(categoryName)
+                + " size/" + size
+                + " isRipe/" + isRipe;
+    }
+
+    @Override
     public String toString() {
         return "[Fruit] " + super.toString()
                 + ", Size: " + size

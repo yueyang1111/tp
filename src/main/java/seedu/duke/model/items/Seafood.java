@@ -30,6 +30,13 @@ public class Seafood extends Item {
     }
 
     @Override
+    public String toStorageString(String categoryName) {
+        return super.toStorageString(categoryName)
+                + " seafoodType/" + seafoodType
+                + " origin/" + origin;
+    }
+
+    @Override
     public String toString() {
         return "[Seafood] " + super.toString()
                 + ", Seafood Type: " + seafoodType

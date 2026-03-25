@@ -30,6 +30,13 @@ public class Meat extends Item {
     }
 
     @Override
+    public String toStorageString(String categoryName) {
+        return super.toStorageString(categoryName)
+                + " meatType/" + meatType
+                + " origin/" + origin;
+    }
+
+    @Override
     public String toString() {
         return "[Meat] " + super.toString()
                 + ", Meat Type: " + meatType
