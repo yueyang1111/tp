@@ -202,6 +202,156 @@ If this feature is extended in future versions, the following improvements could
 - Add category filters so users can combine expiry search with category search.
 - Introduce an internal index if inventory size grows enough to justify optimisation.
 
+### Storage feature
+
+This product includes a storage component that is responsible for persisting inventory data
+between application runs.
+
+This component is necessary because the inventory should not be lost when the program exits, as
+users expect their items to remain available the next time they launch the application.
+
+The storage feature solves this by writing the current inventory to a file and reconstructing it
+when the application starts again.
+
+#### Implementation
+
+The storage mechanism is facilitated by `Storage`, which is responsible for saving the current `Inventory`
+to file and loading it back into memory.
+
+It supports two main operations:
+
+- `save(Inventory inventory)` which writes the current inventory to the storage file.
+- `load(Inventory inventory, UI ui)` which reads the storage file and reconstructs the inventory state.
+
+The save format is text-based. Each item is stored on a separate line together with its common fields and any
+additional fields required by its specific category. This allows all supported item types to be saved in a 
+single format while preserving the extra data needed for each subtype.
+
+#### Saving execution flow
+
+When the application saves, `Storage` performs the following sequence:
+1. Open the data file for writing.
+2. Retrieve all categories from the inventory. 
+3. Iterate through each `Category`.
+4. Within each category, iterate through each `Item`.
+5. Convert each item into a formatted text line.
+6. Write the formatted line into the file.
+7. Repeat until all items have been written.
+8. Close the file.
+
+The formatting logic is delegated to the `Item` class via polymorphism, instead of being centralized 
+in the `Storage` class.
+
+A simplified example of the base formatting logic is:
+```java
+public String toStorageString(String categoryName) {
+    return "category/" + categoryName
+            + " item/" + name
+            + " bin/" + binLocation
+            + " qty/" + quantity
+            + " expiryDate/" + expiryDate;
+}
+```
+
+Subclasses extend this behaviour by appending their own fields. For example, the `Fruit` class 
+adds additional attributes:
+```java
+public String toStorageString(String categoryName) {
+    return super.toStorageString(categoryName)
+            + " size/" + size
+            + " isRipe/" + isRipe;
+}
+```
+
+This design ensures that each subclass is responsible for serializing its own data,
+while the `Storage` class remains independent of specific item types.
+
+#### Loading execution flow
+
+When the application loads data from file, `Storage` performs the following sequence:
+1. Ensure the storage file exists. If not, it is created automatically.
+2. Read the file line by line. 
+3. Extract the category from the line.
+4. Use the category to determine the appropriate parsing method.
+5. Convert the line into a `Command` using `AddItemCommandParser`.
+6. Execute the command to reconstruct the item in the inventory.
+7. Skip malformed lines where appropriate.
+8. Continue until the entire file has been processed.
+
+This design allows the application to reconstruct the same logical inventory state from the 
+saved text data.
+
+The loading process depends on the file format remaining consistent with the save format.
+Since both directions are controlled by `Storage`, the implementation can ensure that the data
+written is also the data that can be read back correctly.
+
+This approach reuses existing parsing logic, ensuring consistency between user input handling and 
+stored data reconstruction.
+
+#### Error handling and validation
+
+The storage component also handles cases where the save file is missing, or contains invalid data.
+
+If the file does not exist, the application can start with an empty inventory instead of
+crashing. This is because the absence of a save file may simply mean that the program is being
+run for the first time.
+
+If a line is malformed, the exception is caught and the line is skipped. A warning is 
+logged and the user is informed via the UI, detailing the line that was skipped and the 
+reason for skipping. 
+
+#### Why the storage component is implemented this way
+
+The simple text-based format is chosen instead of a more complex format such as JSON or database
+for several reasons.
+
+First, this keeps the implementation lightweight. The project does not require any external 
+libraries or database setup, which makes the application easier to develop and test.
+
+Second, the saved data is readable which is useful during debugging because we can inspect the 
+contents of the file directly and verify whether items are being written correctly.
+
+Third, the amount of data in the application is relatively small. Hence, a plain text file is 
+sufficient and avoids unnecessary complexity.
+
+#### Alternatives considered
+
+Alternative 1: Store each category in a separate file.
+
+This could improve file organization, especially if categories become large. It was rejected because
+it would make file management more complicated and require the application to coordinate multiple 
+save files instead of just one.
+
+Alternative 2: Use JSON format.
+
+This would make the file structure more standardized. However, it was rejected because it would
+introduce additional complexity which is unnecessary for our project scope.
+
+#### Current limitations
+
+The current storage implementation has several limitations. 
+
+1. The storage system relies on a fixed text format with prefixes such as `category/`, `item/`.
+If the format is modified or corrupted, the parser may fail to reconstruct the item correctly.
+2. During loading, each stored line is converted into a Command using `AddItemCommandParser` and executed.
+While this ensures consistency with user input handling, it introduces coupling between storage logic and 
+command parsing logic. Any changes in parsing behaviour may affect the loading process.
+3. Malformed or corrupted lines are skipped during loading. While this prevents crashes, it may result
+in data loss and incomplete reconstruction of the inventory.
+
+For the current version of the application, these limitations are acceptable, but they may become
+relevant if the system grows more complex.
+
+#### Possible future improvements
+
+The following enhancements can be considered to improve the storage component.
+
+1. Introduce structured storage format, such as JSON. This will help to improve robustness and 
+make format easier to extend.
+2. The system could directly construct `Item` objects instead of converting stored lines into 
+commands. This would reduce coupling and improve clarity of storage logic.
+3. Instead of skipping malformed lines completely, the system could attempt partial recovery and
+provide more detailed diagnostics to the user. This would reduce potential data loss.
 
 ## Product scope
 ### Target user profile
@@ -242,3 +392,20 @@ If this feature is extended in future versions, the following improvements could
 7. Verify that the application shows the invalid date format error.
 8. Run `find expiryDate/`.
 9. Verify that the application shows the missing expiry date error.
+
+### Testing storage
+
+1. Add several items to the inventory.
+2. Exit the application using the `bye` command.
+3. Reopen the application.
+4. Run `list`.
+5. Verify that all items are restored with their correct category specific fields.
+6. Exit the application using the `bye` command.
+7. Modify the storage file so that a line is missing the `category/` field.
+8. Reopen the application.
+9. Verify that the application skips the malformed line and displays the appropriate error message.
+10. Run `list`.
+11. Verify that the remaining valid items are loaded correctly.
+12. Exit the application using the `bye` command.
+13. Delete the storage file before launching the application.
+14. Verify that the application recreates the file automatically and starts without crashing.
