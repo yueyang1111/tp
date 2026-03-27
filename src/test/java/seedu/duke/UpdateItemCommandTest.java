@@ -40,7 +40,7 @@ public class UpdateItemCommandTest {
         updates.put("expiryDate", "2026-04-01");
 
         UpdateItemCommand command = new UpdateItemCommand(
-                "fruits", "apple", updates);
+                "fruits", 1, updates);
 
         command.execute(inventory, new UI());
 
@@ -57,7 +57,7 @@ public class UpdateItemCommandTest {
         updates.put("isRipe", "false");
 
         UpdateItemCommand command = new UpdateItemCommand(
-                "fruits", "apple", updates);
+                "fruits", 1, updates);
 
         assertThrows(DukeException.class,
                 () -> command.execute(inventory, new UI()));
@@ -69,7 +69,7 @@ public class UpdateItemCommandTest {
         updates.put("qty", "0");
 
         UpdateItemCommand command = new UpdateItemCommand(
-                "fruits", "apple", updates);
+                "fruits", 1, updates);
 
         assertThrows(DukeException.class,
                 () -> command.execute(inventory, new UI()));

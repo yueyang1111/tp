@@ -19,7 +19,7 @@ public class UpdateCommandParser {
         assert input != null : "UpdateCommandParser received null input.";
 
         if (input.isEmpty()) {
-            ui.showInvalidInput("Use: update category/CATEGORY item/ITEM "
+            ui.showInvalidInput("Use: update category/CATEGORY index/INDEX "
                     + "[newItem/NAME] [bin/BIN] [qty/QTY] [expiryDate/DATE] ...");
             return null;
         }
@@ -43,9 +43,20 @@ public class UpdateCommandParser {
             throw new DukeException("Missing category.");
         }
 
-        String itemName = fields.remove("item");
-        if (itemName == null || itemName.trim().isEmpty()) {
-            throw new DukeException("Missing item name.");
+        String itemIndexString = fields.remove("index");
+        if (itemIndexString == null || itemIndexString.trim().isEmpty()) {
+            throw new DukeException("Missing item index.");
+        }
+
+        int itemIndex;
+        try {
+            itemIndex = Integer.parseInt(itemIndexString.trim());
+        } catch (NumberFormatException e) {
+            throw new DukeException("Item index must be an integer.");
+        }
+
+        if (itemIndex <= 0) {
+            throw new DukeException("Item index must be a positive integer.");
         }
 
         if (fields.isEmpty()) {
@@ -53,6 +64,6 @@ public class UpdateCommandParser {
         }
 
         return new UpdateItemCommand(categoryName.trim(),
-                itemName.trim(), fields);
+                itemIndex, fields);
     }
 }

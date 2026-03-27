@@ -15,13 +15,13 @@ public class UpdateItemCommand extends Command {
     private static final Logger logger = Logger.getLogger(UpdateItemCommand.class.getName());
 
     private final String categoryName;
-    private final String itemName;
+    private final int itemIndex;
     private final Map<String, String> updates;
 
-    public UpdateItemCommand(String categoryName, String itemName,
+    public UpdateItemCommand(String categoryName, int itemIndex,
                              Map<String, String> updates) {
         this.categoryName = categoryName;
-        this.itemName = itemName;
+        this.itemIndex = itemIndex;
         this.updates = updates;
     }
 
@@ -36,13 +36,12 @@ public class UpdateItemCommand extends Command {
             throw new DukeException("Category not found: " + categoryName);
         }
 
-        Item item = category.findItemByName(itemName);
-        if (item == null) {
-            logger.log(Level.WARNING, "Item not found while updating item: " + itemName);
-            ui.showItemNotFound(itemName);
-            return;
+        if (itemIndex < 1 || itemIndex > category.getItemCount()) {
+            logger.log(Level.WARNING, "Invalid item index while updating item: " + itemIndex);
+            throw new DukeException("Invalid item index: " + itemIndex);
         }
 
+        Item item = category.getItem(itemIndex - 1);
         String originalName = item.getName();
         applyUpdates(item);
         logger.log(Level.INFO, "Updated item '" + originalName

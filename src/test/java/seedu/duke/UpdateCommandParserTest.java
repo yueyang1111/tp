@@ -15,7 +15,7 @@ public class UpdateCommandParserTest {
         UpdateCommandParser parser = new UpdateCommandParser(new UI());
 
         assertInstanceOf(UpdateItemCommand.class, parser.parse(
-                "category/vegetables item/spinach qty/25 isLeafy/false"));
+                "category/vegetables index/1 qty/25"));
     }
 
     @Test
@@ -23,7 +23,7 @@ public class UpdateCommandParserTest {
         UpdateCommandParser parser = new UpdateCommandParser(new UI());
 
         assertThrows(DukeException.class,
-                () -> parser.parse("item/spinach qty/25"));
+                () -> parser.parse("index/1 qty/25"));
     }
 
     @Test
@@ -31,6 +31,6 @@ public class UpdateCommandParserTest {
         UpdateCommandParser parser = new UpdateCommandParser(new UI());
 
         assertThrows(DukeException.class,
-                () -> parser.parse("category/vegetables item/spinach"));
+                () -> parser.parse("category/vegetables index/1"));
     }
 }

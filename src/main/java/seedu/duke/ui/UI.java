@@ -331,13 +331,13 @@ public class UI {
                 + "(prompts for confirmation)");
         System.out.println("    e.g. delete category/fruits");
         System.out.println();
-        System.out.println("  update category/CATEGORY item/ITEM ...");
+        System.out.println("  update category/CATEGORY index/INDEX ...");
         System.out.println("    - Updates item name, bin, quantity, "
                 + "or expiry date");
         System.out.println("    e.g. update category/fruits "
-                + "item/apple newItem/green_apple bin/A-11");
+                + "index/1 newItem/green_apple bin/A-11");
         System.out.println("    e.g. update category/vegetables "
-                + "item/spinach qty/25 expiryDate/2026-12-01");
+                + "index/2 qty/25 expiryDate/2026-12-01");
         System.out.println();
         System.out.println("  list");
         System.out.println("    - Lists all categories "
