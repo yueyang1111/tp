@@ -35,30 +35,39 @@ public class CommonFieldParser {
 
         String quantityString = FieldParser.extractField(
                 input, "qty/", "expiryDate/");
+        int quantity = parseQuantity(quantityString);
+
+        String expiryDate = FieldParser.extractField(
+                input, "expiryDate/", fieldAfterExpiry);
+        validateExpiryDate(expiryDate);
+
+        return new CommonFieldParser(itemName, categoryName, bin, quantity, expiryDate);
+    }
+
+    public static int parseQuantity(String quantityString) throws DukeException {
         if (quantityString == null
                 || quantityString.trim().isEmpty()) {
             throw new DukeException("Missing quantity.");
         }
+
         int quantity;
         try {
-            quantity = Integer.parseInt(quantityString);
+            quantity = Integer.parseInt(quantityString.trim());
         } catch (NumberFormatException e) {
-            throw new DukeException(
-                    "Quantity must be an integer.");
+            throw new DukeException("Quantity must be an integer.");
         }
 
         if (quantity <= 0) {
-            throw new DukeException(
-                    "Quantity must be a positive integer.");
+            throw new DukeException("Quantity must be a positive integer.");
         }
 
-        String expiryDate = FieldParser.extractField(
-                input, "expiryDate/", fieldAfterExpiry);
+        return quantity;
+    }
+
+    public static void validateExpiryDate(String expiryDate) throws DukeException {
         if (expiryDate == null || expiryDate.trim().isEmpty()) {
             throw new DukeException("Missing expiry date.");
         }
         DateParser.validateDate(expiryDate);
-
-        return new CommonFieldParser(itemName, categoryName, bin, quantity, expiryDate);
     }
 }

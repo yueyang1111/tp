@@ -34,6 +34,8 @@ public class Parser {
             return new AddCommandParser(ui).parse(arguments);
         case "delete":
             return new DeleteCommandParser(ui).parse(arguments);
+        case "update":
+            return new UpdateCommandParser(ui).parse(arguments);
         case "find":
             return new FindItemParser(ui).parse(arguments);
         case "list":
