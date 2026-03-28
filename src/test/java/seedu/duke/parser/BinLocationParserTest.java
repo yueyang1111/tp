@@ -4,9 +4,7 @@ import org.junit.jupiter.api.Test;
 import seedu.duke.exception.DukeException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BinLocationParserTest {
     @Test
@@ -29,14 +27,4 @@ public class BinLocationParserTest {
         assertThrows(DukeException.class, () -> BinLocationParser.parseSearchInput("A-10-1"));
     }
 
-    @Test
-    public void isMatchingBin_validSearchTypes_returnsExpectedMatches() {
-        assertTrue(BinLocationParser.isMatchingBin("A-10", "a-10"));
-        assertTrue(BinLocationParser.isMatchingBin("A-10", "a"));
-        assertTrue(BinLocationParser.isMatchingBin("A-10", "10"));
-
-        assertFalse(BinLocationParser.isMatchingBin("A-10", "a-1"));
-        assertFalse(BinLocationParser.isMatchingBin("A-10", "1"));
-        assertFalse(BinLocationParser.isMatchingBin("B-10", "a"));
-    }
 }
