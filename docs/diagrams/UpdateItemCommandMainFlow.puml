@@ -1,0 +1,103 @@
+@startuml
+title Sequence Diagram for UpdateItemCommand (Main Control Flow Only)
+
+autonumber
+hide footbox
+
+actor User
+participant ":UI" as UI
+participant ":Duke" as Duke
+participant ":Parser" as Parser
+participant ":UpdateCommandParser" as UpdateCommandParser
+participant ":UpdateItemCommand" as UpdateItemCommand
+participant ":Inventory" as Inventory
+participant ":Category" as Category
+participant ":Item" as Item
+participant ":CommonFieldParser" as CommonFieldParser
+
+User -> UI: enter update command
+activate UI
+UI -> Duke: input
+activate Duke
+Duke -> Parser: parse(input)
+activate Parser
+
+Parser -> UpdateCommandParser: parse(arguments)
+activate UpdateCommandParser
+create UpdateItemCommand
+UpdateCommandParser -> UpdateItemCommand: UpdateItemCommand(categoryName, itemIndex, fields)
+activate UpdateItemCommand
+UpdateItemCommand --> UpdateCommandParser: command
+UpdateCommandParser --> Parser: command
+deactivate UpdateCommandParser
+Parser --> Duke: command
+deactivate Parser
+
+Duke -> UpdateItemCommand: execute(inventory, ui)
+activate UpdateItemCommand
+UpdateItemCommand -> Inventory: findCategoryByName(categoryName)
+activate Inventory
+loop for each category in inventory
+    Inventory -> Category: getName()
+    activate Category
+    Category --> Inventory: name
+    deactivate Category
+end
+Inventory --> UpdateItemCommand: matchingCategory
+deactivate Inventory
+
+UpdateItemCommand -> Category: getItemCount(), getItem(itemIndex - 1), getName()
+activate Category
+Category --> UpdateItemCommand: itemCount, item, categoryName
+deactivate Category
+
+UpdateItemCommand -> Item: getName()
+activate Item
+Item --> UpdateItemCommand: originalName
+deactivate Item
+
+UpdateItemCommand -> UpdateItemCommand: applyUpdates(item)
+activate UpdateItemCommand
+loop for each update entry
+    alt field == newItem or bin
+        UpdateItemCommand -> Item: setName(...) / setBinLocation(...)
+        activate Item
+        Item --> UpdateItemCommand
+        deactivate Item
+    else field == qty
+        UpdateItemCommand -> CommonFieldParser: parseQuantity(value)
+        activate CommonFieldParser
+        CommonFieldParser --> UpdateItemCommand: quantity
+        deactivate CommonFieldParser
+        UpdateItemCommand -> Item: setQuantity(quantity)
+        activate Item
+        Item --> UpdateItemCommand
+        deactivate Item
+    else field == expiryDate
+        UpdateItemCommand -> CommonFieldParser: validateExpiryDate(value)
+        activate CommonFieldParser
+        CommonFieldParser --> UpdateItemCommand
+        deactivate CommonFieldParser
+        UpdateItemCommand -> Item: setExpiryDate(value)
+        activate Item
+        Item --> UpdateItemCommand
+        deactivate Item
+    end
+end
+UpdateItemCommand --> UpdateItemCommand
+deactivate UpdateItemCommand
+
+UpdateItemCommand -> Item: getName()
+activate Item
+Item --> UpdateItemCommand: updatedName
+deactivate Item
+
+UpdateItemCommand -> UI: showItemUpdated(originalName, updatedName, categoryName)
+activate UI
+UI --> User: display confirmation
+deactivate UI
+
+deactivate UpdateItemCommand
+deactivate Duke
+deactivate UI
+@enduml
