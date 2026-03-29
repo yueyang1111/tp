@@ -25,12 +25,9 @@ public class DeleteItemCommandTest {
         fruitsCategory = new Category("fruits");
         vegetablesCategory = new Category("vegetables");
 
-        fruitsCategory.addItem(
-                new Item("apple", 40, "A-10", null));
-        fruitsCategory.addItem(
-                new Item("banana", 30, "B-10", null));
-        vegetablesCategory.addItem(
-                new Item("carrot", 20, "C-5", null));
+        fruitsCategory.addItem(new Item("apple", 40, "A-10", null));
+        fruitsCategory.addItem(new Item("banana", 30, "B-10", null));
+        vegetablesCategory.addItem(new Item("carrot", 20, "C-5", null));
 
         inventory.addCategory(fruitsCategory);
         inventory.addCategory(vegetablesCategory);
@@ -38,8 +35,7 @@ public class DeleteItemCommandTest {
 
     @Test
     public void execute_validIndex_itemDeleted() {
-        DeleteItemCommand command =
-                new DeleteItemCommand("fruits", 1);
+        DeleteItemCommand command = new DeleteItemCommand("fruits", 1);
         TestUI ui = new TestUI();
 
         command.execute(inventory, ui);
@@ -52,8 +48,7 @@ public class DeleteItemCommandTest {
 
     @Test
     public void execute_lastIndex_itemDeleted() {
-        DeleteItemCommand command =
-                new DeleteItemCommand("fruits", 2);
+        DeleteItemCommand command = new DeleteItemCommand("fruits", 2);
         TestUI ui = new TestUI();
 
         command.execute(inventory, ui);
@@ -65,8 +60,7 @@ public class DeleteItemCommandTest {
 
     @Test
     public void execute_invalidIndexTooHigh_showsError() {
-        DeleteItemCommand command =
-                new DeleteItemCommand("fruits", 5);
+        DeleteItemCommand command = new DeleteItemCommand("fruits", 5);
         TestUI ui = new TestUI();
 
         command.execute(inventory, ui);
@@ -77,8 +71,7 @@ public class DeleteItemCommandTest {
 
     @Test
     public void execute_invalidIndexZero_showsError() {
-        DeleteItemCommand command =
-                new DeleteItemCommand("fruits", 0);
+        DeleteItemCommand command = new DeleteItemCommand("fruits", 0);
         TestUI ui = new TestUI();
 
         command.execute(inventory, ui);
@@ -89,8 +82,7 @@ public class DeleteItemCommandTest {
 
     @Test
     public void execute_categoryNotFound_showsCategoryNotFound() {
-        DeleteItemCommand command =
-                new DeleteItemCommand("dairy", 1);
+        DeleteItemCommand command = new DeleteItemCommand("dairy", 1);
         TestUI ui = new TestUI();
 
         command.execute(inventory, ui);
@@ -102,18 +94,15 @@ public class DeleteItemCommandTest {
     public void execute_deleteAllOneByOne_categoryEmpty() {
         TestUI ui = new TestUI();
 
-        new DeleteItemCommand("fruits", 1)
-                .execute(inventory, ui);
-        new DeleteItemCommand("fruits", 1)
-                .execute(inventory, ui);
+        new DeleteItemCommand("fruits", 1).execute(inventory, ui);
+        new DeleteItemCommand("fruits", 1).execute(inventory, ui);
 
         assertEquals(0, fruitsCategory.getItemCount());
     }
 
     @Test
     public void execute_deleteFromSecondCategory_correctCategory() {
-        DeleteItemCommand command =
-                new DeleteItemCommand("vegetables", 1);
+        DeleteItemCommand command = new DeleteItemCommand("vegetables", 1);
         TestUI ui = new TestUI();
 
         command.execute(inventory, ui);
@@ -130,8 +119,7 @@ public class DeleteItemCommandTest {
         private final List<String> errors = new ArrayList<>();
 
         @Override
-        public void showItemDeleted(String itemName,
-                                    String categoryName) {
+        public void showItemDeleted(String itemName, String categoryName) {
             this.deletedItemName = itemName;
             this.deletedFromCategory = categoryName;
         }
