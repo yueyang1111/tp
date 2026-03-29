@@ -202,6 +202,329 @@ If this feature is extended in future versions, the following improvements could
 - Add category filters so users can combine expiry search with category search.
 - Introduce an internal index if inventory size grows enough to justify optimisation.
 
+### Find Item By Category Feature
+
+Another search feature in the product is the ability to find items by category using the command
+`find category/CATEGORY`.
+
+This feature is useful because the inventory is organised around categories, and users often want to
+review all items stored within one category without scanning the entire inventory. In practice, this
+supports tasks such as checking what is currently stored under `fruits`, confirming that a category is
+empty, or verifying whether a category exists at all.
+
+For example, if the user enters `find category/fruits`, the system locates the `fruits` category and
+shows all items currently stored in it.
+
+#### High-level design
+
+At a high level, this feature reuses the existing command pipeline of the application. The flow is as
+follows:
+
+1. The user enters a `find` command.
+2. `FindItemParser` inspects the prefix before the `/`.
+3. If the prefix is `category`, the parser creates a `FindItemByCategoryCommand`.
+4. The command is executed with access to the current `Inventory` and `UI`.
+5. The command attempts to locate the matching category and displays either the items or an
+   appropriate message.
+
+The main interaction for this flow is illustrated in [FindItemByCategoryCommandMainFlow.puml](FindItemByCategoryCommandMainFlow.puml).
+
+This design was chosen because it follows the same separation of concerns already used throughout the
+project:
+
+- Parsers interpret user input.
+- Command classes implement the application behaviour.
+- Model classes store inventory data.
+- `UI` is responsible for displaying the result to the user.
+
+As a result, the category-search feature integrates cleanly into the existing architecture instead of
+requiring a separate retrieval subsystem.
+
+#### Component-level implementation
+
+The feature is mainly implemented using the following classes:
+
+- `FindItemParser`
+- `FindItemByCategoryCommand`
+- `Inventory`
+- `Category`
+- `Item`
+
+The responsibilities of these classes are as follows:
+
+- `FindItemParser` recognises that the user wants to search by category.
+- `FindItemByCategoryCommand` performs the lookup and prepares the result for display.
+- `Inventory` exposes a category lookup through `findCategoryByName(...)`.
+- `Category` exposes its stored items and name.
+- `Item` provides the item data shown in the final output.
+
+The parser logic remains intentionally small. It only determines the requested find type and creates
+an appropriate command object. The actual lookup is performed inside the command layer.
+
+#### Command execution flow
+
+When `FindItemByCategoryCommand.execute()` is called, the implementation performs the following
+sequence:
+
+1. Assert that `inventory`, `ui`, and `categoryInput` are not `null`.
+2. Call `inventory.findCategoryByName(categoryInput)`.
+3. If no category is found, call `ui.showCategoryNotFound(categoryInput)` and return.
+4. Retrieve the items from the matched category using `matched.getItems()`.
+5. If the item list is empty, display a no-items-found message for that category.
+6. Otherwise, display dividers, a heading, and the numbered item list.
+
+The core lookup logic is:
+
+```java
+Category matched = inventory.findCategoryByName(categoryInput);
+
+if (matched == null) {
+    ui.showCategoryNotFound(categoryInput);
+    return;
+}
+```
+
+This keeps the command focused on one responsibility: resolve the category, then display the result
+based on whether the category exists and whether it contains items.
+
+#### Why the feature is implemented this way
+
+The most important design choice in this feature is that category search is implemented as a direct
+category lookup instead of a full scan that compares every item's category name individually.
+
+This was chosen for three reasons.
+
+First, category is already a first-class concept in the data model. The inventory stores items under
+`Category` objects, so searching by category should begin from that structure rather than reconstruct
+it indirectly from the items.
+
+Second, it keeps the implementation small and readable. Once the category is found, the command can
+immediately retrieve its item list and display it.
+
+Third, it gives clearer user feedback. The command can distinguish between an existing category with no
+items and a category that does not exist at all. That distinction is useful in practice and would be
+harder to express cleanly if the implementation only scanned items globally.
+
+Another deliberate design choice is that category matching is delegated to `Inventory.findCategoryByName(...)`.
+This centralises the lookup logic in one place and avoids duplicating case-handling behaviour across
+multiple commands.
+
+#### Error handling and validation
+
+Input validation is handled mainly by `FindItemParser`.
+
+If the user enters `find` with no target, the parser throws a `DukeException` explaining the supported
+find formats.
+
+If the user enters `find category/` with no value after the slash, the parser throws a `DukeException`
+for the missing name before any command object is created.
+
+At execution time, `FindItemByCategoryCommand` handles two normal non-error outcomes explicitly:
+
+- If the category does not exist, `UI.showCategoryNotFound(...)` is used.
+- If the category exists but contains no items, the command shows `No items found in category: ...`.
+
+This makes the feature robust without treating common user situations as fatal runtime failures.
+
+#### Alternatives considered
+
+Several alternatives were considered when implementing this feature.
+
+Alternative 1: Scan every item in every category and collect items whose parent category name matches
+the input.
+
+This was rejected because the data model already stores items under categories directly. Reusing the
+existing category lookup is simpler and more coherent.
+
+Alternative 2: Return an error whenever the matched category is empty.
+
+This was rejected because an empty category is still a valid category state. Reporting it separately as
+"no items found" is more accurate and more helpful to the user.
+
+Alternative 3: Make category search case-sensitive.
+
+This was rejected because users should not need to remember the exact letter casing used internally.
+Case-insensitive matching produces a more forgiving command experience.
+
+#### Current limitations
+
+The current implementation has some limitations.
+
+- It returns items in the existing order stored in the category and does not apply sorting.
+- It depends on `Inventory.findCategoryByName(...)` for lookup semantics.
+- It only supports searching one category at a time.
+
+These limitations are acceptable for the current scope, but they indicate possible future extensions.
+
+#### Possible future improvements
+
+If this feature is extended in future versions, the following improvements could be considered:
+
+- Support partial category-name matching or suggestions for close matches.
+- Allow additional filtering within a category, such as by expiry date or bin location.
+- Support sorted output within the category listing.
+
+### Find Item By Bin Feature
+
+Another search feature in the product is the ability to find items by bin location using the command
+`find bin/BIN`.
+
+This feature is useful because physical inventory retrieval often starts from storage location rather
+than item name. A user may know that they need to inspect everything in bin `A-1`, or they may only
+remember the bin letter or number. The bin search feature solves this by allowing exact bin searches
+as well as searches by letter or number segment.
+
+For example, if the user enters `find bin/A-1`, the system returns only items stored in bin `A-1`.
+If the user enters `find bin/10`, the system returns items whose bin number is `10`, such as `A-10`
+and `B-10`.
+
+#### High-level design
+
+At a high level, this feature also reuses the command-based architecture of the application. The flow
+is as follows:
+
+1. The user enters a `find` command.
+2. `FindItemParser` inspects the prefix before the `/`.
+3. If the prefix is `bin`, the parser normalises the bin input using `BinLocationParser` and creates a
+   `FindItemByBinCommand`.
+4. The command is executed with access to the current `Inventory` and `UI`.
+5. The command scans the inventory, identifies matching bin locations, and displays the result.
+
+The main interaction for this flow is illustrated in [FindItemByBinCommandMainFlow.puml](FindItemByBinCommandMainFlow.puml).
+
+This design was chosen because it allows bin-specific input normalisation to remain in the parser
+layer, while the matching and display behaviour stays in the command layer.
+
+#### Component-level implementation
+
+The feature is mainly implemented using the following classes:
+
+- `FindItemParser`
+- `BinLocationParser`
+- `FindItemByBinCommand`
+- `Inventory`
+- `Category`
+- `Item`
+
+The responsibilities of these classes are as follows:
+
+- `FindItemParser` recognises that the user wants to search by bin.
+- `BinLocationParser` normalises and validates the user-provided bin search input.
+- `FindItemByBinCommand` performs the inventory scan and matching logic.
+- `Inventory` exposes the list of stored categories.
+- `Category` exposes the items inside each category.
+- `Item` provides the bin location used during matching.
+
+The parser does not perform the inventory scan itself. Its responsibility is limited to interpreting the
+user input and constructing the correct command object.
+
+#### Command execution flow
+
+When `FindItemByBinCommand.execute()` is called, the implementation performs the following sequence:
+
+1. Assert that `inventory`, `ui`, and `binInput` are not `null`.
+2. Create an empty `List<Item>` named `matches`.
+3. Retrieve all categories from the `Inventory`.
+4. Iterate through each `Category`.
+5. Within each category, iterate through each `Item`.
+6. Read each item's bin location using `item.getBinLocation()`.
+7. Call `isMatchingBin(itemBinLocation, binInput)` to determine whether the item matches.
+8. Add matching items to `matches`.
+9. After the scan, either display a no-items-found message or show the numbered result list.
+
+The key matching logic is:
+
+```java
+if (binInput.contains("-")) {
+    return normalizedBinLocation.equals(binInput);
+}
+
+if (Character.isLetter(binInput.charAt(0))) {
+    return binLetter.equals(binInput);
+}
+
+return binNumber.equals(binInput);
+```
+
+This design supports three search modes using a single command:
+
+- Exact bin search such as `A-1`
+- Bin-letter search such as `A`
+- Bin-number search such as `10`
+
+#### Why the feature is implemented this way
+
+The most important design choice in this feature is the use of a full inventory scan combined with a
+small dedicated matching function, `isMatchingBin(...)`.
+
+This was chosen for three reasons.
+
+First, bin location is stored as part of each item rather than as a separate index. Reusing the
+existing inventory structure keeps the implementation simple.
+
+Second, the matching rules are slightly richer than a plain string equality check. The command needs to
+support exact-bin, letter-only, and number-only searches, so isolating the logic in `isMatchingBin(...)`
+keeps the main execution flow readable.
+
+Third, the expected inventory size is small enough that a linear scan is acceptable. Introducing a more
+complex location index would increase maintenance cost without enough practical benefit for the current
+project scope.
+
+Another deliberate design choice is that exact bin searches do not overmatch prefixes. For example,
+searching for `A-1` should not accidentally return items in `A-10`. This behaviour is important for
+physical storage accuracy.
+
+#### Error handling and validation
+
+Input validation is split between `FindItemParser` and `BinLocationParser`.
+
+`FindItemParser` rejects missing `find` targets and missing values after the `/`.
+
+`BinLocationParser` is responsible for normalising the bin search input before the command is created.
+This ensures that the command operates on a consistent representation of the search term.
+
+At execution time, `FindItemByBinCommand` handles the no-match case gracefully by displaying
+`No items found in bin location: ...` instead of failing.
+
+This design keeps invalid-input handling close to parsing, while expected no-result searches are
+handled as normal command outcomes.
+
+#### Alternatives considered
+
+Several alternatives were considered when implementing this feature.
+
+Alternative 1: Support only exact full-bin matching.
+
+This would simplify the matching logic, but it was rejected because users may want to inspect all bins
+with the same letter or the same number.
+
+Alternative 2: Use raw substring matching on the stored bin location.
+
+This was rejected because it can produce incorrect overmatching. For example, searching for `A-1`
+would incorrectly match `A-10`.
+
+Alternative 3: Maintain a separate map from bin location to items.
+
+This was rejected because it introduces extra state that must be synchronised whenever items are added,
+updated, or deleted.
+
+#### Current limitations
+
+The current implementation has some limitations.
+
+- It performs a full scan of the inventory on every search.
+- It returns items in their existing inventory order.
+- It supports exact, letter, and number matching, but not more advanced patterns such as ranges.
+
+These limitations are acceptable for the current project scope.
+
+#### Possible future improvements
+
+If this feature is extended in future versions, the following improvements could be considered:
+
+- Support bin ranges or multi-bin queries.
+- Group results by category when displaying matches.
+- Introduce an internal location index if inventory size grows significantly.
 ### Add Item Feature
 
 Another core feature of the product is the ability to add an item into an existing category using
@@ -516,6 +839,7 @@ If this feature is extended in future versions, the following improvements could
 - Support optional sorted views such as by category name or expiry date.
 - Add pagination or condensed summaries for larger inventories.
 - Reuse the same command object for alternate UI front ends if the presentation layer expands.
+
 ### Storage feature
 
 This product includes a storage component that is responsible for persisting inventory data
@@ -716,6 +1040,30 @@ provide more detailed diagnostics to the user. This would reduce potential data 
 5. Run `list`.
 6. Verify that the application still handles the command successfully and shows the inventory view for the empty state.
 
+### Testing find by bin
+
+1. Add items with bin locations such as `A-1`, `A-10`, and `B-10`.
+2. Run `find bin/A-1`.
+3. Verify that only items in bin `A-1` are shown, and items in `A-10` are not included.
+4. Run `find bin/A`.
+5. Verify that all items with matching bin letter `A` are shown.
+6. Run `find bin/10`.
+7. Verify that items in bins such as `A-10` and `B-10` are shown.
+8. Run `find bin/Z`.
+9. Verify that the application shows `No items found in bin location: z.` or the corresponding no-match message.
+
+### Testing find by category
+
+1. Ensure the inventory contains a non-empty category such as `fruits` and an empty category if available.
+2. Run `find category/fruits`.
+3. Verify that the application shows the items stored in `fruits`.
+4. Run `find category/FRUITS`.
+5. Verify that the application still returns the items in `fruits`.
+6. Run `find category/snacks` for an existing but empty category.
+7. Verify that the application shows `No items found in category: snacks.` or the corresponding empty-category message.
+8. Run `find category/toiletries` for a category that does not exist.
+9. Verify that the application shows the category-not-found message.
+
 ### Testing find by expiry date
 
 1. Add items with different expiry dates.
@@ -744,6 +1092,9 @@ provide more detailed diagnostics to the user. This would reduce potential data 
 12. Exit the application using the `bye` command.
 13. Delete the storage file before launching the application.
 14. Verify that the application recreates the file automatically and starts without crashing.
+
+
+
 
 
 
