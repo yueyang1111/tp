@@ -13,16 +13,35 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Finds items whose expiry dates are on or before a specified cutoff date.
+ * A <code>FindItemByExpiryDateCommand</code> object scans all categories in the
+ * inventory and lists the items that expire by the given date.
+ */
 public class FindItemByExpiryDateCommand extends Command {
     private static final Logger logger = Logger.getLogger(
             FindItemByExpiryDateCommand.class.getName());
 
     private final String expiryDateInput;
 
+    /**
+     * Constructs a command that searches for items expiring by the specified date.
+     *
+     * @param expiryDateInput Cutoff expiry date supplied by the user.
+     */
     public FindItemByExpiryDateCommand(String expiryDateInput) {
         this.expiryDateInput = expiryDateInput;
     }
 
+    /**
+     * Executes the expiry-date search on the specified inventory.
+     * The method parses the cutoff date, scans all items, and displays those whose
+     * expiry dates are on or before the specified date.
+     *
+     * @param inventory Inventory containing the items to search.
+     * @param ui User interface used to display search results.
+     * @throws DukeException If the supplied expiry date cannot be parsed.
+     */
     @Override
     public void execute(Inventory inventory, UI ui) throws DukeException {
         assert inventory != null : "FindItemByExpiryDateCommand received null inventory.";
@@ -62,5 +81,3 @@ public class FindItemByExpiryDateCommand extends Command {
         ui.showDivider();
     }
 }
-
-
