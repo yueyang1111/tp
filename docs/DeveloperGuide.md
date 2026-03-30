@@ -202,6 +202,644 @@ If this feature is extended in future versions, the following improvements could
 - Add category filters so users can combine expiry search with category search.
 - Introduce an internal index if inventory size grows enough to justify optimisation.
 
+### Find Item By Category Feature
+
+Another search feature in the product is the ability to find items by category using the command
+`find category/CATEGORY`.
+
+This feature is useful because the inventory is organised around categories, and users often want to
+review all items stored within one category without scanning the entire inventory. In practice, this
+supports tasks such as checking what is currently stored under `fruits`, confirming that a category is
+empty, or verifying whether a category exists at all.
+
+For example, if the user enters `find category/fruits`, the system locates the `fruits` category and
+shows all items currently stored in it.
+
+#### High-level design
+
+At a high level, this feature reuses the existing command pipeline of the application. The flow is as
+follows:
+
+1. The user enters a `find` command.
+2. `FindItemParser` inspects the prefix before the `/`.
+3. If the prefix is `category`, the parser creates a `FindItemByCategoryCommand`.
+4. The command is executed with access to the current `Inventory` and `UI`.
+5. The command attempts to locate the matching category and displays either the items or an
+   appropriate message.
+
+The main interaction for this flow is illustrated in [FindItemByCategoryCommandMainFlow.puml](diagram/FindItemByCategoryCommandMainFlow.puml).
+
+This design was chosen because it follows the same separation of concerns already used throughout the
+project:
+
+- Parsers interpret user input.
+- Command classes implement the application behaviour.
+- Model classes store inventory data.
+- `UI` is responsible for displaying the result to the user.
+
+As a result, the category-search feature integrates cleanly into the existing architecture instead of
+requiring a separate retrieval subsystem.
+
+#### Component-level implementation
+
+The feature is mainly implemented using the following classes:
+
+- `FindItemParser`
+- `FindItemByCategoryCommand`
+- `Inventory`
+- `Category`
+- `Item`
+
+The responsibilities of these classes are as follows:
+
+- `FindItemParser` recognises that the user wants to search by category.
+- `FindItemByCategoryCommand` performs the lookup and prepares the result for display.
+- `Inventory` exposes a category lookup through `findCategoryByName(...)`.
+- `Category` exposes its stored items and name.
+- `Item` provides the item data shown in the final output.
+
+The parser logic remains intentionally small. It only determines the requested find type and creates
+an appropriate command object. The actual lookup is performed inside the command layer.
+
+#### Command execution flow
+
+When `FindItemByCategoryCommand.execute()` is called, the implementation performs the following
+sequence:
+
+1. Assert that `inventory`, `ui`, and `categoryInput` are not `null`.
+2. Call `inventory.findCategoryByName(categoryInput)`.
+3. If no category is found, call `ui.showCategoryNotFound(categoryInput)` and return.
+4. Retrieve the items from the matched category using `matched.getItems()`.
+5. If the item list is empty, display a no-items-found message for that category.
+6. Otherwise, display dividers, a heading, and the numbered item list.
+
+The core lookup logic is:
+
+```java
+Category matched = inventory.findCategoryByName(categoryInput);
+
+if (matched == null) {
+    ui.showCategoryNotFound(categoryInput);
+    return;
+}
+```
+
+This keeps the command focused on one responsibility: resolve the category, then display the result
+based on whether the category exists and whether it contains items.
+
+#### Why the feature is implemented this way
+
+The most important design choice in this feature is that category search is implemented as a direct
+category lookup instead of a full scan that compares every item's category name individually.
+
+This was chosen for three reasons.
+
+First, category is already a first-class concept in the data model. The inventory stores items under
+`Category` objects, so searching by category should begin from that structure rather than reconstruct
+it indirectly from the items.
+
+Second, it keeps the implementation small and readable. Once the category is found, the command can
+immediately retrieve its item list and display it.
+
+Third, it gives clearer user feedback. The command can distinguish between an existing category with no
+items and a category that does not exist at all. That distinction is useful in practice and would be
+harder to express cleanly if the implementation only scanned items globally.
+
+Another deliberate design choice is that category matching is delegated to `Inventory.findCategoryByName(...)`.
+This centralises the lookup logic in one place and avoids duplicating case-handling behaviour across
+multiple commands.
+
+#### Error handling and validation
+
+Input validation is handled mainly by `FindItemParser`.
+
+If the user enters `find` with no target, the parser throws a `DukeException` explaining the supported
+find formats.
+
+If the user enters `find category/` with no value after the slash, the parser throws a `DukeException`
+for the missing name before any command object is created.
+
+At execution time, `FindItemByCategoryCommand` handles two normal non-error outcomes explicitly:
+
+- If the category does not exist, `UI.showCategoryNotFound(...)` is used.
+- If the category exists but contains no items, the command shows `No items found in category: ...`.
+
+This makes the feature robust without treating common user situations as fatal runtime failures.
+
+#### Alternatives considered
+
+Several alternatives were considered when implementing this feature.
+
+Alternative 1: Scan every item in every category and collect items whose parent category name matches
+the input.
+
+This was rejected because the data model already stores items under categories directly. Reusing the
+existing category lookup is simpler and more coherent.
+
+Alternative 2: Return an error whenever the matched category is empty.
+
+This was rejected because an empty category is still a valid category state. Reporting it separately as
+"no items found" is more accurate and more helpful to the user.
+
+Alternative 3: Make category search case-sensitive.
+
+This was rejected because users should not need to remember the exact letter casing used internally.
+Case-insensitive matching produces a more forgiving command experience.
+
+#### Current limitations
+
+The current implementation has some limitations.
+
+- It returns items in the existing order stored in the category and does not apply sorting.
+- It depends on `Inventory.findCategoryByName(...)` for lookup semantics.
+- It only supports searching one category at a time.
+
+These limitations are acceptable for the current scope, but they indicate possible future extensions.
+
+#### Possible future improvements
+
+If this feature is extended in future versions, the following improvements could be considered:
+
+- Support partial category-name matching or suggestions for close matches.
+- Allow additional filtering within a category, such as by expiry date or bin location.
+- Support sorted output within the category listing.
+
+### Find Item By Bin Feature
+
+Another search feature in the product is the ability to find items by bin location using the command
+`find bin/BIN`.
+
+This feature is useful because physical inventory retrieval often starts from storage location rather
+than item name. A user may know that they need to inspect everything in bin `A-1`, or they may only
+remember the bin letter or number. The bin search feature solves this by allowing exact bin searches
+as well as searches by letter or number segment.
+
+For example, if the user enters `find bin/A-1`, the system returns only items stored in bin `A-1`.
+If the user enters `find bin/10`, the system returns items whose bin number is `10`, such as `A-10`
+and `B-10`.
+
+#### High-level design
+
+At a high level, this feature also reuses the command-based architecture of the application. The flow
+is as follows:
+
+1. The user enters a `find` command.
+2. `FindItemParser` inspects the prefix before the `/`.
+3. If the prefix is `bin`, the parser normalises the bin input using `BinLocationParser` and creates a
+   `FindItemByBinCommand`.
+4. The command is executed with access to the current `Inventory` and `UI`.
+5. The command scans the inventory, identifies matching bin locations, and displays the result.
+
+The main interaction for this flow is illustrated in [FindItemByBinCommandMainFlow.puml](diagram/FindItemByBinCommandMainFlow.puml).
+
+This design was chosen because it allows bin-specific input normalisation to remain in the parser
+layer, while the matching and display behaviour stays in the command layer.
+
+#### Component-level implementation
+
+The feature is mainly implemented using the following classes:
+
+- `FindItemParser`
+- `BinLocationParser`
+- `FindItemByBinCommand`
+- `Inventory`
+- `Category`
+- `Item`
+
+The responsibilities of these classes are as follows:
+
+- `FindItemParser` recognises that the user wants to search by bin.
+- `BinLocationParser` normalises and validates the user-provided bin search input.
+- `FindItemByBinCommand` performs the inventory scan and matching logic.
+- `Inventory` exposes the list of stored categories.
+- `Category` exposes the items inside each category.
+- `Item` provides the bin location used during matching.
+
+The parser does not perform the inventory scan itself. Its responsibility is limited to interpreting the
+user input and constructing the correct command object.
+
+#### Command execution flow
+
+When `FindItemByBinCommand.execute()` is called, the implementation performs the following sequence:
+
+1. Assert that `inventory`, `ui`, and `binInput` are not `null`.
+2. Create an empty `List<Item>` named `matches`.
+3. Retrieve all categories from the `Inventory`.
+4. Iterate through each `Category`.
+5. Within each category, iterate through each `Item`.
+6. Read each item's bin location using `item.getBinLocation()`.
+7. Call `isMatchingBin(itemBinLocation, binInput)` to determine whether the item matches.
+8. Add matching items to `matches`.
+9. After the scan, either display a no-items-found message or show the numbered result list.
+
+The key matching logic is:
+
+```java
+if (binInput.contains("-")) {
+    return normalizedBinLocation.equals(binInput);
+}
+
+if (Character.isLetter(binInput.charAt(0))) {
+    return binLetter.equals(binInput);
+}
+
+return binNumber.equals(binInput);
+```
+
+This design supports three search modes using a single command:
+
+- Exact bin search such as `A-1`
+- Bin-letter search such as `A`
+- Bin-number search such as `10`
+
+#### Why the feature is implemented this way
+
+The most important design choice in this feature is the use of a full inventory scan combined with a
+small dedicated matching function, `isMatchingBin(...)`.
+
+This was chosen for three reasons.
+
+First, bin location is stored as part of each item rather than as a separate index. Reusing the
+existing inventory structure keeps the implementation simple.
+
+Second, the matching rules are slightly richer than a plain string equality check. The command needs to
+support exact-bin, letter-only, and number-only searches, so isolating the logic in `isMatchingBin(...)`
+keeps the main execution flow readable.
+
+Third, the expected inventory size is small enough that a linear scan is acceptable. Introducing a more
+complex location index would increase maintenance cost without enough practical benefit for the current
+project scope.
+
+Another deliberate design choice is that exact bin searches do not overmatch prefixes. For example,
+searching for `A-1` should not accidentally return items in `A-10`. This behaviour is important for
+physical storage accuracy.
+
+#### Error handling and validation
+
+Input validation is split between `FindItemParser` and `BinLocationParser`.
+
+`FindItemParser` rejects missing `find` targets and missing values after the `/`.
+
+`BinLocationParser` is responsible for normalising the bin search input before the command is created.
+This ensures that the command operates on a consistent representation of the search term.
+
+At execution time, `FindItemByBinCommand` handles the no-match case gracefully by displaying
+`No items found in bin location: ...` instead of failing.
+
+This design keeps invalid-input handling close to parsing, while expected no-result searches are
+handled as normal command outcomes.
+
+#### Alternatives considered
+
+Several alternatives were considered when implementing this feature.
+
+Alternative 1: Support only exact full-bin matching.
+
+This would simplify the matching logic, but it was rejected because users may want to inspect all bins
+with the same letter or the same number.
+
+Alternative 2: Use raw substring matching on the stored bin location.
+
+This was rejected because it can produce incorrect overmatching. For example, searching for `A-1`
+would incorrectly match `A-10`.
+
+Alternative 3: Maintain a separate map from bin location to items.
+
+This was rejected because it introduces extra state that must be synchronised whenever items are added,
+updated, or deleted.
+
+#### Current limitations
+
+The current implementation has some limitations.
+
+- It performs a full scan of the inventory on every search.
+- It returns items in their existing inventory order.
+- It supports exact, letter, and number matching, but not more advanced patterns such as ranges.
+
+These limitations are acceptable for the current project scope.
+
+#### Possible future improvements
+
+If this feature is extended in future versions, the following improvements could be considered:
+
+- Support bin ranges or multi-bin queries.
+- Group results by category when displaying matches.
+- Introduce an internal location index if inventory size grows significantly.
+### Add Item Feature
+
+Another core feature of the product is the ability to add an item into an existing category using
+the `add` command.
+
+This feature is necessary because the application is fundamentally an inventory manager. Users need
+to record newly stocked products together with shared fields such as name, quantity, bin location,
+and expiry date, while also capturing category-specific attributes such as fruit size or drink
+volume. The add-item flow solves this by routing the same high-level command through specialised
+parsers based on the category provided by the user.
+
+For example, if the user enters
+`add category/fruits item/apple bin/A1 qty/10 expiryDate/2026-4-01 size/medium isRipe/true`,
+the system validates the common and category-specific fields, constructs the correct `Item`
+subclass, and adds it into the matching category.
+
+#### High-level design
+
+At a high level, this enhancement also fits into the existing command-based architecture of the
+application. The feature follows this flow:
+
+1. The user enters an `add` command.
+2. `Parser` recognises the `add` command word and delegates the remaining input to `AddCommandParser`.
+3. `AddCommandParser` validates the required shared fields and determines the target category.
+4. `AddItemCommandParser` dispatches to the category-specific parsing method such as `FruitParser` and constructs the
+   correct `Item` subtype.
+5. An `AddItemCommand` is created and executed with access to the current `Inventory` and `UI`.
+6. The command finds the target category, inserts the item, and shows a confirmation message.
+
+The main interaction for this flow is illustrated in [AddItemCommandMainFlow.puml](diagram/AddItemCommandMainFlow.puml).
+
+This design was chosen because it preserves the same separation of responsibilities used elsewhere
+in the codebase:
+
+- `Parser` and parser helpers interpret user input.
+- `AddItemCommand` performs the inventory mutation.
+- Model classes such as `Inventory`, `Category`, and `Item` hold the application state.
+- `UI` presents confirmation messages to the user.
+
+As a result, adding a new item subtype does not require redesigning the command pipeline. The parser
+layer can be extended category by category while the execution model remains unchanged.
+
+#### Component-level implementation
+
+The feature is mainly implemented using the following classes:
+
+- `Parser`
+- `AddCommandParser`
+- `AddItemCommandParser`
+- Category-specific parsers such as `FruitParser`
+- `AddItemCommand`
+- `Inventory`
+- `Category`
+- `Item`
+
+The responsibilities of these classes are as follows:
+
+- `Parser` identifies that the user wants to perform an add operation.
+- `AddCommandParser` validates shared required fields and chooses the correct parsing branch based on
+  `category/`.
+- `AddItemCommandParser` coordinates common-field parsing and category-specific parsing.
+- Category-specific parsers construct the extra fields required by each concrete `Item` subtype.
+- `AddItemCommand` performs the actual insertion into the inventory.
+- `Inventory` finds the matching category by name.
+- `Category` stores the added item.
+- `Item` and its subclasses represent the domain object being created.
+
+This design intentionally separates shared parsing from category-specific parsing. Common fields such
+as `item/`, `bin/`, `qty/`, and `expiryDate/` can be handled consistently, while subtype-specific
+fields remain encapsulated in the relevant parser and model class.
+
+#### Command execution flow
+
+When the user enters an add command, the implementation performs the following sequence:
+
+1. `Parser.parse()` splits the command word from the arguments.
+2. `Parser` calls `AddCommandParser.parse(arguments)`.
+3. `AddCommandParser` checks that mandatory fields such as `item/` and `category/` are present.
+4. `AddCommandParser` extracts the category and dispatches to the corresponding method in
+   `AddItemCommandParser`.
+5. `AddItemCommandParser` validates the input, parses common fields, and invokes the category-specific
+   parser.
+6. `AddItemCommandParser` creates an `Item` subtype and wraps it in an `AddItemCommand`.
+7. `Duke` executes `AddItemCommand.execute(inventory, ui)`.
+8. `AddItemCommand` calls `inventory.findCategoryByName(categoryName)`.
+9. If the category exists, `AddItemCommand` calls `category.addItem(item)`.
+10. `UI.showItemAdded(...)` displays the confirmation to the user.
+
+The execution logic in `AddItemCommand` is intentionally small:
+
+```java
+Category category = inventory.findCategoryByName(categoryName);
+category.addItem(item);
+ui.showItemAdded(item.getName(), item.getQuantity(),
+        category.getName(), item.getBinLocation());
+```
+
+This keeps construction concerns in the parser layer and mutation concerns in the command layer.
+
+#### Why the feature is implemented this way
+
+The main design choice is the use of category-based dispatch in `AddCommandParser` and
+`AddItemCommandParser` instead of one very large parser or category-agnostic item builder.
+
+This was chosen for three reasons.
+
+First, different item types do not share the same attributes. Separating parsers by category keeps
+validation rules close to the subtype that needs them.
+
+Second, it improves maintainability. Adding support for a new category mostly requires introducing a
+new parser branch and item subtype rather than modifying one monolithic parsing method with many
+special cases.
+
+Third, it keeps command execution simple. By the time `AddItemCommand` runs, all parsing and object
+construction work has already been completed. The command only needs to find the category and append
+the item.
+
+Another deliberate design choice is that the command adds only into an existing category rather than
+creating a missing category automatically. This keeps category creation rules explicit and avoids
+silently introducing unintended categories due to typing errors.
+
+#### Error handling and validation
+
+Validation is split across the parser layer.
+
+`AddCommandParser` rejects missing shared fields such as `item/` and `category/` before dispatching
+to a category-specific parser.
+
+`AddItemCommandParser` and the specialised parsers validate category-specific input. If required
+fields are missing or malformed, they throw `DukeException` before an `AddItemCommand` is created.
+
+`AddItemCommand` also performs execution-time checks. If `inventory.findCategoryByName(categoryName)`
+returns `null`, the command throws a `DukeException` with the message
+`Category not found: <categoryName>`. If the parsed item is unexpectedly `null`, it throws
+`Item cannot be null.`
+
+This layered approach ensures invalid input is rejected as early as possible, while still protecting
+the command layer from invalid state.
+
+#### Alternatives considered
+
+Several alternatives were considered when implementing this feature.
+
+Alternative 1: Use a single generic item parser for every category.
+
+This would reduce the number of parser classes, but it was rejected because different categories have
+different required fields. A single parser would become difficult to understand and maintain.
+
+Alternative 2: Let `AddItemCommand` parse the raw command string itself.
+
+This was rejected because it mixes input interpretation with business logic. The current design keeps
+commands focused on behaviour and leaves parsing to the parser layer.
+
+Alternative 3: Create missing categories automatically during item addition.
+
+This was rejected because it can hide user mistakes. Requiring the target category to exist makes the
+inventory structure more predictable and prevents accidental category creation due to typos.
+
+#### Current limitations
+
+The current implementation has some limitations.
+
+- Category dispatch in `AddCommandParser` is hard-coded using a `switch` statement.
+- Supporting a new category requires updates in multiple places, including parser dispatch and the
+  corresponding model subtype.
+- Error messages depend on the specific parser branch and are not fully standardised across all item
+  types.
+
+These limitations are acceptable for the current project scope, but they may become more noticeable if
+the number of item categories continues to grow.
+
+#### Possible future improvements
+
+If this feature is extended in future versions, the following improvements could be considered:
+
+- Replace hard-coded category dispatch with a registry-based parser lookup.
+- Standardise validation error messages across all category-specific parsers.
+- Support optional default values for selected fields where domain rules permit them.
+- Separate category definitions from parser code so new item types can be added with less wiring.
+
+### List Feature
+
+The product also supports displaying the current inventory using the `list` command.
+
+This feature is important because users need a quick way to inspect the complete inventory after
+adding, updating, deleting, or loading items from storage. Unlike targeted search commands, the list
+operation provides a full snapshot of the current inventory state grouped by category.
+
+For example, after a sequence of inventory changes, the user can enter `list` to review all categories
+and their stored items in one output.
+
+#### High-level design
+
+At a high level, the feature is intentionally minimal and fits directly into the existing command
+architecture:
+
+1. The user enters a `list` command.
+2. `Parser` recognises the command word and constructs a `ListCommand`.
+3. `Duke` executes the command with the current `Inventory` and `UI`.
+4. `ListCommand` delegates rendering to `UI.showInventory(inventory)`.
+5. `UI` iterates through the inventory and prints the formatted listing to the user.
+
+The main interaction for this flow is illustrated in [ListCommandMainFlow.puml](diagram/ListCommandMainFlow.puml).
+
+This design was chosen because listing inventory does not require separate parsing logic beyond
+recognising the command word. The command object acts mainly as a bridge between the parser and the UI.
+
+#### Component-level implementation
+
+The feature is mainly implemented using the following classes:
+
+- `Parser`
+- `ListCommand`
+- `Inventory`
+- `Category`
+- `UI`
+
+The responsibilities of these classes are as follows:
+
+- `Parser` detects the `list` command and returns a new `ListCommand`.
+- `ListCommand` represents the list operation and triggers the display behaviour.
+- `Inventory` provides access to the stored categories.
+- `Category` provides the items and summary information for each category.
+- `UI` formats and prints the inventory contents.
+
+This design keeps the command itself lightweight. Since listing is a read-only operation, most of the
+formatting logic appropriately lives in the UI layer instead of the command layer.
+
+#### Command execution flow
+
+When `ListCommand.execute()` is called, the implementation performs the following sequence:
+
+1. Assert that `inventory` and `ui` are not `null`.
+2. Log that the inventory listing is being requested.
+3. Call `ui.showInventory(inventory)`.
+4. Inside the UI layer, retrieve all categories from the `Inventory`.
+5. Iterate through each `Category`.
+6. For each category, display its name, item count, and items.
+7. Print the combined inventory listing to the user.
+
+The command logic is intentionally short:
+
+```java
+logger.log(Level.INFO, "Listing inventory.");
+ui.showInventory(inventory);
+```
+
+This reflects the design decision that `ListCommand` should trigger the operation, while formatting and
+presentation remain the responsibility of the UI.
+
+#### Why the feature is implemented this way
+
+The most important design choice here is that `ListCommand` delegates almost all work to the UI layer
+instead of assembling formatted output by itself.
+
+This was chosen for two reasons.
+
+First, it preserves separation of concerns. The command layer decides what action should happen, while
+the UI layer decides how the result should be shown.
+
+Second, it keeps the read-only command easy to maintain. Since `list` does not modify state, there is
+no need for extra model logic or intermediate data transformation in the command itself.
+
+This also makes the command consistent with other parts of the application where `UI` is responsible
+for user-facing output.
+
+#### Error handling and validation
+
+The `list` command has minimal input validation because it takes no arguments.
+
+`Parser` handles recognition of the command word. Once a `ListCommand` is created, the main runtime
+checks are the assertions in `ListCommand.execute()` that ensure `inventory` and `ui` are not `null`.
+
+Because the command is read-only and does not parse additional user arguments, there are fewer failure
+modes compared with commands such as `add` or `find`.
+
+#### Alternatives considered
+
+Several alternatives were considered when implementing this feature.
+
+Alternative 1: Let `Parser` call `UI.showInventory(inventory)` directly without creating a command
+object.
+
+This was rejected because it breaks the existing command architecture. Keeping `ListCommand` preserves
+a consistent parse-then-execute pipeline across user actions.
+
+Alternative 2: Let `ListCommand` build a formatted string instead of delegating to `UI`.
+
+This was rejected because presentation logic belongs more naturally in the UI layer. Mixing display
+formatting into the command would weaken separation of concerns.
+
+Alternative 3: Add filtering arguments directly to `list`.
+
+This was rejected for now because filtered retrieval is already covered by specialised `find`
+commands. Keeping `list` simple makes its behaviour predictable.
+
+#### Current limitations
+
+The current implementation has some limitations.
+
+- The command always lists the full inventory and does not support optional filters or sorting.
+- Output ordering depends on the current order of categories and items stored in memory.
+- Formatting is tied to the current console UI implementation.
+
+These limitations are acceptable for the current scope because the command is intended to provide a
+simple full-inventory view.
+
+#### Possible future improvements
+
+If this feature is extended in future versions, the following improvements could be considered:
+
+- Support optional sorted views such as by category name or expiry date.
+- Add pagination or condensed summaries for larger inventories.
+- Reuse the same command object for alternate UI front ends if the presentation layer expands.
+
 ### Storage feature
 
 This product includes a storage component that is responsible for persisting inventory data
@@ -521,6 +1159,51 @@ If this feature is extended in future versions, the following improvements could
 ## Instructions for manual testing
 
 {Give instructions on how to do a manual product testing e.g., how to load sample data to be used for testing}
+
+### Testing add item
+
+1. Ensure the target category already exists in the inventory, for example `fruits`.
+2. Run `add category/fruits item/apple bin/A1 qty/10 expiryDate/2026-4-01 size/medium isRipe/true`.
+3. Verify that the application shows a confirmation message for the added item.
+4. Run `list`.
+5. Verify that `apple` appears under the `fruits` category with the entered values.
+6. Run `add category/unknown item/apple bin/A1 qty/10 expiryDate/2026-4-01 size/medium isRipe/true`.
+7. Verify that the application shows `Category not found: unknown` or the corresponding category error.
+8. Run an add command with a missing required field, for example `add category/fruits bin/A1 qty/10 expiryDate/2026-4-01 size/medium isRipe/true`.
+9. Verify that the application shows the appropriate validation error for the missing field.
+
+### Testing list command
+
+1. Start the application with at least one category containing items.
+2. Run `list`.
+3. Verify that the application displays the full inventory grouped by category.
+4. Start the application with an empty inventory.
+5. Run `list`.
+6. Verify that the application still handles the command successfully and shows the inventory view for the empty state.
+
+### Testing find by bin
+
+1. Add items with bin locations such as `A-1`, `A-10`, and `B-10`.
+2. Run `find bin/A-1`.
+3. Verify that only items in bin `A-1` are shown, and items in `A-10` are not included.
+4. Run `find bin/A`.
+5. Verify that all items with matching bin letter `A` are shown.
+6. Run `find bin/10`.
+7. Verify that items in bins such as `A-10` and `B-10` are shown.
+8. Run `find bin/Z`.
+9. Verify that the application shows `No items found in bin location: z.` or the corresponding no-match message.
+
+### Testing find by category
+
+1. Ensure the inventory contains a non-empty category such as `fruits` and an empty category if available.
+2. Run `find category/fruits`.
+3. Verify that the application shows the items stored in `fruits`.
+4. Run `find category/FRUITS`.
+5. Verify that the application still returns the items in `fruits`.
+6. Run `find category/snacks` for an existing but empty category.
+7. Verify that the application shows `No items found in category: snacks.` or the corresponding empty-category message.
+8. Run `find category/toiletries` for a category that does not exist.
+9. Verify that the application shows the category-not-found message.
 
 ### Testing find by expiry date
 

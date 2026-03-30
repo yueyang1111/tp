@@ -1,0 +1,77 @@
+@startuml
+title Sequence Diagram for FindItemByCategoryCommand (Main Control Flow Only)
+
+autonumber
+hide footbox
+
+actor User
+participant ":UI" as UI
+participant ":Duke" as Duke
+participant ":Parser" as Parser
+participant ":FindItemParser" as FindItemParser
+participant ":FindItemByCategoryCommand" as FindItemByCategoryCommand
+participant ":Inventory" as Inventory
+participant ":Category" as Category
+
+User -> UI: enter find category command
+activate UI
+UI -> Duke: input
+activate Duke
+Duke -> Parser: parse(input)
+activate Parser
+
+Parser -> FindItemParser: parse(arguments)
+activate FindItemParser
+create FindItemByCategoryCommand
+FindItemParser -> FindItemByCategoryCommand: FindItemByCategoryCommand(name)
+activate FindItemByCategoryCommand
+FindItemByCategoryCommand --> FindItemParser: command
+FindItemParser --> Parser: command
+deactivate FindItemParser
+Parser --> Duke: command
+deactivate Parser
+
+Duke -> FindItemByCategoryCommand: execute(inventory, ui)
+activate FindItemByCategoryCommand
+FindItemByCategoryCommand -> Inventory: findCategoryByName(categoryInput)
+activate Inventory
+loop for each category in inventory
+    Inventory -> Category: getName()
+    activate Category
+    Category --> Inventory: name
+    deactivate Category
+end
+Inventory --> FindItemByCategoryCommand: matchingCategory
+deactivate Inventory
+
+alt category not found
+    FindItemByCategoryCommand -> UI: showCategoryNotFound(categoryInput)
+    activate UI
+    UI --> User: display error
+    deactivate UI
+else category found
+    FindItemByCategoryCommand -> Category: getItems(), getName()
+    activate Category
+    Category --> FindItemByCategoryCommand: items, categoryName
+    deactivate Category
+
+    alt items is empty
+        FindItemByCategoryCommand -> UI: showMessage("No items found ...")
+        activate UI
+        UI --> User: display no-match message
+        deactivate UI
+    else items found
+        FindItemByCategoryCommand -> UI: showDivider()
+        activate UI
+        FindItemByCategoryCommand -> UI: showMessage("Items in category ...")
+        FindItemByCategoryCommand -> UI: showNumberedList(items)
+        FindItemByCategoryCommand -> UI: showDivider()
+        UI --> User: display matching items
+        deactivate UI
+    end
+end
+
+deactivate FindItemByCategoryCommand
+deactivate Duke
+deactivate UI
+@enduml

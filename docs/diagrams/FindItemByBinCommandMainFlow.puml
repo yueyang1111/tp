@@ -1,0 +1,84 @@
+@startuml
+title Sequence Diagram for FindItemByBinCommand (Main Control Flow Only)
+
+autonumber
+hide footbox
+
+actor User
+participant ":UI" as UI
+participant ":Duke" as Duke
+participant ":Parser" as Parser
+participant ":FindItemParser" as FindItemParser
+participant ":BinLocationParser" as BinLocationParser
+participant ":FindItemByBinCommand" as FindItemByBinCommand
+participant ":Inventory" as Inventory
+participant ":Category" as Category
+participant ":Item" as Item
+
+User -> UI: enter find bin command
+activate UI
+UI -> Duke: input
+activate Duke
+Duke -> Parser: parse(input)
+activate Parser
+
+Parser -> FindItemParser: parse(arguments)
+activate FindItemParser
+FindItemParser -> BinLocationParser: parseSearchInput(name)
+activate BinLocationParser
+BinLocationParser --> FindItemParser: normalizedBinInput
+deactivate BinLocationParser
+create FindItemByBinCommand
+FindItemParser -> FindItemByBinCommand: FindItemByBinCommand(normalizedBinInput)
+activate FindItemByBinCommand
+FindItemByBinCommand --> FindItemParser: command
+FindItemParser --> Parser: command
+deactivate FindItemParser
+Parser --> Duke: command
+deactivate Parser
+
+Duke -> FindItemByBinCommand: execute(inventory, ui)
+activate FindItemByBinCommand
+FindItemByBinCommand -> Inventory: getCategories()
+activate Inventory
+Inventory --> FindItemByBinCommand: categories
+deactivate Inventory
+
+loop for each category
+    FindItemByBinCommand -> Category: getItems()
+    activate Category
+    Category --> FindItemByBinCommand: items
+    deactivate Category
+
+    loop for each item
+        FindItemByBinCommand -> Item: getBinLocation()
+        activate Item
+        Item --> FindItemByBinCommand: itemBinLocation
+        deactivate Item
+
+        FindItemByBinCommand -> FindItemByBinCommand: isMatchingBin(itemBinLocation, binInput)
+        activate FindItemByBinCommand
+        FindItemByBinCommand --> FindItemByBinCommand
+        deactivate FindItemByBinCommand
+    end
+end
+
+alt matches is empty
+    FindItemByBinCommand -> UI: showMessage("No items found ...")
+    activate UI
+    UI --> User: display no-match message
+    deactivate UI
+else matches found
+    FindItemByBinCommand -> UI: showDivider()
+    activate UI
+    FindItemByBinCommand -> UI: showMessage("Items in bin location ...")
+    FindItemByBinCommand -> UI: showNumberedList(matches)
+    FindItemByBinCommand -> UI: showDivider()
+    UI --> User: display matching items
+    deactivate UI
+end
+
+deactivate FindItemByBinCommand
+deactivate Duke
+deactivate UI
+@enduml
