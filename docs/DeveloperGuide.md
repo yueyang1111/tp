@@ -991,6 +991,147 @@ commands. This would reduce coupling and improve clarity of storage logic.
 3. Instead of skipping malformed lines completely, the system could attempt partial recovery and
 provide more detailed diagnostics to the user. This would reduce potential data loss.
 
+### Delete Item Feature
+
+Another core feature of the product is the ability to delete an item from a specific category using
+the command `delete category/CATEGORY index/INDEX`.
+
+This feature is necessary because users need to remove items that are no longer available, have been
+fully consumed, or were added by mistake. Without a targeted delete operation, users would have no way
+to keep the inventory accurate over time. The delete-item command solves this by allowing the user to
+specify the category and the 1-based index of the item to remove.
+
+For example, if the user enters `delete category/fruits index/1`, the system locates the `fruits`
+category, removes the first item in it, and displays a confirmation message showing which item was
+deleted.
+
+#### High-level design
+
+At a high level, this feature fits into the existing command-based architecture of the application.
+The flow is as follows:
+
+1. The user enters a `delete` command with both `category/` and `index/` fields.
+2. `Parser` recognises the `delete` command word and delegates the remaining input to
+   `DeleteCommandParser`.
+3. `DeleteCommandParser` extracts the category name and index string, validates them, and creates a
+   `DeleteItemCommand`.
+4. The command is executed with access to the current `Inventory` and `UI`.
+5. The command looks up the category, validates the index, removes the item, and shows a confirmation
+   message.
+
+The main interaction for this flow is illustrated in
+[DeleteItemCommandMainFlow.puml](diagram/DeleteItemCommandMainFlow.puml).
+
+This design was chosen because it follows the same separation of concerns used throughout the project:
+
+- `Parser` and `DeleteCommandParser` interpret user input.
+- `DeleteItemCommand` performs the inventory mutation.
+- Model classes such as `Inventory`, `Category`, and `Item` hold the application state.
+- `UI` presents confirmation or error messages to the user.
+
+As a result, the delete-item feature integrates cleanly into the existing command pipeline without
+requiring changes to the overall architecture.
+
+#### Component-level implementation
+
+The feature is mainly implemented using the following classes:
+
+- `Parser`
+- `DeleteCommandParser`
+- `DeleteItemCommand`
+- `Inventory`
+- `Category`
+- `Item`
+- `UI`
+
+The responsibilities of these classes are as follows:
+
+- `Parser` detects the `delete` command word and delegates to `DeleteCommandParser`.
+- `DeleteCommandParser` tokenises the arguments, extracts `category/` and `index/` fields, validates
+  that the index is a positive integer, and constructs a `DeleteItemCommand`.
+- `DeleteItemCommand` performs the actual removal of the item from the inventory.
+- `Inventory` provides category lookup through `findCategoryByName(...)`.
+- `Category` provides item access through `getItem(...)` and removal through `removeItem(...)`.
+- `Item` provides the name of the deleted item for the confirmation message.
+- `UI` displays the result to the user.
+
+The parser logic deliberately separates field extraction from index validation.
+`DeleteCommandParser.parse(...)` handles tokenisation and field extraction, while the private helper
+`parseDeleteItem(...)` is responsible for converting the index string into a valid integer. This keeps
+each method focused on a single concern.
+
+#### Command execution flow
+
+When `DeleteItemCommand.execute()` is called, the implementation performs the following sequence:
+
+1. Assert that `inventory`, `ui`, and `categoryName` are not `null`.
+2. Call `inventory.findCategoryByName(categoryName)` to locate the target category.
+3. If the category is not found, call `ui.showCategoryNotFound(categoryName)` and return.
+4. Check whether `itemIndex` is within the valid range (1 to `category.getItemCount()`).
+5. If the index is out of range, call `ui.showError(...)` with a message describing the valid range
+   and return.
+6. Retrieve the item at position `itemIndex - 1` using `category.getItem(...)`.
+7. Remove the item at position `itemIndex - 1` using `category.removeItem(...)`.
+8. Log the deletion at `INFO` level.
+9. Call `ui.showItemDeleted(item.getName(), category.getName())` to confirm the deletion to the user.
+
+#### Error handling and validation
+
+Validation is split across the parser layer and the command layer.
+
+`DeleteCommandParser` rejects input that is empty, contains unrecognised fields, or is missing the
+required `category/` field. If `index/` is provided, `parseDeleteItem(...)` rejects non-integer values
+and non-positive integers before a `DeleteItemCommand` is created.
+
+`DeleteItemCommand` performs execution-time checks. If the category does not exist in the inventory,
+the command shows a category-not-found message. If the index is out of bounds for the resolved
+category, the command shows an error message indicating the valid range.
+
+This layered approach ensures that syntactically invalid input is caught at parse time, while
+semantically invalid operations such as referencing a missing category or an out-of-range index are
+caught at execution time.
+
+#### Alternatives considered
+
+Several alternatives were considered when implementing this feature.
+
+Alternative 1: Delete by item name instead of index.
+
+This was rejected because multiple items can share the same name across or within categories. Using an
+index removes ambiguity and ensures the user can target a specific item.
+
+Alternative 2: Require a confirmation prompt before every item deletion.
+
+This was rejected because individual item deletions are low-risk and easily reversible by re-adding the
+item. The confirmation prompt is reserved for the higher-impact `DeleteCategoryCommand`, which clears
+all items in a category at once.
+
+Alternative 3: Let `DeleteCommandParser` also handle the category-not-found check.
+
+This was rejected because category existence is a runtime concern that depends on the current inventory
+state. Keeping this check in the command layer preserves the separation between parsing and execution.
+
+#### Current limitations
+
+The current implementation has some limitations.
+
+- There is no undo mechanism. Once an item is deleted, it must be manually re-added.
+- The command uses a 1-based index, which requires the user to run `list` or `find` beforehand to
+  determine the correct index.
+- Deleting an item shifts the indices of subsequent items, which may confuse users performing multiple
+  consecutive deletions.
+
+These limitations are acceptable for the current project scope.
+
+#### Possible future improvements
+
+If this feature is extended in future versions, the following improvements could be considered:
+
+- Add an undo or soft-delete mechanism that allows recently deleted items to be restored.
+- Support deletion by item name with a disambiguation prompt when multiple matches exist.
+- Display the updated item list after a successful deletion so the user can see the new indices.
+- Support batch deletion by accepting multiple indices in a single command.
+
 ## Product scope
 ### Target user profile
 
@@ -1092,11 +1233,3 @@ provide more detailed diagnostics to the user. This would reduce potential data 
 12. Exit the application using the `bye` command.
 13. Delete the storage file before launching the application.
 14. Verify that the application recreates the file automatically and starts without crashing.
-
-
-
-
-
-
-
-
