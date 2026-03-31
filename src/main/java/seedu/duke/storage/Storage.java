@@ -33,6 +33,7 @@ public class Storage {
     public Storage(String filePath) {
         assert filePath != null : "Storage received null file path.";
         this.dataFile = new File(filePath);
+        logger.log(Level.INFO, "Storage initialized with file path: " + filePath);
     }
 
     /**
@@ -49,6 +50,7 @@ public class Storage {
             parent.mkdirs();
         }
         dataFile.createNewFile();
+        logger.log(Level.INFO, "Created storage file: " + dataFile.getPath());
     }
 
     /**
@@ -61,6 +63,7 @@ public class Storage {
     public void load(Inventory inventory, UI ui) throws DukeException {
         assert inventory != null : "Storage.load received null inventory.";
         assert ui != null : "Storage.load received null ui.";
+        logger.log(Level.INFO, "Starting inventory load from file: " + dataFile.getPath());
         try {
             createFile();
             List<String> lines = Files.readAllLines(dataFile.toPath());
@@ -68,16 +71,18 @@ public class Storage {
 
             for (String line : lines) {
                 try {
+                    logger.log(Level.INFO, "Parsing stored line: " + line);
                     Command command = parseStoredLine(line, addItemCommandParser);
                     command.execute(inventory, null);
                 } catch (DukeException e) {
                     logger.log(Level.WARNING, "Skipped corrupted line: " + line
-                            + " Reason: " + e.getMessage());
+                    + ", Reason: " + e.getMessage());
                     ui.showSkippedLine(line, e.getMessage());
                 }
             }
             logger.log(Level.INFO, "Finished loading inventory.");
         } catch (IOException e) {
+            logger.log(Level.WARNING, "Unable to read storage file.");
             throw new DukeException("Unable to read storage file.");
         }
     }
@@ -123,6 +128,7 @@ public class Storage {
         case "accessories":
             return parser.handleAccessories(line);
         default:
+            logger.log(Level.WARNING, "Unknown category in storage.");
             throw new DukeException("Unknown category in storage.");
         }
     }
@@ -144,7 +150,7 @@ public class Storage {
             }
         }
 
-        throw new DukeException("Missing category in storage line.");
+        throw new DukeException("Missing category in storage line: " + line);
     }
 
     /**
@@ -156,6 +162,7 @@ public class Storage {
     public void save(Inventory inventory) throws DukeException {
         assert inventory != null : "Storage.save received null inventory.";
         List<String> lines = new ArrayList<>();
+        logger.log(Level.INFO, "Starting inventory save to file: " + dataFile.getPath());
 
         for (Category category : inventory.getCategories()) {
             for (Item item : category.getItems()) {
@@ -168,6 +175,7 @@ public class Storage {
             Files.write(dataFile.toPath(), lines);
             logger.log(Level.INFO, "Saved inventory to storage file.");
         } catch (IOException e) {
+            logger.log(Level.WARNING, "Unable to save inventory.");
             throw new DukeException("Unable to save inventory.");
         }
     }
