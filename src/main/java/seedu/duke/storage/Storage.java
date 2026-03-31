@@ -76,7 +76,7 @@ public class Storage {
                     command.execute(inventory, null);
                 } catch (DukeException e) {
                     logger.log(Level.WARNING, "Skipped corrupted line: " + line
-                    + ", Reason: " + e.getMessage());
+                            + ", Reason: " + e.getMessage());
                     ui.showSkippedLine(line, e.getMessage());
                 }
             }
