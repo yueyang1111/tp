@@ -3,12 +3,13 @@ package seedu.duke.model.items;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class SetMealTest {
     @Test
     public void constructor_validInput_success() {
         SetMeal setMeal = new SetMeal("Chicken Set", 7, "F1", "2026-04-20",
-                "Lunch", "Large");
+                "Lunch", "Large", false);
 
         assertEquals("Chicken Set", setMeal.getName());
         assertEquals(7, setMeal.getQuantity());
@@ -16,5 +17,6 @@ public class SetMealTest {
         assertEquals("2026-04-20", setMeal.getExpiryDate());
         assertEquals("Lunch", setMeal.getMealType());
         assertEquals("Large", setMeal.getFoodSize());
+        assertFalse(setMeal.hasDrinks());
     }
 }

@@ -6,15 +6,26 @@ import seedu.duke.parser.FieldParser;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Parses meat-specific fields from user input.
+ */
 public class MeatParser {
     private static final Logger logger = Logger.getLogger(MeatParser.class.getName());
 
     public final String meatType;
     public final String origin;
+    public final boolean isFrozen;
 
-    public MeatParser(String meatType, String origin) {
+    /**
+     * Creates a {@code MeatParser} object with the parsed meat details.
+     *
+     * @param meatType Type of meat.
+     * @param origin Origin of the meat.
+     */
+    public MeatParser(String meatType, String origin, boolean isFrozen) {
         this.meatType = meatType;
         this.origin = origin;
+        this.isFrozen = isFrozen;
     }
 
     public static MeatParser parse(String input) throws DukeException {
@@ -27,13 +38,25 @@ public class MeatParser {
             throw new DukeException("Missing meatType for meat.");
         }
 
-        String origin = FieldParser.extractField(input, "origin/", null);
+        String origin = FieldParser.extractField(input, "origin/", "isFrozen/");
         if (origin == null || origin.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing origin for meat.");
             throw new DukeException("Missing origin for meat.");
         }
 
+        String isFrozenString = FieldParser.extractField(input, "isFrozen/", null);
+        if (isFrozenString == null || isFrozenString.trim().isEmpty()) {
+            logger.log(Level.WARNING, "Missing isFrozen for meat.");
+            throw new DukeException("Missing isFrozen for meat.");
+        }
+
+        if (!(isFrozenString.equalsIgnoreCase("true") || isFrozenString.equalsIgnoreCase("false"))) {
+            logger.log(Level.WARNING, "isFrozen must be true or false");
+            throw new DukeException("isFrozen must be true or false");
+        }
+        boolean isFrozen = Boolean.parseBoolean(isFrozenString);
+
         logger.log(Level.INFO, "End of processing meat.");
-        return new MeatParser(meatType, origin);
+        return new MeatParser(meatType, origin, isFrozen);
     }
 }

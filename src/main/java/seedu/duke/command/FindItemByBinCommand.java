@@ -12,14 +12,29 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Finds and displays items whose bin locations match a bin query.
+ */
 public class FindItemByBinCommand extends Command {
     private static final Logger logger = Logger.getLogger(FindItemByBinCommand.class.getName());
     private final String binInput;
 
+    /**
+     * Creates a command that searches inventory items by bin input.
+     *
+     * @param binInput normalized bin query supplied by the parser.
+     */
     public FindItemByBinCommand(String binInput) {
         this.binInput = binInput;
     }
 
+    /**
+     * Scans every item in the inventory and displays those whose bin location matches the query.
+     *
+     * @param inventory inventory to search.
+     * @param ui user interface used to display search results.
+     * @throws DukeException included for command interface compatibility.
+     */
     @Override
     public void execute(Inventory inventory, UI ui) throws DukeException {
         assert inventory != null : "FindItemByBinCommand received null inventory.";
@@ -52,6 +67,16 @@ public class FindItemByBinCommand extends Command {
         ui.showDivider();
     }
 
+    /**
+     * Matches a stored bin location against a normalized bin query.
+     * An exact query such as {@code a-10} matches only that bin, a single-letter
+     * query such as {@code a} matches all bins in that row, and a numeric query
+     * such as {@code 10} matches all bins with that number.
+     *
+     * @param itemBinLocation stored item bin location.
+     * @param binInput normalized bin query.
+     * @return {@code true} if the item bin satisfies the query.
+     */
     public static boolean isMatchingBin(String itemBinLocation, String binInput) {
         assert itemBinLocation != null : "BinLocationParser received null item bin location.";
         assert binInput != null : "BinLocationParser received null search input.";
@@ -75,4 +100,3 @@ public class FindItemByBinCommand extends Command {
         return binNumber.equals(binInput);
     }
 }
-

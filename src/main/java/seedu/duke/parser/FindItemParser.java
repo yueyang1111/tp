@@ -11,15 +11,32 @@ import seedu.duke.ui.UI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Parses {@code find} commands and creates the command object for the requested
+ * search mode such as keyword, category, expiry date, or bin.
+ */
 public class FindItemParser {
     private static final Logger logger = Logger.getLogger(FindItemParser.class.getName());
 
     private final UI ui;
 
+    /**
+     * Creates a find-command parser.
+     *
+     * @param ui user interface instance associated with the parser workflow.
+     */
     public FindItemParser(UI ui) {
         this.ui = ui;
     }
 
+    /**
+     * Parses the arguments following {@code find} and returns the matching search command.
+     * Bin searches are normalized and validated before the command is created.
+     *
+     * @param input raw arguments following the {@code find} command word.
+     * @return parsed command ready for execution.
+     * @throws DukeException if the search mode or target value is missing or invalid.
+     */
     public Command parse(String input) throws DukeException {
         assert input != null : "FindCommandParser received null input.";
         if (input.isEmpty()) {

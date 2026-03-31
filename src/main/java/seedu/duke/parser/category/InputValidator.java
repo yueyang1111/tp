@@ -18,8 +18,8 @@ public class InputValidator {
             }
 
             if (current < previous) {
-                throw new DukeException(
-                        "Fields must follow the correct order.");
+                throw new DukeException("Fields must follow the correct order. " +
+                        "Run 'help' for supported command.");
             }
             previous = current;
         }

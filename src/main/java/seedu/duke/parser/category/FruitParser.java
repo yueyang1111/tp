@@ -5,17 +5,33 @@ import seedu.duke.parser.FieldParser;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Parses fruit-specific fields from user input.
+ */
 public class FruitParser {
     private static final Logger logger = Logger.getLogger(FruitParser.class.getName());
 
     public final String size;
     public final boolean isRipe;
 
+    /**
+     * Creates a {@code FruitParser} object with the parsed fruit details.
+     *
+     * @param size Size of the fruit.
+     * @param isRipe Whether the fruit is ripe.
+     */
     public FruitParser(String size, boolean isRipe) {
         this.size = size;
         this.isRipe = isRipe;
     }
 
+    /**
+     * Parses the fruit-related fields from the given input string.
+     *
+     * @param input User input containing fruit fields.
+     * @return A {@code FruitParser} containing the parsed values.
+     * @throws DukeException If any required field is missing or invalid.
+     */
     public static FruitParser parse(String input) throws DukeException {
         assert input != null : "FruitParser received null input.";
 

@@ -25,8 +25,12 @@ public class CommonFieldParser {
 
         String categoryName = FieldParser.extractField(
                 input, "category/", "item/");
+
         String itemName = FieldParser.extractField(
                 input, "item/", "bin/");
+        if (itemName == null || itemName.isEmpty()) {
+            throw new DukeException("Missing item name.");
+        }
 
         String bin = FieldParser.extractField(input, "bin/", "qty/");
         if (bin == null || bin.trim().isEmpty()) {

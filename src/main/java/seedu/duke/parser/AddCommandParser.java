@@ -7,16 +7,33 @@ import seedu.duke.command.Command;
 import seedu.duke.exception.DukeException;
 import seedu.duke.ui.UI;
 
+/**
+ * Parses top-level {@code add} commands and routes them to the category-specific
+ * parser that constructs the corresponding add-item command.
+ */
 public class AddCommandParser {
     private static final Logger logger = Logger.getLogger(AddCommandParser.class.getName());
 
     private final UI ui;
 
+    /**
+     * Creates an add-command parser.
+     *
+     * @param ui user interface instance associated with the parser workflow.
+     */
     public AddCommandParser(UI ui) {
         assert ui != null : "AddCommandParser received null UI.";
         this.ui = ui;
     }
 
+    /**
+     * Validates the common add-command fields, extracts the category, and delegates
+     * parsing to the matching category handler.
+     *
+     * @param input raw arguments following the {@code add} command word.
+     * @return parsed command ready for execution.
+     * @throws DukeException if the input is empty, missing required fields, or uses an unknown category.
+     */
     public Command parse(String input) throws DukeException {
         assert input != null : "AddCommandParser received null input.";
         if (input.isEmpty()) {
@@ -32,13 +49,13 @@ public class AddCommandParser {
         return parseByCategory(trimmedInput, category);
     }
 
+    /**
+     * Ensures the shared fields needed by all add-item workflows are present.
+     *
+     * @param input normalized add-command input.
+     * @throws DukeException if the item name or category is missing.
+     */
     private void validateRequiredFields(String input) throws DukeException {
-        String itemName = extractFieldValue(input, "item/");
-        if (itemName == null || itemName.isEmpty()) {
-            logger.log(Level.WARNING, "Missing item name in add command.");
-            throw new DukeException("Missing item name.");
-        }
-
         String category = extractFieldValue(input, "category/");
         if (category == null || category.isEmpty()) {
             logger.log(Level.WARNING, "Missing category in add command.");
@@ -46,10 +63,23 @@ public class AddCommandParser {
         }
     }
 
+    /**
+     * Extracts the category field and normalizes it for parser dispatch.
+     *
+     * @param input normalized add-command input.
+     * @return lower-case category name.
+     */
     private String extractCategory(String input) {
         return extractFieldValue(input, "category/").toLowerCase();
     }
 
+    /**
+     * Returns the value of the first token with the given prefix.
+     *
+     * @param input command input to inspect.
+     * @param prefix field prefix such as {@code category/}.
+     * @return trimmed field value, or {@code null} if the field is absent.
+     */
     private String extractFieldValue(String input, String prefix) {
         String[] tokens = input.split(" ");
         for (String token : tokens) {
@@ -60,6 +90,14 @@ public class AddCommandParser {
         return null;
     }
 
+    /**
+     * Routes an add command to the parser for the requested category.
+     *
+     * @param input normalized add-command input.
+     * @param category normalized category name.
+     * @return parsed add-item command for the category.
+     * @throws DukeException if the category is unsupported.
+     */
     private Command parseByCategory(String input, String category) throws DukeException {
         AddItemCommandParser parser = new AddItemCommandParser();
 

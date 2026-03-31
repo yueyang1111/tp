@@ -2,11 +2,32 @@
 
 ## Acknowledgements
 
-{list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well}
+This project is develop based on the concepts taught in CS2113. The overall architecture were inspired by SE EDU
+AddressBook Level-3 project: https://se-education.org/addressbook-level3/
 
 ## Design & implementation
 
-{Describe the design and implementation of the product. Use UML diagrams and short code snippets where applicable.}
+This section describes the overall design of the application and how its main components interact.
+
+The application follows a command-based architecture, where user input is parsed into commands that operate on the 
+underlying data model. The system is structured into several key components:
+
+- Parser: Interprets user input and constructs the appropriate command objects.
+- Command: Encapsulates the logic to execute specific user operations.
+- Model: Stores the inventory data, including categories and items.
+- Storage: Handles reading from and writing to the storage file.
+- UI: Manages all user's input and output.
+  
+When a user enters a command, the `Parser` interprets the input and returns a corresponding `Command` object. 
+The `Command` is then executed, modifying the `Model` if necessary and delegating output to the `UI`. 
+After execution, the updated state of the `Model` is saved by the `Storage` component.
+
+This design enforces separation of concerns:
+- Parsing logic is separated from execution logic.
+- Data persistence is handled independently by the storage layer.
+
+This modular structure improves maintainability and allows new features to be added with minimal impact on 
+existing components.
 
 ### Find Item By Expiry Date Feature
 
@@ -227,7 +248,7 @@ follows:
 5. The command attempts to locate the matching category and displays either the items or an
    appropriate message.
 
-The main interaction for this flow is illustrated in [FindItemByCategoryCommandMainFlow.puml](diagram/FindItemByCategoryCommandMainFlow.puml).
+The main interaction for this flow is illustrated in [FindItemByCategoryCommandMainFlow.puml](diagrams/FindItemByCategoryCommandMainFlow.puml).
 
 This design was chosen because it follows the same separation of concerns already used throughout the
 project:
@@ -390,7 +411,7 @@ is as follows:
 4. The command is executed with access to the current `Inventory` and `UI`.
 5. The command scans the inventory, identifies matching bin locations, and displays the result.
 
-The main interaction for this flow is illustrated in [FindItemByBinCommandMainFlow.puml](diagram/FindItemByBinCommandMainFlow.puml).
+The main interaction for this flow is illustrated in [FindItemByBinCommandMainFlow.puml](diagrams/FindItemByBinCommandMainFlow.puml).
 
 This design was chosen because it allows bin-specific input normalisation to remain in the parser
 layer, while the matching and display behaviour stays in the command layer.
@@ -554,7 +575,7 @@ application. The feature follows this flow:
 5. An `AddItemCommand` is created and executed with access to the current `Inventory` and `UI`.
 6. The command finds the target category, inserts the item, and shows a confirmation message.
 
-The main interaction for this flow is illustrated in [AddItemCommandMainFlow.puml](diagram/AddItemCommandMainFlow.puml).
+The main interaction for this flow is illustrated in [AddItemCommandMainFlow.puml](diagrams/AddItemCommandMainFlow.puml).
 
 This design was chosen because it preserves the same separation of responsibilities used elsewhere
 in the codebase:
@@ -727,7 +748,7 @@ architecture:
 4. `ListCommand` delegates rendering to `UI.showInventory(inventory)`.
 5. `UI` iterates through the inventory and prints the formatted listing to the user.
 
-The main interaction for this flow is illustrated in [ListCommandMainFlow.puml](diagram/ListCommandMainFlow.puml).
+The main interaction for this flow is illustrated in [ListCommandMainFlow.puml](diagrams/ListCommandMainFlow.puml).
 
 This design was chosen because listing inventory does not require separate parsing logic beyond
 recognising the command word. The command object acts mainly as a bridge between the parser and the UI.
@@ -904,6 +925,8 @@ public String toStorageString(String categoryName) {
 This design ensures that each subclass is responsible for serializing its own data,
 while the `Storage` class remains independent of specific item types.
 
+The main interaction for this flow is illustrated in [StorageSavingMainFlow.puml](diagrams/StorageSavingMainFlow.puml).
+
 #### Loading execution flow
 
 When the application loads data from file, `Storage` performs the following sequence:
@@ -925,6 +948,8 @@ written is also the data that can be read back correctly.
 
 This approach reuses existing parsing logic, ensuring consistency between user input handling and 
 stored data reconstruction.
+
+The main interaction for this flow is illustrated in [StorageLoadingMainFlow.puml](diagrams/StorageLoadingMainFlow.puml).
 
 #### Error handling and validation
 
@@ -991,33 +1016,212 @@ commands. This would reduce coupling and improve clarity of storage logic.
 3. Instead of skipping malformed lines completely, the system could attempt partial recovery and
 provide more detailed diagnostics to the user. This would reduce potential data loss.
 
+### Delete Item Feature
+
+Another core feature of the product is the ability to delete an item from a specific category using
+the command `delete category/CATEGORY index/INDEX`.
+
+This feature is necessary because users need to remove items that are no longer available, have been
+fully consumed, or were added by mistake. Without a targeted delete operation, users would have no way
+to keep the inventory accurate over time. The delete-item command solves this by allowing the user to
+specify the category and the 1-based index of the item to remove.
+
+For example, if the user enters `delete category/fruits index/1`, the system locates the `fruits`
+category, removes the first item in it, and displays a confirmation message showing which item was
+deleted.
+
+#### High-level design
+
+At a high level, this feature fits into the existing command-based architecture of the application.
+The flow is as follows:
+
+1. The user enters a `delete` command with both `category/` and `index/` fields.
+2. `Parser` recognises the `delete` command word and delegates the remaining input to
+   `DeleteCommandParser`.
+3. `DeleteCommandParser` extracts the category name and index string, validates them, and creates a
+   `DeleteItemCommand`.
+4. The command is executed with access to the current `Inventory` and `UI`.
+5. The command looks up the category, validates the index, removes the item, and shows a confirmation
+   message.
+
+The main interaction for this flow is illustrated in
+[DeleteItemCommandMainFlow.puml](diagram/DeleteItemCommandMainFlow.puml).
+
+This design was chosen because it follows the same separation of concerns used throughout the project:
+
+- `Parser` and `DeleteCommandParser` interpret user input.
+- `DeleteItemCommand` performs the inventory mutation.
+- Model classes such as `Inventory`, `Category`, and `Item` hold the application state.
+- `UI` presents confirmation or error messages to the user.
+
+As a result, the delete-item feature integrates cleanly into the existing command pipeline without
+requiring changes to the overall architecture.
+
+#### Component-level implementation
+
+The feature is mainly implemented using the following classes:
+
+- `Parser`
+- `DeleteCommandParser`
+- `DeleteItemCommand`
+- `Inventory`
+- `Category`
+- `Item`
+- `UI`
+
+The responsibilities of these classes are as follows:
+
+- `Parser` detects the `delete` command word and delegates to `DeleteCommandParser`.
+- `DeleteCommandParser` tokenises the arguments, extracts `category/` and `index/` fields, validates
+  that the index is a positive integer, and constructs a `DeleteItemCommand`.
+- `DeleteItemCommand` performs the actual removal of the item from the inventory.
+- `Inventory` provides category lookup through `findCategoryByName(...)`.
+- `Category` provides item access through `getItem(...)` and removal through `removeItem(...)`.
+- `Item` provides the name of the deleted item for the confirmation message.
+- `UI` displays the result to the user.
+
+The parser logic deliberately separates field extraction from index validation.
+`DeleteCommandParser.parse(...)` handles tokenisation and field extraction, while the private helper
+`parseDeleteItem(...)` is responsible for converting the index string into a valid integer. This keeps
+each method focused on a single concern.
+
+#### Command execution flow
+
+When `DeleteItemCommand.execute()` is called, the implementation performs the following sequence:
+
+1. Assert that `inventory`, `ui`, and `categoryName` are not `null`.
+2. Call `inventory.findCategoryByName(categoryName)` to locate the target category.
+3. If the category is not found, call `ui.showCategoryNotFound(categoryName)` and return.
+4. Check whether `itemIndex` is within the valid range (1 to `category.getItemCount()`).
+5. If the index is out of range, call `ui.showError(...)` with a message describing the valid range
+   and return.
+6. Retrieve the item at position `itemIndex - 1` using `category.getItem(...)`.
+7. Remove the item at position `itemIndex - 1` using `category.removeItem(...)`.
+8. Log the deletion at `INFO` level.
+9. Call `ui.showItemDeleted(item.getName(), category.getName())` to confirm the deletion to the user.
+
+#### Error handling and validation
+
+Validation is split across the parser layer and the command layer.
+
+`DeleteCommandParser` rejects input that is empty, contains unrecognised fields, or is missing the
+required `category/` field. If `index/` is provided, `parseDeleteItem(...)` rejects non-integer values
+and non-positive integers before a `DeleteItemCommand` is created.
+
+`DeleteItemCommand` performs execution-time checks. If the category does not exist in the inventory,
+the command shows a category-not-found message. If the index is out of bounds for the resolved
+category, the command shows an error message indicating the valid range.
+
+This layered approach ensures that syntactically invalid input is caught at parse time, while
+semantically invalid operations such as referencing a missing category or an out-of-range index are
+caught at execution time.
+
+#### Alternatives considered
+
+Several alternatives were considered when implementing this feature.
+
+Alternative 1: Delete by item name instead of index.
+
+This was rejected because multiple items can share the same name across or within categories. Using an
+index removes ambiguity and ensures the user can target a specific item.
+
+Alternative 2: Require a confirmation prompt before every item deletion.
+
+This was rejected because individual item deletions are low-risk and easily reversible by re-adding the
+item. The confirmation prompt is reserved for the higher-impact `DeleteCategoryCommand`, which clears
+all items in a category at once.
+
+Alternative 3: Let `DeleteCommandParser` also handle the category-not-found check.
+
+This was rejected because category existence is a runtime concern that depends on the current inventory
+state. Keeping this check in the command layer preserves the separation between parsing and execution.
+
+#### Current limitations
+
+The current implementation has some limitations.
+
+- There is no undo mechanism. Once an item is deleted, it must be manually re-added.
+- The command uses a 1-based index, which requires the user to run `list` or `find` beforehand to
+  determine the correct index.
+- Deleting an item shifts the indices of subsequent items, which may confuse users performing multiple
+  consecutive deletions.
+
+These limitations are acceptable for the current project scope.
+
+#### Possible future improvements
+
+If this feature is extended in future versions, the following improvements could be considered:
+
+- Add an undo or soft-delete mechanism that allows recently deleted items to be restored.
+- Support deletion by item name with a disambiguation prompt when multiple matches exist.
+- Display the updated item list after a successful deletion so the user can see the new indices.
+- Support batch deletion by accepting multiple indices in a single command.
+
 ## Product scope
 ### Target user profile
 
-{Describe the target user profile}
+- Users who need to manage categorized inventory items
+- Users who are comfortable using a Command Line Interface (CLI)
+- Users who want to track item details such as quantity, location, and expiry date
+- Store managers or individuals managing physical storage systems
 
 ### Value proposition
 
-{Describe the value proposition: what problem does it solve?}
+InventoryDock is a CLI-based inventory management system that allows users to efficiently manage categorized items 
+with attributes such as bin location, quantity, and expiry date. It provides fast command-based operations for adding, 
+updating, deleting, and searching items, enabling users to quickly locate and manage inventory without navigating 
+complex interfaces.
 
 ## User Stories
 
-|Version| As a ... | I want to ... | So that I can ...|
-|--------|----------|---------------|------------------|
-|v1.0|new user|see usage instructions|refer to them when I forget how to use the application|
-|v2.0|user|find a to-do item by name|locate a to-do without having to go through the entire list|
+| Version | As a ... | I want to ...             | So that I can ...                                           |
+|---------|----------|---------------------------|-------------------------------------------------------------|
+| v1.0    | new user | see usage instructions    | refer to them when I forget how to use the application      |
+| v1.0    | user     | add items                 | track inventory                                             |
+| v1.0    | user     | delete items              | remove outdated or incorrect entries                        |
+| v1.0    | user     | list items                | view all inventory at once                                  |
+| v2.0    | user     | find items by keyword     | locate an item without having to go through the entire list |
+| v2.0    | user     | find items by category    | find items in a particular category                         |
+| v2.0    | user     | find items by bin         | find items based on storage location                        |
+| v2.0    | user     | find items by expiry date | identify items expiring soon                                |
+| v2.0    | user     | update items              | correct or modify item details                              |
 
 ## Non-Functional Requirements
 
-{Give non-functional requirements}
+1. The application should run on any system with Java 17 or above installed.
+2. The system should handle small to moderate inventory sizes efficiently using linear scans.
+3. The application should persist data between sessions using file storage.
+4. The system should provide clear error messages for invalid user inputs.
+5. The application should be usable via a Command Line Interface.
+6. The system should not crash when encountering malformed storage data, and should handle such cases.
 
 ## Glossary
 
-* *glossary item* - Definition
+* *Item* - A unit stored in the inventory with attributes such as name, quantity, and expiry date.
+* *Category* - A grouping of items within the inventory.
+* *Bin* - A physical storage location identifier (e.g., A-10).
+* *Inventory* - The overall collection of categories and items managed by the system.
+* *Command* - A user input instruction that triggers an operation in the application.
 
 ## Instructions for manual testing
 
-{Give instructions on how to do a manual product testing e.g., how to load sample data to be used for testing}
+This section provides instructions for manually testing the application.
+
+### Launching the application
+
+1. Ensure that Java 17 or above is installed on your system.
+2. Compile and run the `Duke` class.
+3. Verify that the application starts successfully and displays the welcome message.
+
+### Adding sample data
+
+1. Use the `add` command to insert sample items into different categories.
+2. Example:
+    - `add category/fruits item/apple bin/A1 qty/10 expiryDate/2026-4-01 size/medium isRipe/true`
+    - `add category/drinks item/cola bin/B2 qty/5 expiryDate/2026-6-01 brand/coke flavour/original isCarbonated/true`
+3. Run `list` to verify that the items are correctly added.
+
+After setting up the application, proceed to the individual test cases below.
 
 ### Testing add item
 
@@ -1092,11 +1296,3 @@ provide more detailed diagnostics to the user. This would reduce potential data 
 12. Exit the application using the `bye` command.
 13. Delete the storage file before launching the application.
 14. Verify that the application recreates the file automatically and starts without crashing.
-
-
-
-
-
-
-
-

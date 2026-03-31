@@ -5,17 +5,33 @@ import seedu.duke.parser.FieldParser;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Parses ice cream-specific fields from user input.
+ */
 public class IceCreamParser {
     private static final Logger logger = Logger.getLogger(IceCreamParser.class.getName());
 
     public final String flavour;
     public final boolean isDairyFree;
 
+    /**
+     * Creates an {@code IceCreamParser} object with the parsed ice cream details.
+     *
+     * @param flavour Flavour of the ice cream.
+     * @param isDairyFree Whether the ice cream is dairy-free.
+     */
     public IceCreamParser(String flavour, boolean isDairyFree) {
         this.flavour = flavour;
         this.isDairyFree = isDairyFree;
     }
 
+    /**
+     * Parses the ice cream-related fields from the given input string.
+     *
+     * @param input User input containing ice cream fields.
+     * @return An {@code IceCreamParser} containing the parsed values.
+     * @throws DukeException If any required field is missing or invalid.
+     */
     public static IceCreamParser parse(String input) throws DukeException {
         assert input != null : "IceCreamParser received null input.";
         logger.log(Level.INFO, "Processing IceCream special fields.");

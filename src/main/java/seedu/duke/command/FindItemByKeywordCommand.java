@@ -12,14 +12,35 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Represents a command to find items across all categories
+ * whose names contain the specified keyword.
+ * The search is case-insensitive.
+ */
 public class FindItemByKeywordCommand extends Command {
     private static final Logger logger = Logger.getLogger(FindItemByKeywordCommand.class.getName());
     private final String keywordInput;
 
+    /**
+     * Constructs a FindItemByKeywordCommand with the given
+     * keyword.
+     *
+     * @param keywordInput The keyword to search for in item
+     *                     names.
+     */
     public FindItemByKeywordCommand(String keywordInput) {
         this.keywordInput = keywordInput;
     }
 
+    /**
+     * Executes the find-by-keyword command by searching all
+     * categories for items whose names contain the keyword.
+     *
+     * @param inventory The inventory to search through.
+     * @param ui        The UI to display results to the user.
+     * @throws DukeException If an error occurs during
+     *                       execution.
+     */
     @Override
     public void execute(Inventory inventory, UI ui) throws DukeException {
         assert inventory != null : "FindItemByKeywordCommand received null inventory.";
@@ -43,8 +64,7 @@ public class FindItemByKeywordCommand extends Command {
             return;
         }
 
-        logger.log(Level.INFO, "Found " + matches.size()
-                + " item(s) matching keyword '" + keywordInput + "'.");
+        logger.log(Level.INFO, "Found " + matches.size() + " item(s) matching keyword '" + keywordInput + "'.");
 
         ui.showDivider();
         ui.showMessage("Items matching keyword '" + keywordInput + "':");

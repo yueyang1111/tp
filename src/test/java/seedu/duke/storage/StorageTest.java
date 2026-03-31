@@ -62,7 +62,7 @@ public class StorageTest {
         );
         inventory.findCategoryByName("snacks").addItem(
                 new Snack("chips", 6, "S-07",
-                        "lays", "2026-06-01")
+                        "2026-06-01", "lays", true)
         );
         inventory.findCategoryByName("toiletries").addItem(
                 new Toiletries("shampoo", 2, "T-03",
@@ -102,7 +102,7 @@ public class StorageTest {
                 "category/fruits item/apple bin/A-10 qty/3 expiryDate/2026-03-20 size/big isRipe/true",
                 "category/vegetables item/spinach bin/V-01 qty/4 expiryDate/2026-03-18 isLeafy/true",
                 "Corrupted line.",
-                "category/snacks item/chips bin/S-07 qty/6 expiryDate/2026-06-01 brand/lays"
+                "category/snacks item/chips bin/S-07 qty/6 expiryDate/2026-06-01 brand/lays, isCrunchy/true"
         );
 
         Files.write(Path.of(FILE_PATH), lines);

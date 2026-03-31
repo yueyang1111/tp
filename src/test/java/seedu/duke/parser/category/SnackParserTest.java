@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class SnackParserTest {
     @Test
     public void parse_validInput_success() {
-        String input = "brand/Lays";
+        String input = "brand/Lays, isCrunchy/true";
         assertDoesNotThrow(() -> SnackParser.parse(input));
     }
 
@@ -20,6 +20,14 @@ public class SnackParserTest {
         DukeException e = assertThrows(DukeException.class,
                 () -> SnackParser.parse(input));
         assertEquals("Missing brand for snack.", e.getMessage());
+    }
+
+    @Test
+    public void parse_missingCrunchiness_throwsException() {
+        String input = "brand/Lays isCrunchy/";
+        DukeException e = assertThrows(DukeException.class,
+                () -> SnackParser.parse(input));
+        assertEquals("Missing crunchiness for snack.", e.getMessage());
     }
 }
 
