@@ -10,13 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class SweetsParserTest {
     @Test
     public void parse_validInput_success() {
-        String input = "brand/Haribo sweetnessLevel/High";
+        String input = "brand/Haribo sweetnessLevel/High, isChewy/true";
         assertDoesNotThrow(() -> SweetsParser.parse(input));
     }
 
     @Test
     public void parse_missingBrand_throwsException() {
-        String input = "brand/ sweetnessLevel/High";
+        String input = "brand/ sweetnessLevel/High isChewy/true";
         DukeException e = assertThrows(DukeException.class,
                 () -> SweetsParser.parse(input));
         assertEquals("Missing brand for sweets.", e.getMessage());
@@ -24,7 +24,7 @@ public class SweetsParserTest {
 
     @Test
     public void parse_missingSweetnessLevel_throwsException() {
-        String input = "brand/Haribo sweetnessLevel/";
+        String input = "brand/Haribo sweetnessLevel/ isChewy/true";
         DukeException e = assertThrows(DukeException.class,
                 () -> SweetsParser.parse(input));
         assertEquals("Missing sweetness level for sweets.", e.getMessage());

@@ -1,0 +1,57 @@
+@startuml
+title Sequence Diagram for Storage Save (Main Control Flow Only)
+
+autonumber
+hide footbox
+
+participant ":Duke" as Duke
+participant ":Storage" as Storage
+participant ":Inventory" as Inventory
+participant ":Category" as Category
+participant ":Item" as Item
+
+Duke -> Storage: save(inventory)
+activate Storage
+
+Storage -> Inventory: getCategories()
+activate Inventory
+Inventory --> Storage: categories
+deactivate Inventory
+
+loop for each category in inventory
+    Storage -> Category: getItems()
+    activate Category
+    Category --> Storage: items
+    deactivate Category
+
+    Storage -> Category: getName()
+    activate Category
+    Category --> Storage: categoryName
+    deactivate Category
+
+    loop for each item in category
+        Storage -> Storage: formatItem(item, categoryName)
+        activate Storage
+        Storage -> Item: toStorageString(categoryName)
+        activate Item
+        Item --> Storage: storageLine
+        deactivate Item
+        Storage --> Storage
+        deactivate Storage
+    end
+end
+
+Storage -> Storage: createFile()
+activate Storage
+Storage --> Storage
+deactivate Storage
+
+Storage -> Storage: write(dataFile, lines)
+activate Storage
+Storage --> Storage
+deactivate Storage
+
+Storage --> Duke
+deactivate Storage
+
+@enduml

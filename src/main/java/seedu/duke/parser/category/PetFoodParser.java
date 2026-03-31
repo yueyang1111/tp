@@ -10,10 +10,12 @@ public class PetFoodParser {
 
     public final String petType;
     public final String brand;
+    public final boolean isDryFood;
 
-    public PetFoodParser(String petType, String brand) {
+    public PetFoodParser(String petType, String brand, boolean isDryFood) {
         this.petType = petType;
         this.brand = brand;
+        this.isDryFood = isDryFood;
     }
 
     public static PetFoodParser parse(String input) throws DukeException {
@@ -26,13 +28,25 @@ public class PetFoodParser {
             throw new DukeException("Missing petType for pet food.");
         }
 
-        String brand = FieldParser.extractField(input, "brand/", null);
+        String brand = FieldParser.extractField(input, "brand/", "isDryFood/");
         if (brand == null || brand.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing brand for pet food.");
             throw new DukeException("Missing brand for pet food.");
         }
 
+        String isDryFoodString = FieldParser.extractField(input, "isDryFood/", null);
+        if (isDryFoodString == null || isDryFoodString.trim().isEmpty()) {
+            logger.log(Level.WARNING, "Missing isDryFood for pet food.");
+            throw new DukeException("Missing isDryFood for pet food.");
+        }
+
+        if (!(isDryFoodString.equalsIgnoreCase("true") || isDryFoodString.equalsIgnoreCase("false"))) {
+            logger.log(Level.WARNING, "isDryFood must be true or false");
+            throw new DukeException("isDryFood must be true or false");
+        }
+        boolean isDryFood = Boolean.parseBoolean(isDryFoodString);
+
         logger.log(Level.INFO, "End of processing pet food.");
-        return new PetFoodParser(petType, brand);
+        return new PetFoodParser(petType, brand, isDryFood);
     }
 }

@@ -10,13 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class SetMealParserTest {
     @Test
     public void parse_validInput_success() {
-        String input = "mealType/Western foodSize/Large";
+        String input = "mealType/Western foodSize/Large hasDrinks/true";
         assertDoesNotThrow(() -> SetMealParser.parse(input));
     }
 
     @Test
     public void parse_missingFoodSize_throwsException() {
-        String input = "mealType/Western foodSize/";
+        String input = "mealType/Western foodSize/ hasDrinks/true";
         DukeException e = assertThrows(DukeException.class,
                 () -> SetMealParser.parse(input));
         assertEquals("Missing foodSize for set meal.", e.getMessage());
@@ -24,7 +24,7 @@ public class SetMealParserTest {
 
     @Test
     public void parse_missingMealType_throwsException() {
-        String input = "mealType/ foodSize/Large";
+        String input = "mealType/ foodSize/Large hasDrinks/true";
         DukeException e = assertThrows(DukeException.class,
                 () -> SetMealParser.parse(input));
         assertEquals("Missing mealType for set meal.", e.getMessage());

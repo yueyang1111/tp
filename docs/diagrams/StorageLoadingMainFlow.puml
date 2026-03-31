@@ -1,0 +1,68 @@
+@startuml
+title Sequence Diagram for Storage Load (Main Control Flow Only)
+
+autonumber
+hide footbox
+
+participant ":Duke" as Duke
+participant ":Storage" as Storage
+participant ":AddItemCommandParser" as AddItemCommandParser
+participant ":Command" as Command
+participant ":Inventory" as Inventory
+participant ":UI" as UI
+
+Duke -> Storage: load(inventory, ui)
+activate Storage
+
+Storage -> Storage: createFile()
+activate Storage
+Storage --> Storage
+deactivate Storage
+
+Storage -> Storage: readAllLines(dataFile)
+activate Storage
+Storage --> Storage
+deactivate Storage
+
+create AddItemCommandParser
+Storage -> AddItemCommandParser: AddItemCommandParser()
+activate AddItemCommandParser
+AddItemCommandParser --> Storage
+
+loop for each line in storage file
+    Storage -> Storage: parseStoredLine(line, addItemCommandParser)
+    activate Storage
+    Storage --> Storage
+    deactivate Storage
+
+    Storage -> Storage: extractCategory(line)
+    activate Storage
+    Storage --> Storage
+    deactivate Storage
+
+    alt category is valid
+        Storage -> AddItemCommandParser: handleCategory(line)
+        activate AddItemCommandParser
+        AddItemCommandParser --> Storage: command
+        deactivate AddItemCommandParser
+
+        Storage -> Command: execute(inventory, null)
+        activate Command
+        Command -> Inventory: add loaded item
+        activate Inventory
+        Inventory --> Command
+        deactivate Inventory
+        Command --> Storage
+        deactivate Command
+    else corrupted or invalid line
+        Storage -> UI: showSkippedLine(line, errorMessage)
+        activate UI
+        UI --> Storage
+        deactivate UI
+    end
+end
+
+Storage --> Duke
+deactivate Storage
+
+@enduml

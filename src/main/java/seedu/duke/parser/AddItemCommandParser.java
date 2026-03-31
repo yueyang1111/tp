@@ -56,12 +56,12 @@ public class AddItemCommandParser {
     public Command handleSnack(String input) throws DukeException {
         assert input != null : "AddItemCommandParser received null snack input.";
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
-                "expiryDate/", "brand/");
+                "expiryDate/", "brand/", "isCrunchy/");
 
         CommonFieldParser commonFields = CommonFieldParser.parse(input, "brand/");
         SnackParser snackFields = SnackParser.parse(input);
         Item item = new Snack(commonFields.itemName, commonFields.quantity, commonFields.bin,
-                snackFields.brand, commonFields.expiryDate);
+                commonFields.expiryDate, snackFields.brand, snackFields.isCrunchy);
 
         return new AddItemCommand(commonFields.categoryName, item);
     }
@@ -96,12 +96,12 @@ public class AddItemCommandParser {
         assert input != null : "AddItemCommandParser received null drinks input.";
         logger.log(Level.INFO, "Parsing add-item command for drinks.");
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
-                "expiryDate/", "brand/", "flavour/");
+                "expiryDate/", "brand/", "flavour/", "isCarbonated/");
 
         CommonFieldParser commonFields = CommonFieldParser.parse(input, "brand/");
         DrinksParser drinksFields = DrinksParser.parse(input);
         Item item = new Drinks(commonFields.itemName, commonFields.quantity, commonFields.bin,
-                commonFields.expiryDate, drinksFields.brand, drinksFields.flavour);
+                commonFields.expiryDate, drinksFields.brand, drinksFields.flavour, drinksFields.isCarbonated);
 
         logger.log(Level.INFO, "Created drinks item command for category: " + commonFields.categoryName);
         return new AddItemCommand(commonFields.categoryName, item);
@@ -126,12 +126,12 @@ public class AddItemCommandParser {
         assert input != null : "AddItemCommandParser received null sweets input.";
         logger.log(Level.INFO, "Parsing add-item command for sweets.");
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
-                "expiryDate/", "brand/", "sweetnessLevel/");
+                "expiryDate/", "brand/", "sweetnessLevel/", "isChewy/");
 
         CommonFieldParser commonFields = CommonFieldParser.parse(input, "brand/");
         SweetsParser sweetsFields = SweetsParser.parse(input);
         Item item = new Sweets(commonFields.itemName, commonFields.quantity, commonFields.bin,
-                commonFields.expiryDate, sweetsFields.brand, sweetsFields.sweetnessLevel);
+                commonFields.expiryDate, sweetsFields.brand, sweetsFields.sweetnessLevel, sweetsFields.isChewy);
 
         logger.log(Level.INFO, "Created sweets item command for category: " + commonFields.categoryName);
         return new AddItemCommand(commonFields.categoryName, item);
@@ -141,12 +141,12 @@ public class AddItemCommandParser {
         assert input != null : "AddItemCommandParser received null set meal input.";
         logger.log(Level.INFO, "Parsing add-item command for set meal.");
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
-                "expiryDate/", "mealType/", "foodSize/");
+                "expiryDate/", "mealType/", "foodSize/", "hasDrinks/");
 
         CommonFieldParser commonFields = CommonFieldParser.parse(input, "mealType/");
         SetMealParser setMealFields = SetMealParser.parse(input);
         Item item = new SetMeal(commonFields.itemName, commonFields.quantity, commonFields.bin,
-                commonFields.expiryDate, setMealFields.mealType, setMealFields.foodSize);
+                commonFields.expiryDate, setMealFields.mealType, setMealFields.foodSize, setMealFields.hasDrinks);
 
         logger.log(Level.INFO, "Created set meal item command for category: " + commonFields.categoryName);
         return new AddItemCommand(commonFields.categoryName, item);
@@ -156,12 +156,12 @@ public class AddItemCommandParser {
         assert input != null : "AddItemCommandParser received null seafood input.";
         logger.log(Level.INFO, "Parsing add-item command for seafood.");
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
-                "expiryDate/", "seafoodType/", "origin/");
+                "expiryDate/", "seafoodType/", "origin/", "isFrozen/");
 
         CommonFieldParser commonFields = CommonFieldParser.parse(input, "seafoodType/");
         SeafoodParser seafoodFields = SeafoodParser.parse(input);
         Item item = new Seafood(commonFields.itemName, commonFields.quantity, commonFields.bin,
-                commonFields.expiryDate, seafoodFields.seafoodType, seafoodFields.origin);
+                commonFields.expiryDate, seafoodFields.seafoodType, seafoodFields.origin, seafoodFields.isFrozen);
 
         logger.log(Level.INFO, "Created seafood item command for category: " + commonFields.categoryName);
         return new AddItemCommand(commonFields.categoryName, item);
@@ -171,12 +171,12 @@ public class AddItemCommandParser {
         assert input != null : "AddItemCommandParser received null meat input.";
         logger.log(Level.INFO, "Parsing add-item command for meat.");
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
-                "expiryDate/", "meatType/", "origin/");
+                "expiryDate/", "meatType/", "origin/", "isFrozen/");
 
         CommonFieldParser commonFields = CommonFieldParser.parse(input, "meatType/");
         MeatParser meatFields = MeatParser.parse(input);
         Item item = new Meat(commonFields.itemName, commonFields.quantity, commonFields.bin,
-                commonFields.expiryDate, meatFields.meatType, meatFields.origin);
+                commonFields.expiryDate, meatFields.meatType, meatFields.origin, meatFields.isFrozen);
 
         logger.log(Level.INFO, "Created meat item command for category: " + commonFields.categoryName);
         return new AddItemCommand(commonFields.categoryName, item);
@@ -186,12 +186,12 @@ public class AddItemCommandParser {
         assert input != null : "AddItemCommandParser received null pet food input.";
         logger.log(Level.INFO, "Parsing add-item command for pet food.");
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
-                "expiryDate/", "petType/", "brand/");
+                "expiryDate/", "petType/", "brand/", "isDryFood/");
 
         CommonFieldParser commonFields = CommonFieldParser.parse(input, "petType/");
         PetFoodParser petFoodFields = PetFoodParser.parse(input);
         Item item = new PetFood(commonFields.itemName, commonFields.quantity, commonFields.bin,
-                commonFields.expiryDate, petFoodFields.petType, petFoodFields.brand);
+                commonFields.expiryDate, petFoodFields.petType, petFoodFields.brand, petFoodFields.isDryFood);
 
         logger.log(Level.INFO, "Created pet food item command for category: " + commonFields.categoryName);
         return new AddItemCommand(commonFields.categoryName, item);
@@ -201,12 +201,13 @@ public class AddItemCommandParser {
         assert input != null : "AddItemCommandParser received null accessories input.";
         logger.log(Level.INFO, "Parsing add-item command for accessories.");
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
-                "expiryDate/", "type/", "material/");
+                "expiryDate/", "type/", "material/", "isFragile/");
 
         CommonFieldParser commonFields = CommonFieldParser.parse(input, "type/");
         AccessoriesParser accessoriesFields = AccessoriesParser.parse(input);
         Item item = new Accessories(commonFields.itemName, commonFields.quantity, commonFields.bin,
-                commonFields.expiryDate, accessoriesFields.type, accessoriesFields.material);
+                commonFields.expiryDate, accessoriesFields.type, accessoriesFields.material,
+                accessoriesFields.isFragile);
 
         logger.log(Level.INFO, "Created accessories item command for category: " + commonFields.categoryName);
         return new AddItemCommand(commonFields.categoryName, item);

@@ -36,9 +36,9 @@ public class FindItemByKeywordCommandTest {
         fruitsCategory.addItem(new Fruit("banana", 30, "B-10",
                 "2026-10-03", "small", true));
         snacksCategory.addItem(new Snack("chips", 50, "D-05",
-                "Lays", "2026-10-03"));
+                "2026-10-03", "Lays", true));
         drinksCategory.addItem(new Drinks("apple_juice", 24, "F-01",
-                "2026-10-03", "Marigold", "Apple"));
+                "2026-10-03", "Marigold", "Apple", true));
 
         inventory.addCategory(fruitsCategory);
         inventory.addCategory(snacksCategory);

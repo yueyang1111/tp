@@ -11,10 +11,12 @@ public class SweetsParser {
 
     public final String brand;
     public final String sweetnessLevel;
+    public final boolean isChewy;
 
-    public SweetsParser(String brand, String sweetnessLevel) {
+    public SweetsParser(String brand, String sweetnessLevel, boolean isChewy) {
         this.brand = brand;
         this.sweetnessLevel = sweetnessLevel;
+        this.isChewy = isChewy;
     }
 
     public static SweetsParser parse(String input) throws DukeException {
@@ -27,13 +29,25 @@ public class SweetsParser {
             throw new DukeException("Missing brand for sweets.");
         }
 
-        String sweetnessLevel = FieldParser.extractField(input, "sweetnessLevel/", null);
+        String sweetnessLevel = FieldParser.extractField(input, "sweetnessLevel/", "isChewy/");
         if (sweetnessLevel == null || sweetnessLevel.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing sweetness level for sweets.");
             throw new DukeException("Missing sweetness level for sweets.");
         }
 
+        String chewyString = FieldParser.extractField(input, "isChewy/", null);
+        if (chewyString == null || chewyString.trim().isEmpty()) {
+            logger.log(Level.WARNING, "Missing chewiness for snack.");
+            throw new DukeException("Missing chewiness for snack.");
+        }
+
+        if (!(chewyString.equalsIgnoreCase("true") || chewyString.equalsIgnoreCase("false"))) {
+            logger.log(Level.WARNING, "Chewiness must be true or false");
+            throw new DukeException("Chewiness must be true or false");
+        }
+        boolean isChewy = Boolean.parseBoolean(chewyString);
+
         logger.log(Level.INFO, "End of processing sweets.");
-        return new SweetsParser(brand, sweetnessLevel);
+        return new SweetsParser(brand, sweetnessLevel, isChewy);
     }
 }

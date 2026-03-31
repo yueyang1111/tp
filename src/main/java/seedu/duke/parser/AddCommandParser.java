@@ -33,12 +33,6 @@ public class AddCommandParser {
     }
 
     private void validateRequiredFields(String input) throws DukeException {
-        String itemName = extractFieldValue(input, "item/");
-        if (itemName == null || itemName.isEmpty()) {
-            logger.log(Level.WARNING, "Missing item name in add command.");
-            throw new DukeException("Missing item name.");
-        }
-
         String category = extractFieldValue(input, "category/");
         if (category == null || category.isEmpty()) {
             logger.log(Level.WARNING, "Missing category in add command.");

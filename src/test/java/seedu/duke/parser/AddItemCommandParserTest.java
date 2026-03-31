@@ -102,7 +102,7 @@ public class AddItemCommandParserTest {
 
         DukeException e = assertThrows(DukeException.class,
                 () -> parser.handleFruit(input));
-        assertEquals("Fields must follow the correct order.", e.getMessage());
+        assertEquals("Fields must follow the correct order. Run 'help' for supported command.", e.getMessage());
     }
 
     @Test
