@@ -828,6 +828,7 @@ Item item = category.getItem(itemIndex - 1);
 String originalName = item.getName();
 applyUpdates(item);
 ui.showItemUpdated(originalName, item.getName(), category.getName());
+```
 
 #### Why the feature is implemented this way
 
