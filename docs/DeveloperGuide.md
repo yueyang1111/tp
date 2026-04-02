@@ -1139,7 +1139,7 @@ public String toStorageString(String categoryName) {
 This design ensures that each subclass is responsible for serializing its own data,
 while the `Storage` class remains independent of specific item types.
 
-The main interaction for this flow is illustrated in [StorageSavingMainFlow.puml](diagrams/StorageSavingMainFlow.puml).
+The main interaction for this flow is illustrated in ![StorageSavingMainFlow.png](diagrams/StorageSavingMainFlow.png).
 
 #### Loading execution flow
 
@@ -1163,7 +1163,7 @@ written is also the data that can be read back correctly.
 This approach reuses existing parsing logic, ensuring consistency between user input handling and 
 stored data reconstruction.
 
-The main interaction for this flow is illustrated in [StorageLoadingMainFlow.puml](diagrams/StorageLoadingMainFlow.puml).
+The main interaction for this flow is illustrated in [StorageLoadingMainFlow.png](diagrams/StorageLoadingMainFlow.png).
 
 #### Error handling and validation
 
