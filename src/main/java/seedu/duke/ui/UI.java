@@ -168,6 +168,27 @@ public class UI {
         showDivider();
     }
 
+    public void showSortedInventory(Inventory inventory, List<List<Item>> sortedItemsByCategory, String sortLabel) {
+        List<Category> categories = inventory.getCategories();
+        if (categories.isEmpty()) {
+            System.out.println("Inventory is empty.");
+            return;
+        }
+        showDivider();
+        System.out.println("Current Inventory (sorted by " + sortLabel + "):");
+        System.out.println("Items remain grouped by category.");
+        System.out.println();
+        for (int i = 0; i < categories.size(); i++) {
+            Category cat = categories.get(i);
+            System.out.println((i + 1) + ". " + capitalise(cat.getName()) + " (" + cat.getItemCount() + " items)");
+            List<Item> items = sortedItemsByCategory.get(i);
+            for (int j = 0; j < items.size(); j++) {
+                System.out.println("   " + (j + 1) + ". " + items.get(j));
+            }
+        }
+        showDivider();
+    }
+
     public void showSkippedLine(String line, String reason) {
         showDivider();
         System.out.println("Skip corrupted line: " + line);
