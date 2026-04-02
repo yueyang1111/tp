@@ -34,7 +34,7 @@ public class SortCommandParser {
         switch (sortType) {
         case "expirydate":
         case "qty":
-//            return new SortCommand(sortType);
+           return new SortCommand(sortType);
         default:
             logger.log(Level.WARNING, "Unknown sort type: " + sortType);
             throw new DukeException("Unknown sort type: '" + sortType + "'. "
