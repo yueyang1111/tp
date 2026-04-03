@@ -15,7 +15,7 @@ public class SortCommandParserTest {
     public void parse_emptyInput_throwsException() {
         DukeException exception = assertThrows(DukeException.class,
                 () -> parser.parse(""));
-        assertEquals("Please specify what to sort by. Use: sort expirydate, or sort qty.",
+        assertEquals("Please specify what to sort by. Use: sort name, sort expirydate, or sort qty.",
                 exception.getMessage());
     }
 
@@ -23,7 +23,7 @@ public class SortCommandParserTest {
     public void parse_unknownSortType_throwsException() {
         DukeException exception = assertThrows(DukeException.class,
                 () -> parser.parse("invalid"));
-        assertEquals("Unknown sort type: 'invalid'. Use: sort expirydate, or sort qty.",
+        assertEquals("Unknown sort type: 'invalid'. Use: sort name, sort expirydate, or sort qty.",
                 exception.getMessage());
     }
 

@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Parses {@code sort} commands and creates the command object for the sorting the inventory, based on expiry date
+ * Parses {@code sort} commands and creates the command object for the sorting the inventory, based on name, expiry date
  * or quantity.
  */
 public class SortCommandParser {
@@ -27,19 +27,20 @@ public class SortCommandParser {
         if (trimmedInput.isEmpty()) {
             logger.log(Level.WARNING, "Sort command missing sort type.");
             throw new DukeException(
-                    "Please specify what to sort by. Use: sort expirydate, or sort qty.");
+                    "Please specify what to sort by. Use: sort name, sort expirydate, or sort qty.");
         }
 
         String sortType = trimmedInput.toLowerCase();
 
         switch (sortType) {
+        case "name":
         case "expirydate":
         case "qty":
             return new SortCommand(sortType);
         default:
             logger.log(Level.WARNING, "Unknown sort type: " + sortType);
             throw new DukeException("Unknown sort type: '" + sortType + "'. "
-                    + "Use: sort expirydate, or sort qty.");
+                    + "Use: sort name, sort expirydate, or sort qty.");
         }
     }
 }
