@@ -54,6 +54,7 @@ Given below are my contributions to the project.
 - Led the design of the project's initial architecture so teammates could build on a consistent command-driven structure.
 - Helped define the responsibilities and interactions of key classes such as `Parser`, `Command`, `Inventory`, `Category`, `Item`, `Storage`, and `UI`.
 - Established an extensible model design that relied on polymorphism in the `Item` hierarchy, so shared behaviour could be handled through common abstractions while specific item types could still define their own fields and constraints.
+- Reviewed Java logging API documentation and helped standardise how loggers are declared across classes, as well as which logging levels should be used for different situations so logging behaviour stays more consistent across the codebase.
 - Added automated tests for `UpdateItemCommand`, `UpdateCommandParser`, `FindItemByExpiryDateCommand`, and `SortCommand`.
 
 ### Review/mentoring contributions
