@@ -1,0 +1,93 @@
+@startuml
+title Sequence Diagram for FindItemByQtyCommand (Main Control Flow)
+
+autonumber
+hide footbox
+
+actor User
+participant ":UI" as UI
+participant ":Duke" as Duke
+participant ":Parser" as Parser
+participant ":FindItemParser" as FindItemParser
+participant ":CommonFieldParser" as CommonFieldParser
+participant ":FindItemByQtyCommand" as FindItemByQtyCommand
+participant ":Inventory" as Inventory
+participant ":Category" as Category
+participant ":Item" as Item
+
+User -> UI: enter find qty command
+activate UI
+UI -> Duke: input
+activate Duke
+Duke -> Parser: parse(input)
+activate Parser
+
+Parser -> FindItemParser: parse(arguments)
+activate FindItemParser
+FindItemParser -> CommonFieldParser: parseQuantity(name)
+activate CommonFieldParser
+CommonFieldParser --> FindItemParser: qtyInput
+deactivate CommonFieldParser
+
+create FindItemByQtyCommand
+FindItemParser -> FindItemByQtyCommand: FindItemByQtyCommand(qtyInput)
+activate FindItemByQtyCommand
+FindItemByQtyCommand --> FindItemParser: command
+deactivate FindItemByQtyCommand
+FindItemParser --> Parser: command
+deactivate FindItemParser
+Parser --> Duke: command
+deactivate Parser
+
+Duke -> FindItemByQtyCommand: execute(inventory, ui)
+activate FindItemByQtyCommand
+FindItemByQtyCommand -> Inventory: getCategories()
+activate Inventory
+Inventory --> FindItemByQtyCommand: categories
+deactivate Inventory
+
+loop for each category in categories
+    FindItemByQtyCommand -> Category: getItems()
+    activate Category
+    Category --> FindItemByQtyCommand: items
+    deactivate Category
+
+    loop for each item in items
+        FindItemByQtyCommand -> Item: getQuantity()
+        activate Item
+        Item --> FindItemByQtyCommand: quantity
+        deactivate Item
+
+        note right of FindItemByQtyCommand
+            Check if item quantity <= qtyInput
+            If true, add item to matches
+        end note
+    end
+end
+
+alt no matches found
+    FindItemByQtyCommand -> UI: formatNoItemsFoundMessage("with quantity: " + qtyInput)
+    activate UI
+    UI --> FindItemByQtyCommand: noItemsMessage
+    FindItemByQtyCommand -> UI: showMessage(noItemsMessage)
+    UI --> User: display no-match message
+    deactivate UI
+else matches found
+    FindItemByQtyCommand -> UI: formatFoundItemsMessage(matches.size(), "with quantity '" + qtyInput + "'")
+    activate UI
+    UI --> FindItemByQtyCommand: foundItemsMessage
+    FindItemByQtyCommand -> UI: showDivider()
+    FindItemByQtyCommand -> UI: formatFindResultsHeader("with quantity: " + qtyInput)
+    UI --> FindItemByQtyCommand: resultsHeader
+    FindItemByQtyCommand -> UI: showMessage(resultsHeader)
+    FindItemByQtyCommand -> UI: showNumberedList(matches)
+    FindItemByQtyCommand -> UI: showDivider()
+    UI --> User: display matching items
+    deactivate UI
+end
+
+FindItemByQtyCommand --> Duke: display information
+deactivate FindItemByQtyCommand
+deactivate Duke
+deactivate UI
+@enduml

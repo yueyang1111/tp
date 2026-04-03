@@ -83,6 +83,9 @@ I updated `AddItemCommandParser.java` to integrate the category-specific parsers
 
 These methods allow the system to correctly parse category-dependent input and construct the corresponding item objects. This improves the extensibility of the add-command flow and ensures that category-specific item creation is handled in a structured and consistent way.
 
+### Add and update the following UML sequence diagrams:
+- `FindItemByQtyCommand_sequence.puml`
+
 ### Improved code quality and maintainability
 
 In addition to implementation work, I contributed to improving the overall quality of the codebase through testing, JavaDocs, and style-related fixes. This helped ensure that the new inventory features were easier to understand, easier to maintain, and better aligned with project coding standards.
