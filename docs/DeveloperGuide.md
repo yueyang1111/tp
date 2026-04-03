@@ -546,6 +546,114 @@ If this feature is extended in future versions, the following improvements could
 - Support bin ranges or multi-bin queries.
 - Group results by category when displaying matches.
 - Introduce an internal location index if inventory size grows significantly.
+
+### Find Item By Quantity Feature
+
+Another search feature in the product is the ability to find items by quantity using the command
+`find qty/QUANTITY`.
+
+This feature is useful because inventory reviews often start from stock levels rather than item names.
+A user may want to identify low-stock items quickly, restock products below a threshold, or inspect all
+items whose quantity is at or below a target level. The quantity search feature solves this by allowing
+an inclusive threshold search.
+
+For example, if the user enters `find qty/15`, the system returns items with quantity `15` as well as
+items with smaller quantities such as `10` or `5`.
+
+#### High-level design
+
+At a high level, this feature reuses the same command-based architecture as the other `find` features.
+The flow is as follows:
+
+1. The user enters a `find` command.
+2. `FindItemParser` inspects the prefix before the `/`.
+3. If the prefix is `qty`, the parser validates the quantity using `CommonFieldParser.parseQuantity(...)`
+   and creates a `FindItemByQtyCommand`.
+4. The command is executed with access to the current `Inventory` and `UI`.
+5. The command scans the inventory, identifies items whose quantity is less than or equal to the input,
+   and displays the result.
+
+This design was chosen because it keeps quantity validation in the parser layer while keeping inventory
+scanning and threshold comparison in the command layer.
+
+
+#### Component-level implementation
+
+The feature is mainly implemented using the following classes:
+
+- `FindItemParser`
+- `CommonFieldParser`
+- `FindItemByQtyCommand`
+- `Inventory`
+- `Category`
+- `Item`
+
+The responsibilities of these classes are as follows:
+
+- `FindItemParser` recognises that the user wants to search by quantity.
+- `CommonFieldParser` validates that the quantity input is a positive integer.
+- `FindItemByQtyCommand` performs the inventory scan and threshold matching logic.
+- `Inventory` exposes the list of stored categories.
+- `Category` exposes the items inside each category.
+- `Item` provides the stored quantity used during matching.
+
+The parser does not perform the inventory scan itself. Its responsibility is limited to interpreting the
+user input and constructing the correct command object.
+
+#### Command execution flow
+
+When `FindItemByQtyCommand.execute()` is called, the implementation performs the following sequence:
+
+1. Assert that `inventory`, `ui`, and `qtyInput` are valid.
+2. Create an empty `List<Item>` named `matches` to store matching items.
+3. Retrieve all categories from the `Inventory`.
+4. Iterate through each `Category`.
+5. Within each category, iterate through each `Item`.
+6. Read the item's quantity using `item.getQuantity()`.
+7. Compare the item's quantity against the user-provided threshold.
+8. If the item quantity is less than or equal to the threshold, add the item to `matches`.
+9. After the scan is complete, either:
+10. Display a `no items found` message if `matches` is empty, or
+11. Print the list of matching items with numbering and dividers.
+
+The key comparison is:
+
+```java
+if (item.getQuantity() <= qtyInput) {
+    matches.add(item);
+}
+```
+
+#### Design considerations
+
+Alternative 1: Require an exact quantity match.
+
+This was rejected because the more useful operational workflow is to find low-stock items at or below a
+threshold, rather than only items with one exact quantity value.
+
+Alternative 2: Support full comparison operators such as `<`, `<=`, `>`, and `>=`.
+
+This was rejected for now because it would complicate the parser and command syntax beyond the current
+scope of the product.
+
+#### Current limitations
+
+The current implementation has some limitations.
+
+- It only supports one-sided inclusive threshold matching using `<=`.
+- It returns items in the existing inventory order and does not sort by quantity.
+- It does not support combining quantity search with another filter in the same command.
+
+These limitations are acceptable for the current scope, but they indicate possible future extensions.
+
+#### Possible future improvements
+
+If this feature is extended in future versions, the following improvements could be considered:
+
+- Support explicit comparison operators such as `<`, `>`, or ranges.
+- Sort results by quantity so that the lowest-stock items appear first.
+- Allow quantity search to be combined with other filters such as category or expiry date.
+
 ### Add Item Feature
 
 Another core feature of the product is the ability to add an item into an existing category using
@@ -2101,6 +2209,18 @@ After setting up the application, proceed to the individual test cases below.
 8. Run `find bin/Z`.
 9. Verify that the application shows `No items found in bin location: z.` or the corresponding no-match message.
 
+### Testing find by quantity
+
+1. Add items with different quantities, for example `5`, `10`, `15`, and `30`.
+2. Run `find qty/10`.
+3. Verify that only items with quantity `10` or lower are shown.
+4. Run `find qty/15`.
+5. Verify that items with quantity `15` and lower are shown, and items above `15` are excluded.
+6. Run `find qty/abc`.
+7. Verify that the application shows the invalid quantity error.
+8. Run `find qty/5` when no item has quantity `5` or lower.
+9. Verify that the application shows `No items found with quantity: 5.` or the corresponding no-match message.
+
 ### Testing find by category
 
 1. Ensure the inventory contains a non-empty category such as `fruits` and an empty category if available.
@@ -2234,4 +2354,6 @@ After setting up the application, proceed to the individual test cases below.
 12. Exit the application using the `bye` command.
 13. Delete the storage file before launching the application.
 14. Verify that the application recreates the file automatically and starts without crashing.
+
+
 

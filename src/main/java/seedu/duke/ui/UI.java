@@ -67,6 +67,18 @@ public class UI {
         System.out.println(message);
     }
 
+    public String formatFoundItemsMessage(int matchCount, String searchDescription) {
+        return "Found " + matchCount + " item(s) " + searchDescription + ".";
+    }
+
+    public String formatNoItemsFoundMessage(String searchDescription) {
+        return "No items found " + searchDescription + ".";
+    }
+
+    public String formatFindResultsHeader(String resultsDescription) {
+        return "Items " + resultsDescription;
+    }
+
     public void showNumberedList(List<?> items) {
         for (int i = 0; i < items.size(); i++) {
             showMessage((i + 1) + ". " + items.get(i));

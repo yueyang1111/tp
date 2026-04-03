@@ -48,19 +48,17 @@ public class FindItemByExpiryDateCommand extends Command {
         }
 
         if (matches.isEmpty()) {
-            logger.log(Level.INFO, "No items found expiring by " + expiryDateInput);
-            ui.showMessage("No items found expiring by " + expiryDateInput + ".");
+            String noItemsMessage = ui.formatNoItemsFoundMessage("expiring by " + expiryDateInput);
+            logger.log(Level.INFO, noItemsMessage);
+            ui.showMessage(noItemsMessage);
             return;
         }
 
-        logger.log(Level.INFO, "Found " + matches.size()
-                + " item(s) expiring by " + expiryDateInput + ".");
+        logger.log(Level.INFO, ui.formatFoundItemsMessage(matches.size(), "expiring by " + expiryDateInput));
 
         ui.showDivider();
-        ui.showMessage("Items expiring by " + expiryDateInput + ":");
+        ui.showMessage(ui.formatFindResultsHeader("expiring by " + expiryDateInput + ":"));
         ui.showNumberedList(matches);
         ui.showDivider();
     }
 }
-
-

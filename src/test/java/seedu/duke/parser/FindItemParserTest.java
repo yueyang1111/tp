@@ -5,6 +5,7 @@ import seedu.duke.command.FindItemByBinCommand;
 import seedu.duke.command.FindItemByCategoryCommand;
 import seedu.duke.command.FindItemByExpiryDateCommand;
 import seedu.duke.command.FindItemByKeywordCommand;
+import seedu.duke.command.FindItemByQtyCommand;
 import seedu.duke.exception.DukeException;
 import seedu.duke.ui.UI;
 
@@ -20,7 +21,7 @@ public class FindItemParserTest {
         DukeException exception = assertThrows(DukeException.class,
                 () -> parser.parse(""));
         assertEquals("Please specify what to find. Use: find keyword/KEYWORD, "
-                + "find category/CATEGORY, find expiryDate/DATE, or find bin/BIN.",
+                + "find category/CATEGORY, find expiryDate/DATE, find bin/BIN, or find qty/QTY.",
                 exception.getMessage());
     }
 
@@ -29,7 +30,7 @@ public class FindItemParserTest {
         DukeException exception = assertThrows(DukeException.class,
                 () -> parser.parse("keyword/   "));
         assertEquals("Missing name. Use: find keyword/KEYWORD, "
-                + "find category/CATEGORY, find expiryDate/DATE, or find bin/BIN.",
+                + "find category/CATEGORY, find expiryDate/DATE, find bin/BIN, or find qty/QTY.",
                 exception.getMessage());
     }
 
@@ -38,7 +39,7 @@ public class FindItemParserTest {
         DukeException exception = assertThrows(DukeException.class,
                 () -> parser.parse("item/apple"));
         assertEquals("Unknown find type: 'item'. Use: find keyword/KEYWORD, "
-                + "find category/CATEGORY, find expiryDate/DATE, or find bin/BIN.",
+                + "find category/CATEGORY, find expiryDate/DATE, find bin/BIN, or find qty/QTY.",
                 exception.getMessage());
     }
 
@@ -61,5 +62,16 @@ public class FindItemParserTest {
     public void parse_bin_returnsBinCommand() throws DukeException {
         assertInstanceOf(FindItemByBinCommand.class, parser.parse("bin/A-1"));
     }
-}
 
+    @Test
+    public void parse_qty_returnsQtyCommand() throws DukeException {
+        assertInstanceOf(FindItemByQtyCommand.class, parser.parse("qty/10"));
+    }
+
+    @Test
+    public void parse_qtyInvalid_throwsException() {
+        DukeException exception = assertThrows(DukeException.class,
+                () -> parser.parse("qty/abc"));
+        assertEquals("Quantity must be an integer.", exception.getMessage());
+    }
+}

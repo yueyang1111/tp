@@ -53,16 +53,17 @@ public class FindItemByBinCommand extends Command {
         }
 
         if (matches.isEmpty()) {
-            logger.log(Level.INFO, "No items found in bin location: " + binInput);
-            ui.showMessage("No items found in bin location: " + binInput + ".");
+            String noItemsMessage = ui.formatNoItemsFoundMessage("in bin location: " + binInput);
+            logger.log(Level.INFO, noItemsMessage);
+            ui.showMessage(noItemsMessage);
             return;
         }
 
-        logger.log(Level.INFO, "Found " + matches.size()
-                + " item(s) in bin location '" + binInput.toUpperCase() + "'.");
+        logger.log(Level.INFO, ui.formatFoundItemsMessage(matches.size(),
+                "in bin location '" + binInput.toUpperCase() + "'"));
 
         ui.showDivider();
-        ui.showMessage("Items in bin location: " + binInput);
+        ui.showMessage(ui.formatFindResultsHeader("in bin location: " + binInput));
         ui.showNumberedList(matches);
         ui.showDivider();
     }

@@ -1,11 +1,13 @@
 package seedu.duke.parser;
 
 import seedu.duke.command.Command;
+import seedu.duke.command.FindItemByQtyCommand;
 import seedu.duke.command.FindItemByKeywordCommand;
 import seedu.duke.command.FindItemByCategoryCommand;
 import seedu.duke.command.FindItemByExpiryDateCommand;
 import seedu.duke.command.FindItemByBinCommand;
 import seedu.duke.exception.DukeException;
+import seedu.duke.parser.category.CommonFieldParser;
 import seedu.duke.ui.UI;
 
 import java.util.logging.Level;
@@ -13,7 +15,7 @@ import java.util.logging.Logger;
 
 /**
  * Parses {@code find} commands and creates the command object for the requested
- * search mode such as keyword, category, expiry date, or bin.
+ * search mode such as keyword, category, expiry date, bin, or quantity.
  */
 public class FindItemParser {
     private static final Logger logger = Logger.getLogger(FindItemParser.class.getName());
@@ -42,7 +44,7 @@ public class FindItemParser {
         if (input.isEmpty()) {
             logger.log(Level.WARNING, "Find command missing target.");
             throw new DukeException("Please specify what to find. Use: find keyword/KEYWORD, "
-                    + "find category/CATEGORY, find expiryDate/DATE, or find bin/BIN.");
+                    + "find category/CATEGORY, find expiryDate/DATE, find bin/BIN, or find qty/QTY.");
         }
 
         String[] parts = input.split("/", 2);
@@ -50,7 +52,7 @@ public class FindItemParser {
         if (parts.length < 2 || parts[1].trim().isEmpty()) {
             logger.log(Level.WARNING, "Find command missing name.");
             throw new DukeException("Missing name. Use: find keyword/KEYWORD, "
-                    + "find category/CATEGORY, find expiryDate/DATE, or find bin/BIN.");
+                    + "find category/CATEGORY, find expiryDate/DATE, find bin/BIN, or find qty/QTY.");
         }
 
         String type = parts[0].trim().toLowerCase();
@@ -65,11 +67,13 @@ public class FindItemParser {
             return new FindItemByExpiryDateCommand(name);
         case "bin":
             return new FindItemByBinCommand(BinLocationParser.parseSearchInput(name));
+        case "qty":
+            return new FindItemByQtyCommand(CommonFieldParser.parseQuantity(name));
         default:
             logger.log(Level.WARNING, "Unknown find type: " + type);
             throw new DukeException("Unknown find type: '" + type + "'. "
                     + "Use: find keyword/KEYWORD, find category/CATEGORY, "
-                    + "find expiryDate/DATE, or find bin/BIN.");
+                    + "find expiryDate/DATE, find bin/BIN, or find qty/QTY.");
         }
     }
 }

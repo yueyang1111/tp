@@ -3,7 +3,7 @@
 ## Introduction
 
 InventoryDock helps store managers keep track of inventory by category, quantity, expiry date, and bin location.
-This guide covers the commands needed to add items, list all stored items, and search by category or bin.
+This guide covers the commands needed to add items, list all stored items, and search by category, expiry date, bin, or quantity.
 
 ## Quick Start
 
@@ -25,6 +25,7 @@ Notes about command syntax:
 * Quantities must be positive integers.
 * Dates must use `yyyy-M-d`, for example `2026-3-9` or `2026-12-31`.
 * Bin searches accept `LETTER-NUMBER`, `LETTER`, or `NUMBER`, such as `A-10`, `A`, or `10`.
+* Quantity searches return items whose quantity is less than or equal to the specified positive integer.
 * `update` only supports changing common item fields. Category-specific fields cannot be updated.
 * `sort` only supports sorting by name, expiry date and quantity.
 
@@ -226,6 +227,27 @@ Expected result:
 * A bin number matches all items in bins with that number.
 * If no items match, the app shows `No items found in bin location: BIN_INPUT.`
 
+### Finding items by quantity: `find qty/...`
+Shows all items whose quantity is less than or equal to the specified quantity.
+
+Format: `find qty/QUANTITY`
+
+Notes:
+
+* `QUANTITY` must be a positive integer.
+* This search is inclusive. For example, `find qty/15` includes items with quantity `15` and items with smaller quantities.
+
+Examples:
+
+* `find qty/10`
+* `find qty/15`
+
+Expected result:
+
+* Items with quantity equal to the given value are included.
+* Items with quantity lower than the given value are also included.
+* If nothing matches, the app shows `No items found with quantity: QUANTITY.`
+
 ### Update an item: `update`
 
 Updates an existing item in a category by its item index.
@@ -362,9 +384,12 @@ When an error occurs, the app prints an error message and waits for the next com
   `find expiryDate/DATE`
 * Find items by bin:
   `find bin/BIN_INPUT`
+* Find items by quantity:
+  `find qty/QUANTITY`
 * Update an item:
   `update category/CATEGORY index/INDEX [newItem/NEW_NAME] [bin/NEW_BIN] [qty/NEW_QUANTITY] [expiryDate/NEW_DATE]`
 * Delete an item
   `delete category/CATEGORY index/INDEX`
 * Clear a category
   `delete category/CATEGORY`
+

@@ -59,18 +59,17 @@ public class FindItemByKeywordCommand extends Command {
         }
 
         if (matches.isEmpty()) {
-            logger.log(Level.INFO, "No items found matching keyword: " + keywordInput);
-            ui.showMessage("No items found matching keyword: " + keywordInput + ".");
+            String noItemsMessage = ui.formatNoItemsFoundMessage("matching keyword: " + keywordInput);
+            logger.log(Level.INFO, noItemsMessage);
+            ui.showMessage(noItemsMessage);
             return;
         }
 
-        logger.log(Level.INFO, "Found " + matches.size() + " item(s) matching keyword '" + keywordInput + "'.");
+        logger.log(Level.INFO, ui.formatFoundItemsMessage(matches.size(), "matching keyword '" + keywordInput + "'"));
 
         ui.showDivider();
-        ui.showMessage("Items matching keyword '" + keywordInput + "':");
+        ui.showMessage(ui.formatFindResultsHeader("matching keyword '" + keywordInput + "':"));
         ui.showNumberedList(matches);
         ui.showDivider();
     }
 }
-
-

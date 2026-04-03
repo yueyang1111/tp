@@ -50,16 +50,16 @@ public class FindItemByCategoryCommand extends Command {
         List<Item> items = matched.getItems();
 
         if (items.isEmpty()) {
-            logger.log(Level.INFO, "No items found in category: " + categoryInput);
-            ui.showMessage("No items found in category: " + matched.getName() + ".");
+            String noItemsMessage = ui.formatNoItemsFoundMessage("in category: " + matched.getName());
+            logger.log(Level.INFO, noItemsMessage);
+            ui.showMessage(noItemsMessage);
             return;
         }
 
-        logger.log(Level.INFO, "Found " + items.size()
-                + " item(s) in category '" + matched.getName() + "'.");
+        logger.log(Level.INFO, ui.formatFoundItemsMessage(items.size(), "in category '" + matched.getName() + "'"));
 
         ui.showDivider();
-        ui.showMessage("Items in category: " + matched.getName());
+        ui.showMessage(ui.formatFindResultsHeader("in category: " + matched.getName()));
         ui.showNumberedList(items);
         ui.showDivider();
     }

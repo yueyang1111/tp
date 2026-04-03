@@ -79,6 +79,20 @@ Representative PR:
 
 - [#77](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/77)
 
+#### 5. Search by quantity threshold
+
+I implemented the `find qty/QUANTITY` feature, which lets users search for items whose quantity is less than or equal to a specified threshold. This is useful for stock review workflows because users often need to identify low-stock items quickly instead of searching for one exact quantity.
+
+Key aspects of the implementation:
+
+- Added `FindItemByQtyCommand`.
+- Extended `FindItemParser` to dispatch quantity searches correctly.
+- Reused existing quantity validation so the command accepts only positive integers.
+- Implemented inclusive threshold matching using `<=`.
+- Added JUnit tests for parser behaviour and threshold-based matching.
+
+This feature is meaningful because it turns quantity search into an operational low-stock check rather than a narrow exact-match lookup.
+
 ### Contributions to the User Guide
 
 I contributed the user-facing documentation for the features I implemented. In particular, I wrote or substantially updated the sections covering:
@@ -87,11 +101,9 @@ I contributed the user-facing documentation for the features I implemented. In p
 - [Listing all items](../UserGuide.md#listing-all-items-list)
 - [Finding items by category](../UserGuide.md#finding-items-by-category-find-category)
 - [Finding items by bin](../UserGuide.md#finding-items-by-bin-find-bin)
+- [Finding items by quantity](../UserGuide.md#finding-items-by-quantity-find-qty)
 
 These updates included command formats, examples, expected outcomes, and command-format notes so that end users can use the features without needing to inspect the code.
-
-Representative PR:
-
 
 ### Contributions to the Developer Guide
 
@@ -101,6 +113,7 @@ I contributed the technical documentation for the main features I worked on. In 
 - List feature
 - Find Item By Category feature
 - Find Item By Bin feature
+- Find Item By Quantity feature
 
 My contributions covered:
 
@@ -118,7 +131,6 @@ I also added or updated the following UML sequence diagrams:
 - [FindItemByCategoryCommandMainFlow.puml](../diagrams/FindItemByCategoryCommandMainFlow.puml)
 - [FindItemByBinCommandMainFlow.puml](../diagrams/FindItemByBinCommandMainFlow.puml)
 
-
 ### Contributions to Team-Based Tasks
 
 - Helped set up the team's GitHub repository and project collaboration workflow during the early project stage.
@@ -127,7 +139,12 @@ I also added or updated the following UML sequence diagrams:
 
 ### Review and Mentoring Contributions
 
-- Reviewed and responded to code-review feedback on my feature PRs, especially for parser design, search behaviour, and documentation clarity.
-- Helped smooth integration of related features by refactoring and cleaning up parser and test structure where needed.
-
-
+- Reviewed teammates' PRs and gave concrete code-review feedback on parser structure, model design, logging, storage behaviour, and test quality. Examples include:
+- [#28](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/28) Suggested combining parser-related classes and extracting shared validation/parsing logic to improve abstraction and readability.
+- [#32](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/32) Reviewed the refactor of `AddItemCommandParser` and related UI changes, with feedback on abstraction and code clarity.
+- [#39](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/39) Reviewed assertion and logging changes for delete flows, commenting on consistency and debuggability.
+- [#50](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/50) Reviewed the expiry-date search feature, including parser behaviour, logging, error handling, and test coverage.
+- [#55](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/55) Gave feedback on storage logging noise, reuse of parsing helpers, and maintainability of category-handling logic.
+- [#57](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/57) Commented on the logging feature changes during team integration.
+- [#63](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/63) Helped refine the design of newly added item categories by pushing for a more consistent data model across item types.
+- [#86](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/86) Reviewed parsing improvements and suggested ways to keep item-field design more consistent for future iterations.
