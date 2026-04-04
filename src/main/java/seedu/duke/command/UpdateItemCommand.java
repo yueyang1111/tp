@@ -11,6 +11,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Updates an existing item in a category using fields provided by the user.
+ * An <code>UpdateItemCommand</code> object locates the target item and applies
+ * supported updates such as name, bin location, quantity, and expiry date.
+ */
 public class UpdateItemCommand extends Command {
     private static final Logger logger = Logger.getLogger(UpdateItemCommand.class.getName());
 
@@ -18,6 +23,13 @@ public class UpdateItemCommand extends Command {
     private final int itemIndex;
     private final Map<String, String> updates;
 
+    /**
+     * Creates an update command for the specified category, item index, and fields.
+     *
+     * @param categoryName Name of the category containing the item to update.
+     * @param itemIndex One-based index of the item within the category.
+     * @param updates Fields and values to apply to the item.
+     */
     public UpdateItemCommand(String categoryName, int itemIndex,
                              Map<String, String> updates) {
         this.categoryName = categoryName;
@@ -25,6 +37,15 @@ public class UpdateItemCommand extends Command {
         this.updates = updates;
     }
 
+    /**
+     * Executes the update command on the specified inventory.
+     * Finds the target category and item, applies the requested updates, and
+     * reports the result through the user interface.
+     *
+     * @param inventory Inventory containing the item to update.
+     * @param ui User interface used to display update results.
+     * @throws DukeException If the category, item index, or update values are invalid.
+     */
     @Override
     public void execute(Inventory inventory, UI ui) throws DukeException {
         assert inventory != null : "UpdateItemCommand received null inventory.";
@@ -50,6 +71,13 @@ public class UpdateItemCommand extends Command {
         ui.showItemUpdated(originalName, item.getName(), category.getName());
     }
 
+    /**
+     * Applies all requested field updates to the specified item.
+     * Only supported update prefixes are accepted.
+     *
+     * @param item Item to be updated.
+     * @throws DukeException If an update field is unsupported or contains an invalid value.
+     */
     private void applyUpdates(Item item) throws DukeException {
         for (Map.Entry<String, String> entry : updates.entrySet()) {
             String field = entry.getKey();
@@ -77,6 +105,14 @@ public class UpdateItemCommand extends Command {
         }
     }
 
+    /**
+     * Validates that the specified value is not empty.
+     * Throws an exception if the value is null or blank.
+     *
+     * @param value Value to validate.
+     * @param message Error message to use when validation fails.
+     * @throws DukeException If the value is null or blank.
+     */
     private void validateNonEmpty(String value,
                                   String message) throws DukeException {
         if (value == null || value.trim().isEmpty()) {
