@@ -7,7 +7,6 @@ import seedu.duke.model.Item;
 import seedu.duke.ui.UI;
 
 import java.util.List;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,6 +24,29 @@ public class FindItemByCategoryCommand extends Command {
      */
     public FindItemByCategoryCommand(String categoryInput) {
         this.categoryInput = categoryInput;
+    }
+
+    /**
+     * Parses and validates a category input supplied to the category find command.
+     *
+     * @param categoryInput raw category input.
+     * @return normalized category input.
+     * @throws DukeException if the category is empty or numeric.
+     */
+    public static String parseCategoryInput(String categoryInput) throws DukeException {
+        String trimmedCategory = categoryInput.trim();
+        if (trimmedCategory.isEmpty()) {
+            logger.log(Level.WARNING, "Empty category input received.");
+            throw new DukeException("Category cannot be empty.");
+        }
+        try {
+            Integer.parseInt(trimmedCategory);
+            logger.log(Level.WARNING, "Numeric category input received: " + trimmedCategory);
+            throw new DukeException("Category must be a string.");
+        } catch (NumberFormatException e) {
+            assert !trimmedCategory.isEmpty() : "FindItemByCategoryCommand parsed empty category input.";
+            return trimmedCategory.toLowerCase();
+        }
     }
 
     /**

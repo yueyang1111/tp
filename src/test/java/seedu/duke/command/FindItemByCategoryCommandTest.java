@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FindItemByCategoryCommandTest {
@@ -98,6 +99,20 @@ public class FindItemByCategoryCommandTest {
         assertEquals(0, emptyCategory.getItemCount());
     }
 
+    @Test
+    public void parseCategoryInput_validCategory_returnsNormalizedCategory() throws DukeException {
+        assertEquals("fruits", FindItemByCategoryCommand.parseCategoryInput(" Fruits "));
+    }
+
+    @Test
+    public void parseCategoryInput_numericCategory_throwsException() {
+        DukeException exception = assertThrows(DukeException.class,
+                () -> FindItemByCategoryCommand.parseCategoryInput("123"));
+
+        assertEquals("Category must be a string.", exception.getMessage());
+    }
+
+
     private static class TestUI extends UI {
         private final List<String> messages = new ArrayList<>();
         private int dividerCount;
@@ -119,3 +134,6 @@ public class FindItemByCategoryCommandTest {
         }
     }
 }
+
+
+

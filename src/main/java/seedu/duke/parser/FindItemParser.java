@@ -7,7 +7,6 @@ import seedu.duke.command.FindItemByCategoryCommand;
 import seedu.duke.command.FindItemByExpiryDateCommand;
 import seedu.duke.command.FindItemByBinCommand;
 import seedu.duke.exception.DukeException;
-import seedu.duke.parser.category.CommonFieldParser;
 import seedu.duke.ui.UI;
 
 import java.util.logging.Level;
@@ -62,13 +61,13 @@ public class FindItemParser {
         case "keyword":
             return new FindItemByKeywordCommand(name);
         case "category":
-            return new FindItemByCategoryCommand(name);
+            return new FindItemByCategoryCommand(FindItemByCategoryCommand.parseCategoryInput(name));
         case "expirydate":
             return new FindItemByExpiryDateCommand(name);
         case "bin":
             return new FindItemByBinCommand(BinLocationParser.parseSearchInput(name));
         case "qty":
-            return new FindItemByQtyCommand(CommonFieldParser.parseQuantity(name));
+            return new FindItemByQtyCommand(FindItemByQtyCommand.parseQtyInput(name));
         default:
             logger.log(Level.WARNING, "Unknown find type: " + type);
             throw new DukeException("Unknown find type: '" + type + "'. "
@@ -77,3 +76,8 @@ public class FindItemParser {
         }
     }
 }
+
+
+
+
+

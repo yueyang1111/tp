@@ -12,14 +12,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Finds and displays items whose quantity matches a target quantity.
+ * Finds and displays items whose quantity is at or below a target threshold.
  */
 public class FindItemByQtyCommand extends Command {
     private static final Logger logger = Logger.getLogger(FindItemByQtyCommand.class.getName());
     private final int qtyInput;
 
     /**
-     * Creates a command that searches inventory items by exact quantity.
+     * Creates a command that searches inventory items whose quantity is at or below a threshold.
      *
      * @param qtyInput validated quantity query supplied by the parser.
      */
@@ -28,7 +28,32 @@ public class FindItemByQtyCommand extends Command {
     }
 
     /**
-     * Scans every item in the inventory and displays those whose quantity matches the query.
+     * Parses and validates a quantity threshold supplied to the qty find command.
+     *
+     * @param qtyInput raw quantity input.
+     * @return parsed positive quantity.
+     * @throws DukeException if the quantity is not an integer or is not positive.
+     */
+    public static int parseQtyInput(String qtyInput) throws DukeException {
+        int parsedQty;
+        try {
+            parsedQty = Integer.parseInt(qtyInput.trim());
+        } catch (NumberFormatException e) {
+            logger.log(Level.WARNING, "Invalid quantity format: " + qtyInput);
+            throw new DukeException("Quantity must be an integer.");
+        }
+
+        if (parsedQty <= 0) {
+            logger.log(Level.WARNING, "Non-positive quantity input: " + parsedQty);
+            throw new DukeException("Quantity must be a positive integer.");
+        }
+        assert parsedQty >= 0 : "FindItemByQtyCommand parsed negative quantity input.";
+
+        return parsedQty;
+    }
+
+    /**
+     * Scans every item in the inventory and displays those whose quantity is at or below the query.
      *
      * @param inventory inventory to search.
      * @param ui user interface used to display search results.
@@ -38,7 +63,6 @@ public class FindItemByQtyCommand extends Command {
     public void execute(Inventory inventory, UI ui) throws DukeException {
         assert inventory != null : "FindItemByQtyCommand received null inventory.";
         assert ui != null : "FindItemByQtyCommand received null UI.";
-        assert qtyInput >= 0 : "FindItemByQtyCommand received non-positive quantity input.";
 
         List<Item> matches = new ArrayList<>();
         List<Category> categories = inventory.getCategories();

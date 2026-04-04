@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FindItemByQtyCommandTest {
@@ -79,6 +80,23 @@ public class FindItemByQtyCommandTest {
         assertEquals(0, ui.dividerCount);
     }
 
+    @Test
+    public void parseQtyInput_nonInteger_throwsException() {
+        DukeException exception = assertThrows(DukeException.class,
+                () -> FindItemByQtyCommand.parseQtyInput("abc"));
+
+        assertEquals("Quantity must be an integer.", exception.getMessage());
+    }
+
+    @Test
+    public void parseQtyInput_zero_throwsException() {
+        DukeException exception = assertThrows(DukeException.class,
+                () -> FindItemByQtyCommand.parseQtyInput("0"));
+
+        assertEquals("Quantity must be a positive integer.", exception.getMessage());
+    }
+
+
     private static class TestUI extends UI {
         private final List<String> messages = new ArrayList<>();
         private int dividerCount;
@@ -94,3 +112,11 @@ public class FindItemByQtyCommandTest {
         }
     }
 }
+
+
+
+
+
+
+
+

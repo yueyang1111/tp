@@ -69,9 +69,36 @@ public class FindItemParserTest {
     }
 
     @Test
-    public void parse_qtyInvalid_throwsException() {
+    public void parse_qtyNonInteger_throwsException() {
         DukeException exception = assertThrows(DukeException.class,
                 () -> parser.parse("qty/abc"));
         assertEquals("Quantity must be an integer.", exception.getMessage());
     }
+
+    @Test
+    public void parse_qtyMissing_throwsException() {
+        DukeException exception = assertThrows(DukeException.class,
+                () -> parser.parse("qty/   "));
+        assertEquals("Missing name. Use: find keyword/KEYWORD, "
+                + "find category/CATEGORY, find expiryDate/DATE, find bin/BIN, or find qty/QTY.",
+                exception.getMessage());
+    }
+
+    @Test
+    public void parse_qtyZero_throwsException() {
+        DukeException exception = assertThrows(DukeException.class,
+                () -> parser.parse("qty/0"));
+        assertEquals("Quantity must be a positive integer.", exception.getMessage());
+    }
+
+    @Test
+    public void parse_qtyNegative_throwsException() {
+        DukeException exception = assertThrows(DukeException.class,
+                () -> parser.parse("qty/-2"));
+        assertEquals("Quantity must be a positive integer.", exception.getMessage());
+    }
+
+
+
 }
+
