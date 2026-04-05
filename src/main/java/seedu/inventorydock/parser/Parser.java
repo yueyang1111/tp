@@ -33,7 +33,7 @@ public class Parser {
         case "add":
             return new AddCommandParser().parse(arguments);
         case "delete":
-            return new DeleteCommandParser(ui).parse(arguments);
+            return new DeleteCommandParser().parse(arguments);
         case "update":
             return new UpdateCommandParser(ui).parse(arguments);
         case "find":
