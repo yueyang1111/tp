@@ -3,7 +3,6 @@ package seedu.inventorydock.parser;
 import seedu.inventorydock.command.Command;
 import seedu.inventorydock.command.UpdateItemCommand;
 import seedu.inventorydock.exception.DukeException;
-import seedu.inventorydock.ui.UI;
 
 import java.util.HashMap;
 import java.util.Map;

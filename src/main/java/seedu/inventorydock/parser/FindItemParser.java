@@ -7,7 +7,6 @@ import seedu.inventorydock.command.FindItemByCategoryCommand;
 import seedu.inventorydock.command.FindItemByExpiryDateCommand;
 import seedu.inventorydock.command.FindItemByBinCommand;
 import seedu.inventorydock.exception.DukeException;
-import seedu.inventorydock.ui.UI;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

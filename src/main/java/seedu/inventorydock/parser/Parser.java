@@ -5,7 +5,6 @@ import seedu.inventorydock.command.ExitCommand;
 import seedu.inventorydock.command.HelpCommand;
 import seedu.inventorydock.command.ListCommand;
 import seedu.inventorydock.exception.DukeException;
-import seedu.inventorydock.ui.UI;
 
 public class Parser {
 
