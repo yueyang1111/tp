@@ -1,0 +1,45 @@
+@startuml
+title Class Diagram for FindItemByBinCommand Feature
+skinparam classAttributeIconSize 0
+hide circle
+left to right direction
+
+class "{abstract}\nCommand" as Command {
+  + execute(...)
+}
+
+class FindItemParser {
+  + parse(input: String)
+}
+
+class FindItemByBinCommand {
+  - binInput: String
+  + execute(...)
+}
+
+class Inventory {
+  + getCategories()
+}
+
+class Category {
+  - name: String
+}
+
+class Item {
+  - binLocation: String
+  - quantity: int
+}
+
+class UI {
+  + showMessage(...)
+  + showNumberedList(...)
+}
+
+Command <|-- FindItemByBinCommand
+FindItemParser ..> FindItemByBinCommand : creates
+FindItemByBinCommand --> Inventory : scans
+FindItemByBinCommand --> UI : displays through
+Inventory "1" o-- "*" Category
+Category "1" o-- "*" Item
+@enduml
+

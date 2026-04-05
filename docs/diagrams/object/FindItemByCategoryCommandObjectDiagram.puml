@@ -1,0 +1,31 @@
+@startuml
+title Object Diagram for FindItemByCategoryCommand Feature
+hide circle
+left to right direction
+
+object "<u>findParser:FindItemParser</u>" as parser
+object "<u>cmd:FindItemByCategoryCommand</u>" as command {
+  categoryInput = "fruits"
+}
+object "<u>inventory:Inventory</u>" as inventory
+object "<u>fruits:Category</u>" as fruits {
+  name = "fruits"
+}
+object "<u>apple:Item</u>" as apple {
+  name = "apple"
+  quantity = 10
+}
+object "<u>banana:Item</u>" as banana {
+  name = "banana"
+  quantity = 30
+}
+object "<u>:UI</u>" as ui
+
+parser --> command : creates >
+command --> inventory : queries >
+command --> ui : displays through >
+inventory --> fruits : contains >
+fruits --> apple : contains >
+fruits --> banana : contains >
+@enduml
+

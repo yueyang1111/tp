@@ -4,7 +4,7 @@ title Sequence Diagram for Sort Command (Main Control Flow)
 autonumber
 hide footbox
 
-participant ":Duke" as Duke
+participant ":InventoryDock" as InventoryDock
 participant ":Parser" as Parser
 participant ":SortCommandParser" as SortCommandParser
 participant ":SortCommand" as SortCommand
@@ -12,7 +12,7 @@ participant ":Inventory" as Inventory
 participant ":Category" as Category
 participant ":UI" as UI
 
-Duke -> Parser: parse("sort expirydate")
+InventoryDock -> Parser: parse("sort expirydate")
 activate Parser
 
 Parser -> SortCommandParser: parse("expirydate")
@@ -25,7 +25,7 @@ deactivate SortCommandParser
 
 alt input is empty
     SortCommandParser --> Parser: throw DukeException
-    Parser --> Duke: exception
+    Parser --> InventoryDock: exception
 else valid sort type
     create SortCommand
     SortCommandParser -> SortCommand: SortCommand("expirydate")
@@ -34,10 +34,10 @@ else valid sort type
 
     SortCommandParser --> Parser: sortCommand
     deactivate SortCommandParser
-    Parser --> Duke: sortCommand
+    Parser --> InventoryDock: sortCommand
     deactivate Parser
 
-    Duke -> SortCommand: execute(inventory, ui)
+    InventoryDock -> SortCommand: execute(inventory, ui)
     activate SortCommand
 
     SortCommand -> SortCommand: getSortedItemsByCategory(inventory)
@@ -130,7 +130,7 @@ else valid sort type
     UI --> SortCommand
     deactivate UI
 
-    SortCommand --> Duke
+    SortCommand --> InventoryDock
     deactivate SortCommand
 end
 

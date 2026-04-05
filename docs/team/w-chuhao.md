@@ -93,6 +93,11 @@ Key aspects of the implementation:
 
 This feature is meaningful because it turns quantity search into an operational low-stock check rather than a narrow exact-match lookup.
 
+Representative PRs:
+
+- [#120](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/120)
+- [#128](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/128)
+
 ### Contributions to the User Guide
 
 I contributed the user-facing documentation for the features I implemented. In particular, I wrote or substantially updated the sections covering:
@@ -148,3 +153,4 @@ I also added or updated the following UML sequence diagrams:
 - [#57](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/57) Commented on the logging feature changes during team integration.
 - [#63](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/63) Helped refine the design of newly added item categories by pushing for a more consistent data model across item types.
 - [#86](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/86) Reviewed parsing improvements and suggested ways to keep item-field design more consistent for future iterations.
+

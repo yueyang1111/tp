@@ -1,0 +1,51 @@
+@startuml
+title Class Diagram for AddItemCommand Feature
+skinparam classAttributeIconSize 0
+hide circle
+left to right direction
+
+class "{abstract}\nCommand" as Command {
+  + execute(...)
+}
+
+class AddCommandParser {
+  + parse(input: String)
+}
+
+class AddItemCommandParser {
+  + handleFruit(input: String)
+}
+
+class AddItemCommand {
+  - categoryName: String
+  + execute(...)
+}
+
+class Inventory {
+  + findCategoryByName(categoryName: String)
+}
+
+class Category {
+  - name: String
+  + addItem(item: Item)
+}
+
+class Item {
+  - name: String
+  - quantity: int
+  - binLocation: String
+}
+
+class UI {
+  + showItemAdded(...)
+}
+
+Command <|-- AddItemCommand
+AddCommandParser ..> AddItemCommandParser : delegates to
+AddItemCommandParser ..> AddItemCommand : creates
+AddItemCommand --> Inventory : updates through
+AddItemCommand --> UI : shows result via
+Inventory "1" o-- "*" Category
+Category "1" o-- "*" Item
+@enduml
+

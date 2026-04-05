@@ -6,7 +6,7 @@ hide footbox
 
 actor User
 participant ":UI" as UI
-participant ":Duke" as Duke
+participant ":InventoryDock" as InventoryDock
 participant ":Parser" as Parser
 participant ":DeleteCommandParser" as DeleteCommandParser
 participant ":DeleteCategoryCommand" as DeleteCategoryCommand
@@ -15,9 +15,9 @@ participant ":Category" as Category
 
 User -> UI: enter delete category command
 activate UI
-UI -> Duke: input
-activate Duke
-Duke -> Parser: parse(input)
+UI -> InventoryDock: input
+activate InventoryDock
+InventoryDock -> Parser: parse(input)
 activate Parser
 
 Parser -> DeleteCommandParser: parse(arguments)
@@ -30,10 +30,10 @@ DeleteCategoryCommand --> DeleteCommandParser: command
 deactivate DeleteCategoryCommand
 DeleteCommandParser --> Parser: command
 deactivate DeleteCommandParser
-Parser --> Duke: command
+Parser --> InventoryDock: command
 deactivate Parser
 
-Duke -> DeleteCategoryCommand: execute(inventory, ui)
+InventoryDock -> DeleteCategoryCommand: execute(inventory, ui)
 activate DeleteCategoryCommand
 DeleteCategoryCommand -> Inventory: findCategoryByName(categoryName)
 activate Inventory
@@ -91,8 +91,9 @@ else category found
     end
 end
 
-DeleteCategoryCommand --> Duke: display information
+DeleteCategoryCommand --> InventoryDock: display information
 deactivate DeleteCategoryCommand
-deactivate Duke
+deactivate InventoryDock
 deactivate UI
 @enduml
+

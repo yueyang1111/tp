@@ -1,0 +1,39 @@
+@startuml
+title Class Diagram for ListCommand Feature
+skinparam classAttributeIconSize 0
+hide circle
+left to right direction
+
+class "{abstract}\nCommand" as Command {
+  + execute(...)
+}
+
+class ListCommand {
+  + execute(...)
+}
+
+class UI {
+  + showInventory(inventory: Inventory)
+}
+
+class Inventory {
+  + getCategories()
+}
+
+class Category {
+  - name: String
+  + getItemCount(): int
+}
+
+class Item {
+  - name: String
+  - quantity: int
+}
+
+Command <|-- ListCommand
+ListCommand --> UI : delegates to
+UI --> Inventory : reads
+Inventory "1" o-- "*" Category
+Category "1" o-- "*" Item
+@enduml
+

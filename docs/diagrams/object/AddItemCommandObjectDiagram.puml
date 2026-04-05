@@ -1,0 +1,29 @@
+@startuml
+title Object Diagram for AddItemCommand Feature
+hide circle
+left to right direction
+
+object "<u>addParser:AddCommandParser</u>" as addParser
+object "<u>addItemParser:AddItemCommandParser</u>" as addItemParser
+object "<u>cmd:AddItemCommand</u>" as addCommand {
+  categoryName = "fruits"
+}
+object "<u>inventory:Inventory</u>" as inventory
+object "<u>fruits:Category</u>" as fruits {
+  name = "fruits"
+}
+object "<u>apple:Item</u>" as apple {
+  name = "apple"
+  quantity = 10
+  binLocation = "A1"
+}
+object "<u>:UI</u>" as ui
+
+addParser --> addItemParser : delegates to >
+addItemParser --> addCommand : creates >
+addCommand --> inventory : updates through >
+addCommand --> ui : shows result via >
+inventory --> fruits : contains >
+fruits --> apple : contains >
+@enduml
+

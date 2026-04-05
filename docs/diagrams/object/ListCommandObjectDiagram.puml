@@ -1,0 +1,31 @@
+@startuml
+title Object Diagram for ListCommand Feature
+hide circle
+left to right direction
+
+object "<u>cmd:ListCommand</u>" as command
+object "<u>:UI</u>" as ui
+object "<u>inventory:Inventory</u>" as inventory
+object "<u>fruits:Category</u>" as fruits {
+  name = "fruits"
+}
+object "<u>vegetables:Category</u>" as vegetables {
+  name = "vegetables"
+}
+object "<u>apple:Item</u>" as apple {
+  name = "apple"
+  quantity = 10
+}
+object "<u>carrot:Item</u>" as carrot {
+  name = "carrot"
+  quantity = 15
+}
+
+command --> ui : delegates to >
+ui --> inventory : reads >
+inventory --> fruits : contains >
+inventory --> vegetables : contains >
+fruits --> apple : contains >
+vegetables --> carrot : contains >
+@enduml
+

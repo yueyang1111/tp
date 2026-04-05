@@ -248,7 +248,17 @@ follows:
 5. The command attempts to locate the matching category and displays either the items or an
    appropriate message.
 
-The main interaction for this flow is illustrated in [FindItemByCategoryCommandMainFlow.png](diagrams/FindItemByCategoryCommandMainFlow-Sequence_Diagram_for_FindItemByCategoryCommand__Main_Control_Flow_Only_.png).
+The main interaction for this flow is illustrated below.
+
+![FindItemByCategoryCommandMainFlow](diagrams/sequence/FindItemByCategoryCommandMainFlow-Sequence_Diagram_for_FindItemByCategoryCommand__Main_Control_Flow_Only_.png)
+
+The main structural relationships for this feature are shown below.
+
+![FindItemByCategoryCommandClassDiagram](diagrams/class/FindItemByCategoryCommandClassDiagram.png)
+
+A representative object snapshot for this feature is shown below.
+
+![FindItemByCategoryCommandObjectDiagram](diagrams/object/FindItemByCategoryCommandObjectDiagram.png)
 
 This design was chosen because it follows the same separation of concerns already used throughout the
 project:
@@ -411,7 +421,17 @@ is as follows:
 4. The command is executed with access to the current `Inventory` and `UI`.
 5. The command scans the inventory, identifies matching bin locations, and displays the result.
 
-The main interaction for this flow is illustrated in [FindItemByBinCommandMainFlow.png](diagrams/FindItemByBinCommandMainFlow-Sequence_Diagram_for_FindItemByBinCommand__Main_Control_Flow_Only_.png).
+The main interaction for this flow is illustrated below.
+
+![FindItemByBinCommandMainFlow](diagrams/sequence/FindItemByBinCommandMainFlow-Sequence_Diagram_for_FindItemByBinCommand__Main_Control_Flow_Only_.png)
+
+The main structural relationships for this feature are shown below.
+
+![FindItemByBinCommandClassDiagram](diagrams/class/FindItemByBinCommandClassDiagram.png)
+
+A representative object snapshot for this feature is shown below.
+
+![FindItemByBinCommandObjectDiagram](diagrams/object/FindItemByBinCommandObjectDiagram.png)
 
 This design was chosen because it allows bin-specific input normalisation to remain in the parser
 layer, while the matching and display behaviour stays in the command layer.
@@ -616,8 +636,10 @@ When `FindItemByQtyCommand.execute()` is called, the implementation performs the
 10. Display a `no items found` message if `matches` is empty, or
 11. Print the list of matching items with numbering and dividers.
 
-The main interaction for this flow is illustrated in [FindItemByQtyCommandMainFlow.png](diagrams/FindItemByQtyCommand_sequence-Sequence_Diagram_for_FindItemByQtyCommand__Main_Control_Flow_.png).
+The main interaction for this flow is illustrated below.
 
+![FindItemByQtyCommandMainFlow](diagrams/FindItemByQtyCommand_sequence-Sequence_Diagram_for_FindItemByQtyCommand__Main_Control_Flow_.png)
+This sequence diagram is drawn by Luke(lukeluoyu)
 The key comparison is:
 
 ```java
@@ -685,7 +707,17 @@ application. The feature follows this flow:
 5. An `AddItemCommand` is created and executed with access to the current `Inventory` and `UI`.
 6. The command finds the target category, inserts the item, and shows a confirmation message.
 
-The main interaction for this flow is illustrated in [AddItemCommandMainFlow.png](diagrams/AddItemCommandMainFlow-Sequence_Diagram_for_AddItemCommand__Main_Control_Flow_Only_.png).
+The main interaction for this flow is illustrated below.
+
+![AddItemCommandMainFlow](diagrams/sequence/AddItemCommandMainFlow-Sequence_Diagram_for_AddItemCommand__Main_Control_Flow_Only_.png)
+
+The main structural relationships for this feature are shown below.
+
+![AddItemCommandClassDiagram](diagrams/class/AddItemCommandClassDiagram.png)
+
+A representative object snapshot for this feature is shown below.
+
+![AddItemCommandObjectDiagram](diagrams/object/AddItemCommandObjectDiagram.png)
 
 This design was chosen because it preserves the same separation of responsibilities used elsewhere
 in the codebase:
@@ -1072,7 +1104,17 @@ architecture:
 4. `ListCommand` delegates rendering to `UI.showInventory(inventory)`.
 5. `UI` iterates through the inventory and prints the formatted listing to the user.
 
-The main interaction for this flow is illustrated in [ListCommandMainFlow.png](diagrams/ListCommandMainFlow-Sequence_Diagram_for_ListCommand__Main_Control_Flow_Only_.png).
+The main interaction for this flow is illustrated below.
+
+![ListCommandMainFlow](diagrams/sequence/ListCommandMainFlow-Sequence_Diagram_for_ListCommand__Main_Control_Flow_Only_.png)
+
+The main structural relationships for this feature are shown below.
+
+![ListCommandClassDiagram](diagrams/class/ListCommandClassDiagram.png)
+
+A representative object snapshot for this feature is shown below.
+
+![ListCommandObjectDiagram](diagrams/object/ListCommandObjectDiagram.png)
 
 This design was chosen because listing inventory does not require separate parsing logic beyond
 recognising the command word. The command object acts mainly as a bridge between the parser and the UI.
@@ -1254,7 +1296,9 @@ When `SortCommand.execute()` is called the implementation performs the following
 This means the command does not directly modify the order of items stored inside the actual inventory. Instead, it 
 prepares a sorted view for display.
 
-The main interaction for this flow is illustrated in [SortingMainFlow.png](diagrams/SortingMainFlow.png).
+The main interaction for this flow is illustrated below.
+
+![SortingMainFlow](diagrams/SortingMainFlow.png)
 
 #### Sorting logic
 
@@ -1412,7 +1456,9 @@ public String toStorageString(String categoryName) {
 This design ensures that each subclass is responsible for serializing its own data,
 while the `Storage` class remains independent of specific item types.
 
-The main interaction for this flow is illustrated in [StorageSavingMainFlow.png](diagrams/StorageSavingMainFlow.png).
+The main interaction for this flow is illustrated below.
+
+![StorageSavingMainFlow](diagrams/StorageSavingMainFlow.png)
 
 #### Loading execution flow
 
@@ -1436,7 +1482,9 @@ written is also the data that can be read back correctly.
 This approach reuses existing parsing logic, ensuring consistency between user input handling and 
 stored data reconstruction.
 
-The main interaction for this flow is illustrated in [StorageLoadingMainFlow.png](diagrams/StorageLoadingMainFlow.png).
+The main interaction for this flow is illustrated below.
+
+![StorageLoadingMainFlow](diagrams/StorageLoadingMainFlow.png)
 
 #### Error handling and validation
 
@@ -1531,8 +1579,9 @@ The flow is as follows:
 5. The command looks up the category, validates the index, removes the item, and shows a confirmation
    message.
 
-The main interaction for this flow is illustrated in
-[DeleteItemCommandMainFlow.png](diagrams/DeleteItemCommandMainFlow-Sequence_Diagram_for_DeleteItemCommand__Main_Control_Flow_Only_.png).
+The main interaction for this flow is illustrated below.
+
+![DeleteItemCommandMainFlow](diagrams/DeleteItemCommandMainFlow-Sequence_Diagram_for_DeleteItemCommand__Main_Control_Flow_Only_.png)
 
 This design was chosen because it follows the same separation of concerns used throughout the project:
 
@@ -1670,8 +1719,9 @@ single-item delete feature. The flow is as follows:
 5. If the category is not empty, the command prompts the user for confirmation via `UI`.
 6. If the user confirms, the command clears all items from the category.
 
-The main interaction for this flow is illustrated in
-[DeleteCategoryCommandMainFlow.png](diagrams/DeleteCategoryCommandMainFlow-Sequence_Diagram_for_DeleteCategoryCommand__Main_Control_Flow_Only_.png).
+The main interaction for this flow is illustrated below.
+
+![DeleteCategoryCommandMainFlow](diagrams/DeleteCategoryCommandMainFlow-Sequence_Diagram_for_DeleteCategoryCommand__Main_Control_Flow_Only_.png)
 
 This design was chosen because it follows the same separation of concerns used throughout the project:
 
@@ -1837,8 +1887,9 @@ as follows:
 4. The command is executed with access to the current `Inventory` and `UI`.
 5. The command scans all categories and items, collects matches, and displays the result.
 
-The main interaction for this flow is illustrated in
-[FindItemByKeywordCommandMainFlow.png](diagrams/FindItemByKeywordCommandMainFlow-Sequence_Diagram_for_FindItemByKeywordCommand__Main_Control_Flow_Only_.png).
+The main interaction for this flow is illustrated below.
+
+![FindItemByKeywordCommandMainFlow](diagrams/FindItemByKeywordCommandMainFlow-Sequence_Diagram_for_FindItemByKeywordCommand__Main_Control_Flow_Only_.png)
 
 This design was chosen because it follows the same separation of concerns already used throughout
 the project:
@@ -2015,8 +2066,9 @@ architecture:
 4. `HelpCommand` delegates rendering to `UI.showHelp()`.
 5. `UI` prints the available commands and the User Guide link.
 
-The main interaction for this flow is illustrated in
-[HelpCommandMainFlow.png](diagrams/HelpCommandMainFlow-Sequence_Diagram_for_HelpCommand__Main_Control_Flow_Only_.png).
+The main interaction for this flow is illustrated below.
+
+![HelpCommandMainFlow](diagrams/HelpCommandMainFlow-Sequence_Diagram_for_HelpCommand__Main_Control_Flow_Only_.png)
 
 This design was chosen because displaying help does not require separate parsing logic beyond
 recognising the command word. The command object acts as a bridge between the parser and the UI,
@@ -2356,7 +2408,4 @@ After setting up the application, proceed to the individual test cases below.
 12. Exit the application using the `bye` command.
 13. Delete the storage file before launching the application.
 14. Verify that the application recreates the file automatically and starts without crashing.
-
-
-
 

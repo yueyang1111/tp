@@ -1,0 +1,45 @@
+@startuml
+title Class Diagram for FindItemByCategoryCommand Feature
+skinparam classAttributeIconSize 0
+hide circle
+left to right direction
+
+class "{abstract}\nCommand" as Command {
+  + execute(...)
+}
+
+class FindItemParser {
+  + parse(input: String)
+}
+
+class FindItemByCategoryCommand {
+  - categoryInput: String
+  + execute(...)
+}
+
+class Inventory {
+  + findCategoryByName(categoryName: String)
+}
+
+class Category {
+  - name: String
+}
+
+class Item {
+  - name: String
+  - quantity: int
+}
+
+class UI {
+  + showCategoryNotFound(...)
+  + showNumberedList(...)
+}
+
+Command <|-- FindItemByCategoryCommand
+FindItemParser ..> FindItemByCategoryCommand : creates
+FindItemByCategoryCommand --> Inventory : queries
+FindItemByCategoryCommand --> UI : displays through
+Inventory "1" o-- "*" Category
+Category "1" o-- "*" Item
+@enduml
+

@@ -1,0 +1,31 @@
+@startuml
+title Object Diagram for FindItemByBinCommand Feature
+hide circle
+left to right direction
+
+object "<u>findParser:FindItemParser</u>" as parser
+object "<u>cmd:FindItemByBinCommand</u>" as command {
+  binInput = "a"
+}
+object "<u>inventory:Inventory</u>" as inventory
+object "<u>fruits:Category</u>" as fruits {
+  name = "fruits"
+}
+object "<u>apple:Item</u>" as apple {
+  name = "apple"
+  binLocation = "A-1"
+}
+object "<u>banana:Item</u>" as banana {
+  name = "banana"
+  binLocation = "A-10"
+}
+object "<u>:UI</u>" as ui
+
+parser --> command : creates >
+command --> inventory : scans >
+command --> ui : displays through >
+inventory --> fruits : contains >
+fruits --> apple : contains >
+fruits --> banana : contains >
+@enduml
+

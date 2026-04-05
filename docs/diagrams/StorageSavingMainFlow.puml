@@ -4,13 +4,13 @@ title Sequence Diagram for Storage Save (Main Control Flow Only)
 autonumber
 hide footbox
 
-participant ":Duke" as Duke
+participant ":InventoryDock" as InventoryDock
 participant ":Storage" as Storage
 participant ":Inventory" as Inventory
 participant ":Category" as Category
 participant ":Item" as Item
 
-Duke -> Storage: save(inventory)
+InventoryDock -> Storage: save(inventory)
 activate Storage
 
 Storage -> Inventory: getCategories()
@@ -51,7 +51,7 @@ activate Storage
 Storage --> Storage
 deactivate Storage
 
-Storage --> Duke
+Storage --> InventoryDock
 deactivate Storage
 
 @enduml

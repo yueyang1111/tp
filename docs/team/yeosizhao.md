@@ -61,6 +61,7 @@ Given below are my contributions to the project.
 
 I contributed to team code quality by reviewing pull requests with attention to correctness, architecture consistency, and edge cases in CLI behaviour. Here are the more prominent examples:
 
-- Reviewed [PR #17](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/17)
-- Reviewed [PR #10](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/10)
-- Reviewed [PR #37](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/37)
+- Reviewed [PR #17](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/17), with feedback on parser simplification, reducing duplicate error handling, and refactoring item creation toward a clearer factory-style design pattern.
+- Reviewed [PR #10](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/10), with feedback on aligning model code with coding standards, including clearer boolean naming, consistency in state design, and basic defensive checks.
+- Reviewed [PR #37](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/37), with feedback on simplifying validation logic by removing redundant checks after required-field validation.
+- Reviewed [PR #77](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/77), with feedback on logging levels, separation of parsing and command logic, and import organisation.

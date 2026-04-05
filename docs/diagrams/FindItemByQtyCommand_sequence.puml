@@ -6,7 +6,7 @@ hide footbox
 
 actor User
 participant ":UI" as UI
-participant ":Duke" as Duke
+participant ":InventoryDock" as InventoryDock
 participant ":Parser" as Parser
 participant ":FindItemParser" as FindItemParser
 participant ":CommonFieldParser" as CommonFieldParser
@@ -17,9 +17,9 @@ participant ":Item" as Item
 
 User -> UI: enter find qty command
 activate UI
-UI -> Duke: input
-activate Duke
-Duke -> Parser: parse(input)
+UI -> InventoryDock: input
+activate InventoryDock
+InventoryDock -> Parser: parse(input)
 activate Parser
 
 Parser -> FindItemParser: parse(arguments)
@@ -36,10 +36,10 @@ FindItemByQtyCommand --> FindItemParser: command
 deactivate FindItemByQtyCommand
 FindItemParser --> Parser: command
 deactivate FindItemParser
-Parser --> Duke: command
+Parser --> InventoryDock: command
 deactivate Parser
 
-Duke -> FindItemByQtyCommand: execute(inventory, ui)
+InventoryDock -> FindItemByQtyCommand: execute(inventory, ui)
 activate FindItemByQtyCommand
 FindItemByQtyCommand -> Inventory: getCategories()
 activate Inventory
@@ -86,8 +86,8 @@ else matches found
     deactivate UI
 end
 
-FindItemByQtyCommand --> Duke: display information
+FindItemByQtyCommand --> InventoryDock: display information
 deactivate FindItemByQtyCommand
-deactivate Duke
+deactivate InventoryDock
 deactivate UI
 @enduml
