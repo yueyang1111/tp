@@ -7,7 +7,6 @@ import seedu.duke.command.FindItemByCategoryCommand;
 import seedu.duke.command.FindItemByExpiryDateCommand;
 import seedu.duke.command.FindItemByBinCommand;
 import seedu.duke.exception.DukeException;
-import seedu.duke.ui.UI;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,17 +17,6 @@ import java.util.logging.Logger;
  */
 public class FindItemParser {
     private static final Logger logger = Logger.getLogger(FindItemParser.class.getName());
-
-    private final UI ui;
-
-    /**
-     * Creates a find-command parser.
-     *
-     * @param ui user interface instance associated with the parser workflow.
-     */
-    public FindItemParser(UI ui) {
-        this.ui = ui;
-    }
 
     /**
      * Parses the arguments following {@code find} and returns the matching search command.

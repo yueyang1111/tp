@@ -7,14 +7,13 @@ import seedu.duke.command.FindItemByExpiryDateCommand;
 import seedu.duke.command.FindItemByKeywordCommand;
 import seedu.duke.command.FindItemByQtyCommand;
 import seedu.duke.exception.DukeException;
-import seedu.duke.ui.UI;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FindItemParserTest {
-    private final FindItemParser parser = new FindItemParser(new UI());
+    private final FindItemParser parser = new FindItemParser();
 
     @Test
     public void parse_emptyInput_throwsException() {

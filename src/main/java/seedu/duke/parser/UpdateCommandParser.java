@@ -3,7 +3,6 @@ package seedu.duke.parser;
 import seedu.duke.command.Command;
 import seedu.duke.command.UpdateItemCommand;
 import seedu.duke.exception.DukeException;
-import seedu.duke.ui.UI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,33 +13,21 @@ import java.util.Map;
  * and update fields before creating an update command.
  */
 public class UpdateCommandParser {
-    private final UI ui;
-
-    /**
-     * Creates a parser for update commands using the specified user interface.
-     *
-     * @param ui User interface used to report invalid input to the user.
-     */
-    public UpdateCommandParser(UI ui) {
-        this.ui = ui;
-    }
-
     /**
      * Parses the specified update command arguments into an update command.
      * The input must contain <code>category/</code>, <code>index/</code>, and at least
      * one supported update field.
      *
      * @param input Update command arguments supplied by the user.
-     * @return Command representing the requested item update, or {@code null} if the input is empty.
+     * @return Command representing the requested item update.
      * @throws DukeException If the category, index, or update fields are invalid.
      */
     public Command parse(String input) throws DukeException {
         assert input != null : "UpdateCommandParser received null input.";
 
         if (input.isEmpty()) {
-            ui.showInvalidInput("Use: update category/CATEGORY index/INDEX "
+            throw new DukeException("Use: update category/CATEGORY index/INDEX "
                     + "[newItem/NAME] [bin/BIN] [qty/QTY] [expiryDate/DATE] ...");
-            return null;
         }
 
         String[] tokens = input.trim().split("\\s+");

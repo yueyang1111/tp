@@ -32,7 +32,7 @@ public class Duke {
     public Duke() throws DukeException {
         ui = new UI();
         inventory = new Inventory();
-        parser = new Parser(ui);
+        parser = new Parser();
         storage = new Storage("./data/inventory.txt");
         logger.log(Level.INFO, "Initializing Duke application.");
 

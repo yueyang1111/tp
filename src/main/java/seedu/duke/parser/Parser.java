@@ -5,15 +5,8 @@ import seedu.duke.command.ExitCommand;
 import seedu.duke.command.HelpCommand;
 import seedu.duke.command.ListCommand;
 import seedu.duke.exception.DukeException;
-import seedu.duke.ui.UI;
 
 public class Parser {
-
-    private final UI ui;
-
-    public Parser(UI ui) {
-        this.ui = ui;
-    }
 
     public Command parse(String input) throws DukeException {
         assert input != null : "Parser received null input.";
@@ -21,8 +14,7 @@ public class Parser {
         String trimmed = input.trim();
 
         if (trimmed.isEmpty()) {
-            ui.showEmptyInput();
-            return null;
+            throw new DukeException("Input is empty.");
         }
 
         String[] parts = trimmed.split(" ", 2);
@@ -31,13 +23,13 @@ public class Parser {
 
         switch (commandWord) {
         case "add":
-            return new AddCommandParser(ui).parse(arguments);
+            return new AddCommandParser().parse(arguments);
         case "delete":
-            return new DeleteCommandParser(ui).parse(arguments);
+            return new DeleteCommandParser().parse(arguments);
         case "update":
-            return new UpdateCommandParser(ui).parse(arguments);
+            return new UpdateCommandParser().parse(arguments);
         case "find":
-            return new FindItemParser(ui).parse(arguments);
+            return new FindItemParser().parse(arguments);
         case "sort":
             return new SortCommandParser().parse(arguments);
         case "list":
@@ -47,8 +39,7 @@ public class Parser {
         case "bye":
             return new ExitCommand();
         default:
-            ui.showUnknownCommand();
-            return null;
+            throw new DukeException("Unknown command.");
         }
     }
 }
