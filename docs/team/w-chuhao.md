@@ -4,6 +4,8 @@
 
 InventoryDock is a CLI inventory management application for store managers to track stock by category, quantity, expiry date, and bin location. It supports fast keyboard-driven workflows for adding items, listing the full inventory, and locating stock based on storage-related attributes.
 
+My main contributions focused on inventory creation and retrieval workflows. I implemented the `add` command, the `list` command, and three search features: `find category`, `find bin`, and `find qty`. I also documented these features in the User Guide and Developer Guide, including the diagrams used to explain their control flow and structure.
+
 ## Summary of Contributions
 
 ### Code Contributed
@@ -129,12 +131,25 @@ My contributions covered:
 - current limitations and future improvements
 - manual testing instructions
 
-I also added or updated the following UML sequence diagrams:
+I also added and updated the UML diagrams used to support these Developer Guide sections. These diagrams document both the dynamic execution flow and the static relationships behind the features I implemented.
 
-- [AddItemCommandMainFlow.puml](../diagrams/AddItemCommandMainFlow.puml)
-- [ListCommandMainFlow.puml](../diagrams/ListCommandMainFlow.puml)
-- [FindItemByCategoryCommandMainFlow.puml](../diagrams/FindItemByCategoryCommandMainFlow.puml)
-- [FindItemByBinCommandMainFlow.puml](../diagrams/FindItemByBinCommandMainFlow.puml)
+Sequence diagrams I contributed:
+- [AddItemCommandMainFlow.puml](../diagrams/sequence/AddItemCommandMainFlow.puml)
+- [ListCommandMainFlow.puml](../diagrams/sequence/ListCommandMainFlow.puml)
+- [FindItemByCategoryCommandMainFlow.puml](../diagrams/sequence/FindItemByCategoryCommandMainFlow.puml)
+- [FindItemByBinCommandMainFlow.puml](../diagrams/sequence/FindItemByBinCommandMainFlow.puml)
+Class diagrams I contributed:
+- [AddItemCommandClassDiagram.puml](../diagrams/class/AddItemCommandClassDiagram.puml)
+- [ListCommandClassDiagram.puml](../diagrams/class/ListCommandClassDiagram.puml)
+- [FindItemByCategoryCommandClassDiagram.puml](../diagrams/class/FindItemByCategoryCommandClassDiagram.puml)
+- [FindItemByBinCommandClassDiagram.puml](../diagrams/class/FindItemByBinCommandClassDiagram.puml)
+Object diagrams I contributed:
+- [AddItemCommandObjectDiagram.puml](../diagrams/object/AddItemCommandObjectDiagram.puml)
+- [ListCommandObjectDiagram.puml](../diagrams/object/ListCommandObjectDiagram.puml)
+- [FindItemByCategoryCommandObjectDiagram.puml](../diagrams/object/FindItemByCategoryCommandObjectDiagram.puml)
+- [FindItemByBinCommandObjectDiagram.puml](../diagrams/object/FindItemByBinCommandObjectDiagram.puml)
+
+I also updated the diagram set later to keep the generated documentation consistent after the product name was changed from Duke to InventoryDock.
 
 ### Contributions to Team-Based Tasks
 
@@ -153,4 +168,8 @@ I also added or updated the following UML sequence diagrams:
 - [#57](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/57) Commented on the logging feature changes during team integration.
 - [#63](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/63) Helped refine the design of newly added item categories by pushing for a more consistent data model across item types.
 - [#86](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/86) Reviewed parsing improvements and suggested ways to keep item-field design more consistent for future iterations.
+
+
+
+
 
