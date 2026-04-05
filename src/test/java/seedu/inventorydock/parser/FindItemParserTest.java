@@ -7,14 +7,13 @@ import seedu.inventorydock.command.FindItemByExpiryDateCommand;
 import seedu.inventorydock.command.FindItemByKeywordCommand;
 import seedu.inventorydock.command.FindItemByQtyCommand;
 import seedu.inventorydock.exception.DukeException;
-import seedu.inventorydock.ui.UI;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class FindItemParserTest {
-    private final FindItemParser parser = new FindItemParser(new UI());
+    private final FindItemParser parser = new FindItemParser();
 
     @Test
     public void parse_emptyInput_throwsException() {
