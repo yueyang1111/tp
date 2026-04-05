@@ -52,16 +52,16 @@ public class DeleteCommandParser {
             String value = token.substring(sep + 1).trim();
 
             switch (key) {
-                case "category":
-                    categoryName = value;
-                    break;
-                case "index":
-                    indexString = value;
-                    break;
-                default:
-                    logger.log(Level.WARNING, "Unknown delete field: " + key);
-                    throw new DukeException("Unknown field: '" + key + "'. Use: delete "
-                            + "category/CATEGORY index/INDEX or delete category/CATEGORY");
+            case "category":
+                categoryName = value;
+                break;
+            case "index":
+                indexString = value;
+                break;
+            default:
+                logger.log(Level.WARNING, "Unknown delete field: " + key);
+                throw new DukeException("Unknown field: '" + key + "'. Use: delete "
+                        + "category/CATEGORY index/INDEX or delete category/CATEGORY");
             }
         }
 
