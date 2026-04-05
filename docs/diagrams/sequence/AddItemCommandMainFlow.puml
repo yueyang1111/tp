@@ -6,7 +6,7 @@ hide footbox
 
 actor User
 participant ":UI" as UI
-participant ":Duke" as Duke
+participant ":InventoryDock" as InventoryDock
 participant ":Parser" as Parser
 participant ":AddCommandParser" as AddCommandParser
 participant ":AddItemCommandParser" as AddItemCommandParser
@@ -19,9 +19,9 @@ participant ":Category" as Category
 
 User -> UI: enter add command
 activate UI
-UI -> Duke: input
-activate Duke
-Duke -> Parser: parse(input)
+UI -> InventoryDock: input
+activate InventoryDock
+InventoryDock -> Parser: parse(input)
 activate Parser
 
 Parser -> AddCommandParser: parse(arguments)
@@ -72,10 +72,10 @@ end
 
 AddCommandParser --> Parser: command
 deactivate AddCommandParser
-Parser --> Duke: command
+Parser --> InventoryDock: command
 deactivate Parser
 
-Duke -> AddItemCommand: execute(inventory, ui)
+InventoryDock -> AddItemCommand: execute(inventory, ui)
 activate AddItemCommand
 AddItemCommand -> Inventory: findCategoryByName(categoryName)
 activate Inventory
@@ -99,6 +99,7 @@ UI --> User: display confirmation
 deactivate UI
 deactivate AddItemCommand
 
-deactivate Duke
+deactivate InventoryDock
 deactivate UI
 @enduml
+

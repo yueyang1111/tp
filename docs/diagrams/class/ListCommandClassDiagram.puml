@@ -36,3 +36,4 @@ UI --> Inventory : reads
 Inventory "1" o-- "*" Category
 Category "1" o-- "*" Item
 @enduml
+

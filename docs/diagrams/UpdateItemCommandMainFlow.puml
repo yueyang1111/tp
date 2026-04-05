@@ -6,7 +6,7 @@ hide footbox
 
 actor User
 participant ":UI" as UI
-participant ":Duke" as Duke
+participant ":InventoryDock" as InventoryDock
 participant ":Parser" as Parser
 participant ":UpdateCommandParser" as UpdateCommandParser
 participant ":UpdateItemCommand" as UpdateItemCommand
@@ -17,9 +17,9 @@ participant ":CommonFieldParser" as CommonFieldParser
 
 User -> UI: enter update command
 activate UI
-UI -> Duke: input
-activate Duke
-Duke -> Parser: parse(input)
+UI -> InventoryDock: input
+activate InventoryDock
+InventoryDock -> Parser: parse(input)
 activate Parser
 
 Parser -> UpdateCommandParser: parse(arguments)
@@ -30,10 +30,10 @@ activate UpdateItemCommand
 UpdateItemCommand --> UpdateCommandParser: command
 UpdateCommandParser --> Parser: command
 deactivate UpdateCommandParser
-Parser --> Duke: command
+Parser --> InventoryDock: command
 deactivate Parser
 
-Duke -> UpdateItemCommand: execute(inventory, ui)
+InventoryDock -> UpdateItemCommand: execute(inventory, ui)
 activate UpdateItemCommand
 UpdateItemCommand -> Inventory: findCategoryByName(categoryName)
 activate Inventory
@@ -98,6 +98,7 @@ UI --> User: display confirmation
 deactivate UI
 
 deactivate UpdateItemCommand
-deactivate Duke
+deactivate InventoryDock
 deactivate UI
 @enduml
+

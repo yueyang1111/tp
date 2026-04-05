@@ -6,15 +6,15 @@ hide footbox
 
 actor User
 participant ":UI" as UI
-participant ":Duke" as Duke
+participant ":InventoryDock" as InventoryDock
 participant ":Parser" as Parser
 participant ":HelpCommand" as HelpCommand
 
 User -> UI: enter help command
 activate UI
-UI -> Duke: input
-activate Duke
-Duke -> Parser: parse(input)
+UI -> InventoryDock: input
+activate InventoryDock
+InventoryDock -> Parser: parse(input)
 activate Parser
 
 create HelpCommand
@@ -22,18 +22,19 @@ Parser -> HelpCommand: HelpCommand()
 activate HelpCommand
 HelpCommand --> Parser: command
 deactivate HelpCommand
-Parser --> Duke: command
+Parser --> InventoryDock: command
 deactivate Parser
 
-Duke -> HelpCommand: execute(inventory, ui)
+InventoryDock -> HelpCommand: execute(inventory, ui)
 activate HelpCommand
 HelpCommand -> UI: showHelp()
 activate UI
 UI --> User: display available commands and User Guide link
 deactivate UI
 
-HelpCommand --> Duke: display information
+HelpCommand --> InventoryDock: display information
 deactivate HelpCommand
-deactivate Duke
+deactivate InventoryDock
 deactivate UI
 @enduml
+

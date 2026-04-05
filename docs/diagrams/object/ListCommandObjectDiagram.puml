@@ -28,3 +28,4 @@ inventory --> vegetables : contains >
 fruits --> apple : contains >
 vegetables --> carrot : contains >
 @enduml
+

@@ -6,7 +6,7 @@ hide footbox
 
 actor User
 participant ":UI" as UI
-participant ":Duke" as Duke
+participant ":InventoryDock" as InventoryDock
 participant ":Parser" as Parser
 participant ":FindItemParser" as FindItemParser
 participant ":FindItemByExpiryDateCommand" as FindItemByExpiryDateCommand
@@ -17,9 +17,9 @@ participant ":Item" as Item
 
 User -> UI: enter find expiryDate command
 activate UI
-UI -> Duke: input
-activate Duke
-Duke -> Parser: parse(input)
+UI -> InventoryDock: input
+activate InventoryDock
+InventoryDock -> Parser: parse(input)
 activate Parser
 
 Parser -> FindItemParser: parse(arguments)
@@ -30,10 +30,10 @@ activate FindItemByExpiryDateCommand
 FindItemByExpiryDateCommand --> FindItemParser: command
 FindItemParser --> Parser: command
 deactivate FindItemParser
-Parser --> Duke: command
+Parser --> InventoryDock: command
 deactivate Parser
 
-Duke -> FindItemByExpiryDateCommand: execute(inventory, ui)
+InventoryDock -> FindItemByExpiryDateCommand: execute(inventory, ui)
 activate FindItemByExpiryDateCommand
 FindItemByExpiryDateCommand -> DateParser: parseDate(expiryDateInput)
 activate DateParser
@@ -87,6 +87,7 @@ else matches found
 end
 
 deactivate FindItemByExpiryDateCommand
-deactivate Duke
+deactivate InventoryDock
 deactivate UI
 @enduml
+

@@ -26,3 +26,4 @@ addCommand --> ui : shows result via >
 inventory --> fruits : contains >
 fruits --> apple : contains >
 @enduml
+

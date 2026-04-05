@@ -6,7 +6,7 @@ hide footbox
 
 actor User
 participant ":UI" as UI
-participant ":Duke" as Duke
+participant ":InventoryDock" as InventoryDock
 participant ":Parser" as Parser
 participant ":ListCommand" as ListCommand
 participant ":Inventory" as Inventory
@@ -14,19 +14,19 @@ participant ":Category" as Category
 
 User -> UI: enter list command
 activate UI
-UI -> Duke: input
-activate Duke
-Duke -> Parser: parse(input)
+UI -> InventoryDock: input
+activate InventoryDock
+InventoryDock -> Parser: parse(input)
 activate Parser
 
 create ListCommand
 Parser -> ListCommand: ListCommand()
 activate ListCommand
 ListCommand --> Parser: command
-Parser --> Duke: command
+Parser --> InventoryDock: command
 deactivate Parser
 
-Duke -> ListCommand: execute(inventory, ui)
+InventoryDock -> ListCommand: execute(inventory, ui)
 activate ListCommand
 ListCommand -> UI: showInventory(inventory)
 activate UI
@@ -49,6 +49,7 @@ UI --> User: display inventory listing
 deactivate UI
 deactivate ListCommand
 
-deactivate Duke
+deactivate InventoryDock
 deactivate UI
 @enduml
+

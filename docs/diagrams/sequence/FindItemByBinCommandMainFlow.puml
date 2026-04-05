@@ -6,7 +6,7 @@ hide footbox
 
 actor User
 participant ":UI" as UI
-participant ":Duke" as Duke
+participant ":InventoryDock" as InventoryDock
 participant ":Parser" as Parser
 participant ":FindItemParser" as FindItemParser
 participant ":BinLocationParser" as BinLocationParser
@@ -17,9 +17,9 @@ participant ":Item" as Item
 
 User -> UI: enter find bin command
 activate UI
-UI -> Duke: input
-activate Duke
-Duke -> Parser: parse(input)
+UI -> InventoryDock: input
+activate InventoryDock
+InventoryDock -> Parser: parse(input)
 activate Parser
 
 Parser -> FindItemParser: parse(arguments)
@@ -34,10 +34,10 @@ activate FindItemByBinCommand
 FindItemByBinCommand --> FindItemParser: command
 FindItemParser --> Parser: command
 deactivate FindItemParser
-Parser --> Duke: command
+Parser --> InventoryDock: command
 deactivate Parser
 
-Duke -> FindItemByBinCommand: execute(inventory, ui)
+InventoryDock -> FindItemByBinCommand: execute(inventory, ui)
 activate FindItemByBinCommand
 FindItemByBinCommand -> Inventory: getCategories()
 activate Inventory
@@ -79,6 +79,7 @@ else matches found
 end
 
 deactivate FindItemByBinCommand
-deactivate Duke
+deactivate InventoryDock
 deactivate UI
 @enduml
+

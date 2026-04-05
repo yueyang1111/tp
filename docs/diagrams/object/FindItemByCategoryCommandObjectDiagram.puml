@@ -28,3 +28,4 @@ inventory --> fruits : contains >
 fruits --> apple : contains >
 fruits --> banana : contains >
 @enduml
+

@@ -4,14 +4,14 @@ title Sequence Diagram for Storage Load (Main Control Flow Only)
 autonumber
 hide footbox
 
-participant ":Duke" as Duke
+participant ":InventoryDock" as InventoryDock
 participant ":Storage" as Storage
 participant ":AddItemCommandParser" as AddItemCommandParser
 participant ":Command" as Command
 participant ":Inventory" as Inventory
 participant ":UI" as UI
 
-Duke -> Storage: load(inventory, ui)
+InventoryDock -> Storage: load(inventory, ui)
 activate Storage
 
 Storage -> Storage: createFile()
@@ -62,7 +62,7 @@ loop for each line in storage file
     end
 end
 
-Storage --> Duke
+Storage --> InventoryDock
 deactivate Storage
 
 @enduml
