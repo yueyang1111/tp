@@ -1,101 +1,53 @@
 @startuml
+title Class Diagram for FindItemByQtyCommand Feature
 skinparam classAttributeIconSize 0
-skinparam shadowing false
-skinparam packageStyle rectangle
-hide empty members
+hide circle
+left to right direction
 
-title Class Diagram for FindItemByQtyCommand
-
-package "seedu.inventorydock.command" {
-  abstract class Command {
-    +execute(inventory: Inventory, ui: UI)
-    +isExit(): boolean
-  }
-
-  class FindItemByQtyCommand {
-    -logger: Logger
-    -qtyInput: int
-    +FindItemByQtyCommand(qtyInput: int)
-    +parseQtyInput(qtyInput: String): int
-    +execute(inventory: Inventory, ui: UI)
-  }
+class "{abstract}\nCommand" as Command {
+  + execute(...)
 }
 
-package "seedu.inventorydock.model" {
-  class Inventory {
-    -inventory: List
-    +Inventory()
-    +addCategory(category: Category)
-    +getCategories(): List
-    +getCategory(index: int): Category
-    +getCategoryCount(): int
-    +findCategoryByName(categoryName: String): Category
-    +hasCategory(categoryName: String): boolean
-  }
-
-  class Category {
-    -name: String
-    -items: List
-    +Category(name: String)
-    +getName(): String
-    +setName(name: String)
-    +getItems(): List
-    +addItem(item: Item)
-    +getItem(index: int): Item
-    +getItemCount(): int
-    +isEmpty(): boolean
-    +removeItem(index: int)
-    +findItemByName(itemName: String): Item
-  }
-
-  class Item {
-    -name: String
-    -quantity: int
-    -binLocation: String
-    -expiryDate: String
-    +Item(name: String, quantity: int, binLocation: String, expiryDate: String)
-    +getName(): String
-    +setName(name: String)
-    +getQuantity(): int
-    +setQuantity(quantity: int)
-    +getBinLocation(): String
-    +setBinLocation(binLocation: String)
-    +getExpiryDate(): String
-    +setExpiryDate(expiryDate: String)
-    +toStorageString(categoryName: String): String
-    +toString(): String
-  }
+class FindItemParser {
+  + parse(input: String)
 }
 
-package "seedu.inventorydock.ui" {
-  class UI {
-    +showDivider()
-    +showMessage(message: String)
-    +formatFoundItemsMessage(matchCount: int, searchDescription: String): String
-    +formatNoItemsFoundMessage(searchDescription: String): String
-    +formatFindResultsHeader(resultsDescription: String): String
-    +showNumberedList(items: List)
-  }
+class FindItemByQtyCommand {
+  - qtyInput: int
+  + parseQtyInput(qtyInput: String)
+  + execute(...)
 }
 
-package "seedu.inventorydock.exception" {
-  class DukeException
+class Inventory {
+  + getCategories()
 }
+
+class Category {
+  + getItems()
+}
+
+class Item {
+  - name: String
+  - quantity: int
+  + getQuantity()
+}
+
+class UI {
+  + formatNoItemsFoundMessage(...)
+  + formatFoundItemsMessage(...)
+  + formatFindResultsHeader(...)
+  + showMessage(...)
+  + showDivider()
+  + showNumberedList(...)
+}
+
+class DukeException
 
 Command <|-- FindItemByQtyCommand
-Inventory *-- "0..*" Category : contains
-Category *-- "0..*" Item : contains
-FindItemByQtyCommand ..> Inventory : reads
-FindItemByQtyCommand ..> UI : displays via
+FindItemParser ..> FindItemByQtyCommand : creates
+FindItemByQtyCommand --> Inventory : queries
+FindItemByQtyCommand --> UI : displays through
 FindItemByQtyCommand ..> DukeException
-FindItemByQtyCommand ..> Item : filters by quantity
-FindItemByQtyCommand ..> Category : traverses
-
-note right of FindItemByQtyCommand
-execute() traverses:
-Inventory -> Category -> Item
-and collects items where
-item.getQuantity() <= qtyInput
-end note
-
+Inventory "1" o-- "*" Category
+Category "1" o-- "*" Item
 @enduml
