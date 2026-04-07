@@ -68,7 +68,7 @@ existing components.
 
 The overall architecture of the application is shown below.
 
-![OverallClassDiagram](diagrams/class/OverallClass.png)
+![ArchitectureDiagram](diagrams/ArchitectureDiagram.png)
 
 ### Add Item Feature
 
@@ -1319,6 +1319,296 @@ The responsibilities these classes are as follows:
 This design keeps parsing, sorting and presentation responsibilities separate, The parser only interprets
 the command, the command prepares the sorted result and the UI remains responsible for rendering it.
 
+#### Command execution flow
+
+When `SortCommand.execute()` is called the implementation performs the following sequence:
+
+1. Assert that `inventory`, `ui` and `sortType` are not `null`.
+2. Retrieve all categories from the `Inventory`.
+3. For each category, make a copy of items item list.
+4. Sort the copied list using the comparator that matches the requested sort type.
+5. Store the sorted lists in the same category order as the original inventory.
+6. Call `ui.showSortedInventory(inventory, sortedItemsByCategory, sortLabel)`.
+7. UI displays the categories in their original order and prints each category's sorted item list.
+
+This means the command does not directly modify the order of items stored inside the actual inventory. Instead, it
+prepares a sorted view for display.
+
+The main interaction for this flow is illustrated below.
+
+![SortingMainFlow](diagrams/sequence/SortingMainFlow.png)
+
+The main structural relationships for this feature are shown below.
+
+![SortingClassDiagram](diagrams/class/SortingClassDiagram.png)
+
+A representative object snapshot for this feature is shown below.
+
+![SortingObjectDiagram](diagrams/object/SortingObjectDiagram.png)
+
+#### Sorting logic
+
+The sorting behaviour depends on the user provided sort type.
+
+- `name`: Sorts items alphabetically by item name, ignoring letter case.
+- `expirydate`: Sorts items by expiry date in ascending order, so earlier expiry dates appear first.
+- `qty`: Sorts items by quantity in descending order, so larger quantities appear first.
+
+For expiry-date sorting, the command relies on date parsing rather than raw string comparison. This is important
+because proper date parsing ensures dates are compared logically rather than lexicographically.
+
+A simplified version of the sorting approach is:
+
+```java
+List<Item> sortedItems = new ArrayList<>(category.getItems());
+sortedItems.sort(getComparator());
+```
+
+The sorted item lists are then passed to the UI for display.
+
+#### Why the feature is implemented this way
+
+The most important design choice in this feature is that sorting is performed on copied item lists instead of
+changing the order of items inside the actual inventory.
+
+This was chosen for three reasons.
+
+First, the feature is intended to provide an alternative view of the inventory rather than mutate the underlying data.
+A user who runs `sort name` is usually asking to inspect the data in a different order, not to permanently reorder the
+stored inventory.
+
+Second, it avoids unintended side effects. If the underlying item order were modified directly, later commands that
+depend on the original ordering, such as deletion or updating by index, could behave differently in ways the user
+did not expect.
+
+Third, it keeps the implementation simple and safe. By sorting copies of the item lists, the command can generate the
+desired output without changing the model state.
+
+Another deliberate design choice is that the category order is preserved. Only the items within each category are
+sorted. This keeps the output structure familiar and consistent with the normal `list` command.
+
+#### Error handling and validation
+
+Input validation is handled mainly by `SortCommandParser`.
+
+If the user enters `sort` without providing a sort type, the parser throws a `InventoryDockException` indicating that a valid
+sort type is required.
+
+If the user provides an unsupported sort type, the parser throws a `InventoryDockException` listing the valid options,
+such as `name`, `expirydate`, and `qty`.
+
+At execution time, the command handles an empty inventory gracefully. The UI displays the appropriate empty inventory
+message instead of failing.
+
+#### Alternatives considered
+
+Several alternatives were considered when implementing this feature.
+
+Alternative 1: Permanently reorder items inside each category.
+
+This was rejected because the sort command is intended as a display oriented feature rather than a data mutation
+feature. Permanently changing the stored order could make other index based commands less predictable.
+
+Alternative 2: Extend the `list` command to accept optional sorting arguments.
+
+This was rejected because it would complicate the behaviour of `list`, which is currently simple and predictable.
+Keeping `sort` as a separate command makes each command’s purpose clearer.
+
+Alternative 3: Sort both categories and items.
+
+This was rejected because the primary user need is to inspect items within each category more easily. Reordering
+categories as well would make the output less consistent with the rest of the application.
+
+#### Current limitations
+
+The current implementation has some limitations.
+
+- It only supports one sorting criterion at a time.
+- It preserves category order and does not sort categories themselves.
+- It depends on valid item data for correct field comparison, especially for expiry-date sorting.
+- It currently only support fix direction of sorting, user cannot choose ascending or descending.
+
+These limitations are acceptable for the current project scope.
+
+#### Possible future improvements
+
+If this feature is extended in future versions, the following improvements could be considered:
+
+- Support multi-level sorting such as sorting by expiry date and then by name.
+- Allow categories themselves to be sorted optionally.
+- Support ascending and descending variants for each sort type.
+
+### Storage feature
+
+This product includes a storage component that is responsible for persisting inventory data
+between application runs.
+
+This component is necessary because the inventory should not be lost when the program exits, as
+users expect their items to remain available the next time they launch the application.
+
+The storage feature solves this by writing the current inventory to a file and reconstructing it
+when the application starts again.
+
+#### Implementation
+
+The storage mechanism is facilitated by `Storage`, which is responsible for saving the current `Inventory`
+to file and loading it back into memory.
+
+It supports two main operations:
+
+- `save(Inventory inventory)` which writes the current inventory to the storage file.
+- `load(Inventory inventory, UI ui)` which reads the storage file and reconstructs the inventory state.
+
+The save format is text-based. Each item is stored on a separate line together with its common fields and any
+additional fields required by its specific category. This allows all supported item types to be saved in a
+single format while preserving the extra data needed for each subtype.
+
+The main structural relationships for the storage feature are shown below.
+
+![StorageClassDiagram](diagrams/class/StorageClassDiagram.png)
+
+#### Saving execution flow
+
+When the application saves, `Storage` performs the following sequence:
+1. Open the data file for writing.
+2. Retrieve all categories from the inventory.
+3. Iterate through each `Category`.
+4. Within each category, iterate through each `Item`.
+5. Convert each item into a formatted text line.
+6. Write the formatted line into the file.
+7. Repeat until all items have been written.
+8. Close the file.
+
+The formatting logic is delegated to the `Item` class via polymorphism, instead of being centralized
+in the `Storage` class.
+
+A simplified example of the base formatting logic is:
+```java
+public String toStorageString(String categoryName) {
+    return "category/" + categoryName
+            + " item/" + name
+            + " bin/" + binLocation
+            + " qty/" + quantity
+            + " expiryDate/" + expiryDate;
+}
+```
+
+Subclasses extend this behaviour by appending their own fields. For example, the `Fruit` class
+adds additional attributes:
+```java
+public String toStorageString(String categoryName) {
+    return super.toStorageString(categoryName)
+            + " size/" + size
+            + " isRipe/" + isRipe;
+}
+```
+
+This design ensures that each subclass is responsible for serializing its own data,
+while the `Storage` class remains independent of specific item types.
+
+The main interaction for this flow is illustrated below.
+
+![StorageSavingMainFlow](diagrams/sequence/StorageSavingMainFlow.png)
+
+A representative object snapshot for the storage loading workflow is shown below.
+
+![StorageSavingObjectDiagram](diagrams/object/StorageSavingObjectDiagram.png)
+
+#### Loading execution flow
+
+When the application loads data from file, `Storage` performs the following sequence:
+1. Ensure the storage file exists. If not, it is created automatically.
+2. Read the file line by line.
+3. Extract the category from the line.
+4. Use the category to determine the appropriate parsing method.
+5. Convert the line into a `Command` using `AddItemCommandParser`.
+6. Execute the command to reconstruct the item in the inventory.
+7. Skip malformed lines where appropriate.
+8. Continue until the entire file has been processed.
+
+This design allows the application to reconstruct the same logical inventory state from the
+saved text data.
+
+The loading process depends on the file format remaining consistent with the save format.
+Since both directions are controlled by `Storage`, the implementation can ensure that the data
+written is also the data that can be read back correctly.
+
+This approach reuses existing parsing logic, ensuring consistency between user input handling and
+stored data reconstruction.
+
+The main interaction for this flow is illustrated below.
+
+![StorageLoadingMainFlow](diagrams/sequence/StorageLoadingMainFlow.png)
+
+A representative object snapshot for the storage loading workflow is shown below.
+
+![StorageLoadingObjectDiagram](diagrams/object/StorageLoadingObjectDiagram.png)
+
+#### Error handling and validation
+
+The storage component also handles cases where the save file is missing, or contains invalid data.
+
+If the file does not exist, the application can start with an empty inventory instead of
+crashing. This is because the absence of a save file may simply mean that the program is being
+run for the first time.
+
+If a line is malformed, the exception is caught and the line is skipped. A warning is
+logged and the user is informed via the UI, detailing the line that was skipped and the
+reason for skipping.
+
+#### Why the storage component is implemented this way
+
+The simple text-based format is chosen instead of a more complex format such as JSON or database
+for several reasons.
+
+First, this keeps the implementation lightweight. The project does not require any external
+libraries or database setup, which makes the application easier to develop and test.
+
+Second, the saved data is readable which is useful during debugging because we can inspect the
+contents of the file directly and verify whether items are being written correctly.
+
+Third, the amount of data in the application is relatively small. Hence, a plain text file is
+sufficient and avoids unnecessary complexity.
+
+#### Alternatives considered
+
+Alternative 1: Store each category in a separate file.
+
+This could improve file organization, especially if categories become large. It was rejected because
+it would make file management more complicated and require the application to coordinate multiple
+save files instead of just one.
+
+Alternative 2: Use JSON format.
+
+This would make the file structure more standardized. However, it was rejected because it would
+introduce additional complexity which is unnecessary for our project scope.
+
+#### Current limitations
+
+The current storage implementation has several limitations.
+
+1. The storage system relies on a fixed text format with prefixes such as `category/`, `item/`.
+   If the format is modified or corrupted, the parser may fail to reconstruct the item correctly.
+2. During loading, each stored line is converted into a Command using `AddItemCommandParser` and executed.
+   While this ensures consistency with user input handling, it introduces coupling between storage logic and
+   command parsing logic. Any changes in parsing behaviour may affect the loading process.
+3. Malformed or corrupted lines are skipped during loading. While this prevents crashes, it may result
+   in data loss and incomplete reconstruction of the inventory.
+
+For the current version of the application, these limitations are acceptable, but they may become
+relevant if the system grows more complex.
+
+#### Possible future improvements
+
+The following enhancements can be considered to improve the storage component.
+
+1. Introduce structured storage format, such as JSON. This will help to improve robustness and
+   make format easier to extend.
+2. The system could directly construct `Item` objects instead of converting stored lines into
+   commands. This would reduce coupling and improve clarity of storage logic.
+3. Instead of skipping malformed lines completely, the system could attempt partial recovery and
+   provide more detailed diagnostics to the user. This would reduce potential data loss.
+
 ### Testing delete category
 
 1. Ensure the inventory contains a non-empty category such as `fruits`.
@@ -1533,4 +1823,21 @@ After setting up the application, proceed to the individual test cases below.
 11. Verify that the application shows the missing sort type error message.
 12. Run the command on an empty inventory.
 13. Verify that the application handles it without crashing and displays the appropriate empty state.
+
+### Testing storage
+
+1. Add several items to the inventory.
+2. Exit the application using the `bye` command.
+3. Reopen the application.
+4. Run `list`.
+5. Verify that all items are restored with their correct category specific fields.
+6. Exit the application using the `bye` command.
+7. Modify the storage file so that a line is missing the `category/` field.
+8. Reopen the application.
+9. Verify that the application skips the malformed line and displays the appropriate error message.
+10. Run `list`.
+11. Verify that the remaining valid items are loaded correctly.
+12. Exit the application using the `bye` command.
+13. Delete the storage file before launching the application.
+14. Verify that the application recreates the file automatically and starts without crashing.
 
