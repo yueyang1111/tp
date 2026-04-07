@@ -1,6 +1,5 @@
 package seedu.inventorydock.command;
 
-import seedu.inventorydock.exception.DukeException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.Item;
@@ -38,14 +37,17 @@ public class FindItemByKeywordCommand extends Command {
      *
      * @param inventory The inventory to search through.
      * @param ui        The UI to display results to the user.
-     * @throws DukeException If an error occurs during
-     *                       execution.
      */
     @Override
-    public void execute(Inventory inventory, UI ui) throws DukeException {
+    public void execute(Inventory inventory, UI ui) {
         assert inventory != null : "FindItemByKeywordCommand received null inventory.";
         assert ui != null : "FindItemByKeywordCommand received null UI.";
         assert keywordInput != null : "FindItemByKeywordCommand received null keyword input.";
+
+        if (keywordInput.contains(" ")) {
+            ui.showError("Multiple keywords are not supported. Please provide a single keyword.");
+            return;
+        }
 
         List<String> matches = new ArrayList<>();
         List<Category> categories = inventory.getCategories();

@@ -1,7 +1,8 @@
 package seedu.inventorydock.command;
 
 import org.junit.jupiter.api.Test;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.CategoryNotFoundException;
+import seedu.inventorydock.exception.MissingArgumentException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.Item;
@@ -14,7 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class AddItemCommandTest {
 
     @Test
-    public void execute_validCategoryAndItem_itemAddedAndUiUpdated() throws DukeException {
+    public void execute_validCategoryAndItem_itemAddedAndUiUpdated()
+            throws CategoryNotFoundException, MissingArgumentException {
         Inventory inventory = new Inventory();
         Category fruits = new Category("fruits");
         inventory.addCategory(fruits);
@@ -39,7 +41,7 @@ public class AddItemCommandTest {
         AddItemCommand command = new AddItemCommand("fruits", item);
         TestUI ui = new TestUI();
 
-        DukeException e = assertThrows(DukeException.class,
+        CategoryNotFoundException e = assertThrows(CategoryNotFoundException.class,
                 () -> command.execute(inventory, ui));
         assertEquals("Category not found: fruits", e.getMessage());
     }
@@ -51,7 +53,7 @@ public class AddItemCommandTest {
         AddItemCommand command = new AddItemCommand("fruits", null);
         TestUI ui = new TestUI();
 
-        DukeException e = assertThrows(DukeException.class,
+        MissingArgumentException e = assertThrows(MissingArgumentException.class,
                 () -> command.execute(inventory, ui));
         assertEquals("Item cannot be null.", e.getMessage());
     }

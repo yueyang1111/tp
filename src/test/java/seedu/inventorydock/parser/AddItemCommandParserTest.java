@@ -1,7 +1,7 @@
 package seedu.inventorydock.parser;
 
 import org.junit.jupiter.api.Test;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,7 +23,7 @@ public class AddItemCommandParserTest {
         String input = "category/fruits bin/A-10 qty/3 "
                 + "expiryDate/2026-03-20 size/big isRipe/true";
 
-        DukeException e = assertThrows(DukeException.class,
+        InventoryDockException e = assertThrows(InventoryDockException.class,
                 () -> parser.handleFruit(input));
         assertEquals("Missing required field: item/", e.getMessage());
     }
@@ -34,7 +34,7 @@ public class AddItemCommandParserTest {
         String input = "item/apple bin/A-10 qty/3 "
                 + "expiryDate/2026-03-20 size/big isRipe/true";
 
-        DukeException e = assertThrows(DukeException.class,
+        InventoryDockException e = assertThrows(InventoryDockException.class,
                 () -> parser.handleFruit(input));
         assertEquals("Missing required field: category/", e.getMessage());
     }
@@ -45,7 +45,7 @@ public class AddItemCommandParserTest {
         String input = "category/fruits item/apple qty/3 "
                 + "expiryDate/2026-03-20 size/big isRipe/true";
 
-        DukeException e = assertThrows(DukeException.class,
+        InventoryDockException e = assertThrows(InventoryDockException.class,
                 () -> parser.handleFruit(input));
         assertEquals("Missing required field: bin/", e.getMessage());
     }
@@ -56,7 +56,7 @@ public class AddItemCommandParserTest {
         String input = "category/fruits item/apple bin/A-10 "
                 + "expiryDate/2026-03-20 size/big isRipe/true";
 
-        DukeException e = assertThrows(DukeException.class,
+        InventoryDockException e = assertThrows(InventoryDockException.class,
                 () -> parser.handleFruit(input));
         assertEquals("Missing required field: qty/", e.getMessage());
     }
@@ -67,7 +67,7 @@ public class AddItemCommandParserTest {
         String input = "category/fruits item/apple bin/A-10 qty/3 "
                 + "size/big isRipe/true";
 
-        DukeException e = assertThrows(DukeException.class,
+        InventoryDockException e = assertThrows(InventoryDockException.class,
                 () -> parser.handleFruit(input));
         assertEquals("Missing required field: expiryDate/", e.getMessage());
     }
@@ -78,7 +78,7 @@ public class AddItemCommandParserTest {
         String input = "category/fruits item/apple bin/A-10 qty/3 "
                 + "expiryDate/2026-03-20 isRipe/true";
 
-        DukeException e = assertThrows(DukeException.class,
+        InventoryDockException e = assertThrows(InventoryDockException.class,
                 () -> parser.handleFruit(input));
         assertEquals("Missing required field: size/", e.getMessage());
     }
@@ -89,7 +89,7 @@ public class AddItemCommandParserTest {
         String input = "category/fruits item/apple bin/A-10 qty/3 "
                 + "expiryDate/2026-03-20 size/big";
 
-        DukeException e = assertThrows(DukeException.class,
+        InventoryDockException e = assertThrows(InventoryDockException.class,
                 () -> parser.handleFruit(input));
         assertEquals("Missing required field: isRipe/", e.getMessage());
     }
@@ -100,7 +100,7 @@ public class AddItemCommandParserTest {
         String input = "category/fruits item/apple bin/A-10 qty/3 "
                 + "expiryDate/2026-03-20 isRipe/true size/big";
 
-        DukeException e = assertThrows(DukeException.class,
+        InventoryDockException e = assertThrows(InventoryDockException.class,
                 () -> parser.handleFruit(input));
         assertEquals("Fields must follow the correct order. Run 'help' for supported command.", e.getMessage());
     }
@@ -111,7 +111,7 @@ public class AddItemCommandParserTest {
         String input = "category/fruits item/apple bin/A-10 qty/hi "
                 + "expiryDate/2026-03-20 size/big isRipe/true";
 
-        DukeException e = assertThrows(DukeException.class,
+        InventoryDockException e = assertThrows(InventoryDockException.class,
                 () -> parser.handleFruit(input));
         assertEquals("Quantity must be an integer.", e.getMessage());
     }
@@ -122,7 +122,7 @@ public class AddItemCommandParserTest {
         String input = "category/fruits item/apple bin/A-10 qty/-3 "
                 + "expiryDate/2026-03-20 size/big isRipe/true";
 
-        DukeException e = assertThrows(DukeException.class,
+        InventoryDockException e = assertThrows(InventoryDockException.class,
                 () -> parser.handleFruit(input));
         assertEquals("Quantity must be a positive integer.", e.getMessage());
     }
@@ -240,7 +240,7 @@ public class AddItemCommandParserTest {
         String input = "category/toiletries item/shampoo bin/E-02 qty/15 "
                 + "brand/Dove isLiquid/true";
 
-        DukeException e = assertThrows(DukeException.class,
+        InventoryDockException e = assertThrows(InventoryDockException.class,
                 () -> parser.handleToiletries(input));
         assertEquals("Missing required field: expiryDate/", e.getMessage());
     }

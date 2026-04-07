@@ -1,7 +1,7 @@
 package seedu.inventorydock.parser.category;
 
 import org.junit.jupiter.api.Test;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,7 +17,7 @@ public class MeatParserTest {
     @Test
     public void parse_missingMeatType_throwsException() {
         String input = "meatType/ origin/Australia isFrozen/true";
-        DukeException e = assertThrows(DukeException.class,
+        InventoryDockException e = assertThrows(InventoryDockException.class,
                 () -> MeatParser.parse(input));
         assertEquals("Missing meatType for meat.", e.getMessage());
     }
@@ -25,7 +25,7 @@ public class MeatParserTest {
     @Test
     public void parse_missingOrigin_throwsException() {
         String input = "meatType/Beef origin/ isFrozen/true";
-        DukeException e = assertThrows(DukeException.class,
+        InventoryDockException e = assertThrows(InventoryDockException.class,
                 () -> MeatParser.parse(input));
         assertEquals("Missing origin for meat.", e.getMessage());
     }

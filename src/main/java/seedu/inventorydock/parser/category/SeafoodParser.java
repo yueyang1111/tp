@@ -1,6 +1,6 @@
 package seedu.inventorydock.parser.category;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 import seedu.inventorydock.parser.FieldParser;
 
 import java.util.logging.Level;
@@ -33,33 +33,33 @@ public class SeafoodParser {
      *
      * @param input User input containing seafood fields.
      * @return A {@code SeafoodParser} containing the parsed values.
-     * @throws DukeException If any required field is missing or invalid.
+     * @throws InventoryDockException If any required field is missing or invalid.
      */
-    public static SeafoodParser parse(String input) throws DukeException {
+    public static SeafoodParser parse(String input) throws InventoryDockException {
         assert input != null : "SeafoodParser received null input.";
         logger.log(Level.INFO, "Processing Seafood special fields.");
 
         String seafoodType = FieldParser.extractField(input, "seafoodType/", "origin/");
         if (seafoodType == null || seafoodType.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing seafoodType for seafood.");
-            throw new DukeException("Missing seafoodType for seafood.");
+            throw new InventoryDockException("Missing seafoodType for seafood.");
         }
 
         String origin = FieldParser.extractField(input, "origin/", "isFrozen/");
         if (origin == null || origin.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing origin for seafood.");
-            throw new DukeException("Missing origin for seafood.");
+            throw new InventoryDockException("Missing origin for seafood.");
         }
 
         String isFrozenString = FieldParser.extractField(input, "isFrozen/", null);
         if (isFrozenString == null || isFrozenString.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing isFrozen for seafood.");
-            throw new DukeException("Missing isFrozen for seafood.");
+            throw new InventoryDockException("Missing isFrozen for seafood.");
         }
 
         if (!(isFrozenString.equalsIgnoreCase("true") || isFrozenString.equalsIgnoreCase("false"))) {
             logger.log(Level.WARNING, "isFrozen must be true or false");
-            throw new DukeException("isFrozen must be true or false");
+            throw new InventoryDockException("isFrozen must be true or false");
         }
         boolean isFrozen = Boolean.parseBoolean(isFrozenString);
 

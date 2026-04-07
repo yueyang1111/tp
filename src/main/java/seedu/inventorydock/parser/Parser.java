@@ -4,17 +4,19 @@ import seedu.inventorydock.command.Command;
 import seedu.inventorydock.command.ExitCommand;
 import seedu.inventorydock.command.HelpCommand;
 import seedu.inventorydock.command.ListCommand;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
+import seedu.inventorydock.exception.InvalidCommandException;
+import seedu.inventorydock.exception.MissingArgumentException;
 
 public class Parser {
 
-    public Command parse(String input) throws DukeException {
+    public Command parse(String input) throws InventoryDockException {
         assert input != null : "Parser received null input.";
 
         String trimmed = input.trim();
 
         if (trimmed.isEmpty()) {
-            throw new DukeException("Input is empty.");
+            throw new MissingArgumentException("Input is empty.");
         }
 
         String[] parts = trimmed.split(" ", 2);
@@ -39,7 +41,7 @@ public class Parser {
         case "bye":
             return new ExitCommand();
         default:
-            throw new DukeException("Unknown command.");
+            throw new InvalidCommandException("Unknown command.");
         }
     }
 }

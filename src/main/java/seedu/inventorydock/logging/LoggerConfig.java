@@ -1,6 +1,6 @@
 package seedu.inventorydock.logging;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,9 +46,9 @@ public class LoggerConfig {
      * Set up the global logger configuration. Removes the ConsoleHandler and adds a
      * fileHandler to log output to file.
      *
-     * @throws DukeException If logging setup fails.
+     * @throws InventoryDockException If logging setup fails.
      */
-    public void setup() throws DukeException {
+    public void setup() throws InventoryDockException {
         try {
             createFile();
 
@@ -64,7 +64,7 @@ public class LoggerConfig {
             fileHandler.setFormatter(new SimpleFormatter());
             rootLogger.addHandler(fileHandler);
         } catch (IOException e) {
-            throw new DukeException("Failed to setup logging file.");
+            throw new InventoryDockException("Failed to setup logging file.");
         }
     }
 }

@@ -3,7 +3,7 @@ package seedu.inventorydock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import seedu.inventorydock.command.UpdateItemCommand;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.items.Fruit;
@@ -32,7 +32,7 @@ public class UpdateItemCommandTest {
     }
 
     @Test
-    public void execute_commonFields_itemUpdated() throws DukeException {
+    public void execute_commonFields_itemUpdated() throws InventoryDockException {
         Map<String, String> updates = new LinkedHashMap<>();
         updates.put("qty", "25");
         updates.put("bin", "A-02");
@@ -59,7 +59,7 @@ public class UpdateItemCommandTest {
         UpdateItemCommand command = new UpdateItemCommand(
                 "fruits", 1, updates);
 
-        assertThrows(DukeException.class,
+        assertThrows(InventoryDockException.class,
                 () -> command.execute(inventory, new UI()));
     }
 
@@ -71,7 +71,7 @@ public class UpdateItemCommandTest {
         UpdateItemCommand command = new UpdateItemCommand(
                 "fruits", 1, updates);
 
-        assertThrows(DukeException.class,
+        assertThrows(InventoryDockException.class,
                 () -> command.execute(inventory, new UI()));
     }
 }

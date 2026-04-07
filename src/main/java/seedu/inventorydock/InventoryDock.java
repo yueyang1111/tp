@@ -1,7 +1,7 @@
 package seedu.inventorydock;
 
 import seedu.inventorydock.command.Command;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 import seedu.inventorydock.logging.LoggerConfig;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
@@ -27,9 +27,9 @@ public class InventoryDock {
     /**
      * Creates a Duke application instance with default categories and storage.
      *
-     * @throws DukeException If stored inventory data cannot be loaded.
+     * @throws InventoryDockException If stored inventory data cannot be loaded.
      */
-    public InventoryDock() throws DukeException {
+    public InventoryDock() throws InventoryDockException {
         ui = new UI();
         inventory = new Inventory();
         parser = new Parser();
@@ -64,9 +64,9 @@ public class InventoryDock {
      * Starts the Duke application.
      *
      * @param args Command-line arguments.
-     * @throws DukeException If startup initialization fails.
+     * @throws InventoryDockException If startup initialization fails.
      */
-    public static void main(String[] args) throws DukeException {
+    public static void main(String[] args) throws InventoryDockException {
         LoggerConfig logger = new LoggerConfig("./logs/logger.txt");
         logger.setup();
         new InventoryDock().run();
@@ -99,7 +99,7 @@ public class InventoryDock {
                 logger.log(Level.INFO, "Executing command: " + command.getClass().getSimpleName());
                 command.execute(inventory, ui);
                 storage.save(inventory);
-            } catch (DukeException e) {
+            } catch (InventoryDockException e) {
                 logger.log(Level.WARNING, "Command processing failed: " + e.getMessage());
                 ui.showError(e.getMessage());
             }

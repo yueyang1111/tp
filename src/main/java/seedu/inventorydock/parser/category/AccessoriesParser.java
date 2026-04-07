@@ -3,7 +3,7 @@ package seedu.inventorydock.parser.category;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 import seedu.inventorydock.parser.FieldParser;
 
 /**
@@ -33,33 +33,33 @@ public class AccessoriesParser {
      *
      * @param input User input containing accessory fields.
      * @return An {@code AccessoriesParser} containing the parsed values.
-     * @throws DukeException If any required field is missing or invalid.
+     * @throws InventoryDockException If any required field is missing or invalid.
      */
-    public static AccessoriesParser parse(String input) throws DukeException {
+    public static AccessoriesParser parse(String input) throws InventoryDockException {
         assert input != null : "AccessoriesParser received null input.";
         logger.log(Level.INFO, "Processing Accessories special fields.");
 
         String type = FieldParser.extractField(input, "type/", "material/");
         if (type == null || type.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing type for accessories.");
-            throw new DukeException("Missing type for accessories.");
+            throw new InventoryDockException("Missing type for accessories.");
         }
 
         String material = FieldParser.extractField(input, "material/", "isFragile/");
         if (material == null || material.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing material for accessories.");
-            throw new DukeException("Missing material for accessories.");
+            throw new InventoryDockException("Missing material for accessories.");
         }
 
         String isFragileString = FieldParser.extractField(input, "isFragile/", null);
         if (isFragileString == null || isFragileString.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing isFragile for accessories.");
-            throw new DukeException("Missing isFragile for accessories.");
+            throw new InventoryDockException("Missing isFragile for accessories.");
         }
 
         if (!(isFragileString.equalsIgnoreCase("true") || isFragileString.equalsIgnoreCase("false"))) {
             logger.log(Level.WARNING, "isFragile must be true or false");
-            throw new DukeException("isFragile must be true or false");
+            throw new InventoryDockException("isFragile must be true or false");
         }
         boolean isFragile = Boolean.parseBoolean(isFragileString);
 

@@ -1,6 +1,6 @@
 package seedu.inventorydock.parser;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InvalidDateException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -17,17 +17,17 @@ public class DateParser {
      * Validates that the given date string is nonempty and follows the expected format of yyyy-M-d.
      *
      * @param date The date string to validate.
-     * @throws DukeException If the date is missing or invalid.
+     * @throws InventoryDockException If the date is missing or invalid.
      */
-    public static void validateDate(String date) throws DukeException {
+    public static void validateDate(String date) throws InvalidDateException {
         if (date == null || date.trim().isEmpty()) {
-            throw new DukeException("Missing expiry date");
+            throw new InvalidDateException("Missing expiry date");
         }
 
         try {
             parseDate(date);
         } catch (DateTimeParseException e) {
-            throw new DukeException("Invalid date. Please use yyyy-M-d.");
+            throw new InvalidDateException("Invalid date. Please use yyyy-M-d.");
         }
     }
 
@@ -36,17 +36,17 @@ public class DateParser {
      *
      * @param date The date string to parse.
      * @return The corresponding LocalDate object.
-     * @throws DukeException If the date is missing or invalid.
+     * @throws InventoryDockException If the date is missing or invalid.
      */
-    public static LocalDate parseDate(String date) throws DukeException {
+    public static LocalDate parseDate(String date) throws InvalidDateException {
         if (date == null || date.trim().isEmpty()) {
-            throw new DukeException("Missing expiry date");
+            throw new InvalidDateException("Missing expiry date");
         }
 
         try {
             return LocalDate.parse(date.trim(), FORMATTER);
         } catch (DateTimeParseException e) {
-            throw new DukeException("Invalid date. Please use yyyy-M-d.");
+            throw new InvalidDateException("Invalid date. Please use yyyy-M-d.");
         }
     }
 }

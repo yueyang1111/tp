@@ -2,7 +2,6 @@ package seedu.inventorydock.command;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seedu.inventorydock.exception.DukeException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.items.Drinks;
@@ -46,8 +45,7 @@ public class FindItemByKeywordCommandTest {
     }
 
     @Test
-    public void execute_matchingKeyword_showsMatchingItems()
-            throws DukeException {
+    public void execute_matchingKeyword_showsMatchingItems() {
         FindItemByKeywordCommand command = new FindItemByKeywordCommand("apple");
         TestUI ui = new TestUI();
 
@@ -63,7 +61,7 @@ public class FindItemByKeywordCommandTest {
     }
 
     @Test
-    public void execute_partialKeyword_showsPartialMatches() throws DukeException {
+    public void execute_partialKeyword_showsPartialMatches() {
         FindItemByKeywordCommand command = new FindItemByKeywordCommand("chip");
         TestUI ui = new TestUI();
 
@@ -75,7 +73,7 @@ public class FindItemByKeywordCommandTest {
     }
 
     @Test
-    public void execute_caseInsensitiveKeyword_showsMatches() throws DukeException {
+    public void execute_caseInsensitiveKeyword_showsMatches() {
         FindItemByKeywordCommand command = new FindItemByKeywordCommand("APPLE");
         TestUI ui = new TestUI();
 
@@ -90,19 +88,30 @@ public class FindItemByKeywordCommandTest {
     }
 
     @Test
-    public void execute_noMatchingKeyword_showsNoItemsFound() throws DukeException {
+    public void execute_multipleKeywords_showsError() {
+        FindItemByKeywordCommand command = new FindItemByKeywordCommand("apple banana");
+        TestUI ui = new TestUI();
+
+        command.execute(inventory, ui);
+
+        assertEquals(1, ui.errors.size());
+        assertEquals("Multiple keywords are not supported. Please provide a single keyword.", ui.errors.get(0));
+    }
+
+    @Test
+    public void execute_noMatchingKeyword_showsNoItemsFound() {
         FindItemByKeywordCommand command = new FindItemByKeywordCommand("mango");
         TestUI ui = new TestUI();
 
         command.execute(inventory, ui);
 
         assertEquals(1, ui.messages.size());
-        assertEquals("No items found matching keyword: " + "mango.", ui.messages.get(0));
+        assertEquals("No items found matching keyword: mango.", ui.messages.get(0));
         assertEquals(0, ui.dividerCount);
     }
 
     @Test
-    public void execute_doesNotMutateInventory_inventoryUnchanged() throws DukeException {
+    public void execute_doesNotMutateInventory_inventoryUnchanged() {
         FindItemByKeywordCommand command = new FindItemByKeywordCommand("apple");
         TestUI ui = new TestUI();
 
@@ -114,7 +123,7 @@ public class FindItemByKeywordCommandTest {
     }
 
     @Test
-    public void execute_singleCharKeyword_showsBroadMatches() throws DukeException {
+    public void execute_singleCharKeyword_showsBroadMatches() {
         FindItemByKeywordCommand command = new FindItemByKeywordCommand("a");
         TestUI ui = new TestUI();
 
@@ -127,6 +136,7 @@ public class FindItemByKeywordCommandTest {
     private static class TestUI extends UI {
         private final List<String> messages = new ArrayList<>();
         private int dividerCount;
+        private final List<String> errors = new ArrayList<>();
 
         @Override
         public void showMessage(String message) {
@@ -136,6 +146,11 @@ public class FindItemByKeywordCommandTest {
         @Override
         public void showDivider() {
             dividerCount++;
+        }
+
+        @Override
+        public void showError(String message) {
+            errors.add(message);
         }
     }
 }

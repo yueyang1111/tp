@@ -1,6 +1,6 @@
 package seedu.inventorydock.parser.category;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 import seedu.inventorydock.parser.DateParser;
 import seedu.inventorydock.parser.FieldParser;
 
@@ -35,9 +35,9 @@ public class CommonFieldParser {
      * @param input Input containing the common item fields.
      * @param fieldAfterExpiry Field marker that follows <code>expiryDate/</code>.
      * @return Parser result containing the validated field values.
-     * @throws DukeException If any required field is missing or invalid.
+     * @throws InventoryDockException If any required field is missing or invalid.
      */
-    public static CommonFieldParser parse(String input, String fieldAfterExpiry) throws DukeException {
+    public static CommonFieldParser parse(String input, String fieldAfterExpiry) throws InventoryDockException {
         assert input != null : "CommonFieldParser received null input.";
 
         String categoryName = FieldParser.extractField(
@@ -47,13 +47,13 @@ public class CommonFieldParser {
                 input, "item/", "bin/");
         if (itemName == null || itemName.isEmpty()) {
             logger.log(Level.WARNING, "Missing item name while parsing common fields.");
-            throw new DukeException("Missing item name.");
+            throw new InventoryDockException("Missing item name.");
         }
 
         String bin = FieldParser.extractField(input, "bin/", "qty/");
         if (bin == null || bin.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing bin location while parsing common fields.");
-            throw new DukeException("Missing bin location.");
+            throw new InventoryDockException("Missing bin location.");
         }
 
         String quantityString = FieldParser.extractField(
@@ -74,13 +74,13 @@ public class CommonFieldParser {
      *
      * @param quantityString Quantity string to parse.
      * @return Parsed quantity.
-     * @throws DukeException If the quantity is missing, non-numeric, or not positive.
+     * @throws InventoryDockException If the quantity is missing, non-numeric, or not positive.
      */
-    public static int parseQuantity(String quantityString) throws DukeException {
+    public static int parseQuantity(String quantityString) throws InventoryDockException {
         if (quantityString == null
                 || quantityString.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing quantity while parsing common fields.");
-            throw new DukeException("Missing quantity.");
+            throw new InventoryDockException("Missing quantity.");
         }
 
         int quantity;
@@ -88,12 +88,12 @@ public class CommonFieldParser {
             quantity = Integer.parseInt(quantityString.trim());
         } catch (NumberFormatException e) {
             logger.log(Level.WARNING, "Invalid quantity format: " + quantityString);
-            throw new DukeException("Quantity must be an integer.");
+            throw new InventoryDockException("Quantity must be an integer.");
         }
 
         if (quantity <= 0) {
             logger.log(Level.WARNING, "Non-positive quantity encountered: " + quantity);
-            throw new DukeException("Quantity must be a positive integer.");
+            throw new InventoryDockException("Quantity must be a positive integer.");
         }
 
         return quantity;
@@ -103,12 +103,12 @@ public class CommonFieldParser {
      * Validates that the specified expiry date is present and in a valid format.
      *
      * @param expiryDate Expiry date string to validate.
-     * @throws DukeException If the expiry date is missing or invalid.
+     * @throws InventoryDockException If the expiry date is missing or invalid.
      */
-    public static void validateExpiryDate(String expiryDate) throws DukeException {
+    public static void validateExpiryDate(String expiryDate) throws InventoryDockException {
         if (expiryDate == null || expiryDate.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing expiry date while parsing common fields.");
-            throw new DukeException("Missing expiry date.");
+            throw new InventoryDockException("Missing expiry date.");
         }
         logger.log(Level.INFO, "Validating expiry date: " + expiryDate);
         DateParser.validateDate(expiryDate);

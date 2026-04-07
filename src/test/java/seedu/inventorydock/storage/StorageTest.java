@@ -2,7 +2,7 @@ package seedu.inventorydock.storage;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.items.Fruit;
@@ -38,7 +38,7 @@ public class StorageTest {
     }
 
     @Test
-    public void load_missingFile_fileCreated() throws IOException, DukeException {
+    public void load_missingFile_fileCreated() throws IOException, InventoryDockException {
         Files.deleteIfExists(Path.of(FILE_PATH));
 
         Storage storage = new Storage(FILE_PATH);
@@ -48,7 +48,7 @@ public class StorageTest {
     }
 
     @Test
-    public void saveAndLoad_validInventory_inventoryLoaded() throws DukeException {
+    public void saveAndLoad_validInventory_inventoryLoaded() throws InventoryDockException {
         Storage storage = new Storage(FILE_PATH);
         Inventory inventory = createInventory();
 
@@ -95,7 +95,7 @@ public class StorageTest {
     }
 
     @Test
-    public void load_corruptedLines_skipCorruptedLines() throws IOException, DukeException {
+    public void load_corruptedLines_skipCorruptedLines() throws IOException, InventoryDockException {
         Storage storage = new Storage(FILE_PATH);
 
         List<String> lines = List.of(

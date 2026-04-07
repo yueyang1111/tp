@@ -1,7 +1,7 @@
 package seedu.inventorydock.parser.category;
 
 import org.junit.jupiter.api.Test;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,7 +17,7 @@ public class AccessoriesParserTest {
     @Test
     public void parse_missingType_throwsException() {
         String input = "type/ material/Plastic isFragile/true";
-        DukeException e = assertThrows(DukeException.class,
+        InventoryDockException e = assertThrows(InventoryDockException.class,
                 () -> AccessoriesParser.parse(input));
         assertEquals("Missing type for accessories.", e.getMessage());
     }
@@ -25,7 +25,7 @@ public class AccessoriesParserTest {
     @Test
     public void parse_missingMaterial_throwsException() {
         String input = "type/Clip material/ isFragile/true";
-        DukeException e = assertThrows(DukeException.class,
+        InventoryDockException e = assertThrows(InventoryDockException.class,
                 () -> AccessoriesParser.parse(input));
         assertEquals("Missing material for accessories.", e.getMessage());
     }

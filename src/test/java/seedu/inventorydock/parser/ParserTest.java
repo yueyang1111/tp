@@ -8,7 +8,7 @@ import seedu.inventorydock.command.HelpCommand;
 import seedu.inventorydock.command.ListCommand;
 import seedu.inventorydock.command.SortCommand;
 import seedu.inventorydock.command.UpdateItemCommand;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -19,7 +19,7 @@ public class ParserTest {
     public void parse_emptyInput_throwsException() {
         Parser parser = new Parser();
 
-        DukeException exception = assertThrows(DukeException.class,
+        InventoryDockException exception = assertThrows(InventoryDockException.class,
                 () -> parser.parse("   "));
         assertEquals("Input is empty.", exception.getMessage());
     }
@@ -28,13 +28,13 @@ public class ParserTest {
     public void parse_unknownCommand_throwsException() {
         Parser parser = new Parser();
 
-        DukeException exception = assertThrows(DukeException.class,
+        InventoryDockException exception = assertThrows(InventoryDockException.class,
                 () -> parser.parse("random command"));
         assertEquals("Unknown command.", exception.getMessage());
     }
 
     @Test
-    public void parse_add_returnsAddItemCommand() throws DukeException {
+    public void parse_add_returnsAddItemCommand() throws InventoryDockException {
         Parser parser = new Parser();
 
         assertInstanceOf(AddItemCommand.class,
@@ -43,7 +43,7 @@ public class ParserTest {
     }
 
     @Test
-    public void parse_find_returnsFindItemByCategoryCommand() throws DukeException {
+    public void parse_find_returnsFindItemByCategoryCommand() throws InventoryDockException {
         Parser parser = new Parser();
 
         assertInstanceOf(FindItemByCategoryCommand.class,
@@ -51,7 +51,7 @@ public class ParserTest {
     }
 
     @Test
-    public void parse_update_returnsUpdateItemCommand() throws DukeException {
+    public void parse_update_returnsUpdateItemCommand() throws InventoryDockException {
         Parser parser = new Parser();
 
         assertInstanceOf(UpdateItemCommand.class,
@@ -59,28 +59,28 @@ public class ParserTest {
     }
 
     @Test
-    public void parse_sort_returnsSortCommand() throws DukeException {
+    public void parse_sort_returnsSortCommand() throws InventoryDockException {
         Parser parser = new Parser();
 
         assertInstanceOf(SortCommand.class, parser.parse("sort qty"));
     }
 
     @Test
-    public void parse_list_returnsListCommand() throws DukeException {
+    public void parse_list_returnsListCommand() throws InventoryDockException {
         Parser parser = new Parser();
 
         assertInstanceOf(ListCommand.class, parser.parse("list"));
     }
 
     @Test
-    public void parse_help_returnsHelpCommand() throws DukeException {
+    public void parse_help_returnsHelpCommand() throws InventoryDockException {
         Parser parser = new Parser();
 
         assertInstanceOf(HelpCommand.class, parser.parse("help"));
     }
 
     @Test
-    public void parse_bye_returnsExitCommand() throws DukeException {
+    public void parse_bye_returnsExitCommand() throws InventoryDockException {
         Parser parser = new Parser();
 
         assertInstanceOf(ExitCommand.class, parser.parse("bye"));

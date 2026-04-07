@@ -2,7 +2,10 @@ package seedu.inventorydock.parser;
 
 import seedu.inventorydock.command.Command;
 import seedu.inventorydock.command.UpdateItemCommand;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
+import seedu.inventorydock.exception.InvalidCommandException;
+import seedu.inventorydock.exception.InvalidIndexException;
+import seedu.inventorydock.exception.MissingArgumentException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,13 +23,13 @@ public class UpdateCommandParser {
      *
      * @param input Update command arguments supplied by the user.
      * @return Command representing the requested item update.
-     * @throws DukeException If the category, index, or update fields are invalid.
+     * @throws InventoryDockException If the category, index, or update fields are invalid.
      */
-    public Command parse(String input) throws DukeException {
+    public Command parse(String input) throws InventoryDockException {
         assert input != null : "UpdateCommandParser received null input.";
 
         if (input.isEmpty()) {
-            throw new DukeException("Use: update category/CATEGORY index/INDEX "
+            throw new MissingArgumentException("Use: update category/CATEGORY index/INDEX "
                     + "[newItem/NAME] [bin/BIN] [qty/QTY] [expiryDate/DATE] ...");
         }
 
@@ -36,7 +39,7 @@ public class UpdateCommandParser {
         for (String token : tokens) {
             int separatorIndex = token.indexOf('/');
             if (separatorIndex <= 0 || separatorIndex == token.length() - 1) {
-                throw new DukeException("Invalid update token: " + token);
+                throw new InvalidCommandException("Invalid update token: " + token);
             }
 
             String key = token.substring(0, separatorIndex);
@@ -46,27 +49,27 @@ public class UpdateCommandParser {
 
         String categoryName = fields.remove("category");
         if (categoryName == null || categoryName.trim().isEmpty()) {
-            throw new DukeException("Missing category.");
+            throw new MissingArgumentException("Missing category.");
         }
 
         String itemIndexString = fields.remove("index");
         if (itemIndexString == null || itemIndexString.trim().isEmpty()) {
-            throw new DukeException("Missing item index.");
+            throw new MissingArgumentException("Missing item index.");
         }
 
         int itemIndex;
         try {
             itemIndex = Integer.parseInt(itemIndexString.trim());
         } catch (NumberFormatException e) {
-            throw new DukeException("Item index must be an integer.");
+            throw new InvalidIndexException("Item index must be an integer.", e);
         }
 
         if (itemIndex <= 0) {
-            throw new DukeException("Item index must be a positive integer.");
+            throw new InvalidIndexException("Item index must be a positive integer.");
         }
 
         if (fields.isEmpty()) {
-            throw new DukeException("Provide at least one field to update.");
+            throw new MissingArgumentException("Provide at least one field to update.");
         }
 
         return new UpdateItemCommand(categoryName.trim(),

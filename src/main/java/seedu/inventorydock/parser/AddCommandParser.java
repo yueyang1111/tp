@@ -4,7 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import seedu.inventorydock.command.Command;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 
 /**
  * Parses top-level {@code add} commands and routes them to the category-specific
@@ -20,13 +20,13 @@ public class AddCommandParser {
      *
      * @param input raw arguments following the {@code add} command word.
      * @return parsed command ready for execution.
-     * @throws DukeException if the input is empty, missing required fields, or uses an unknown category.
+     * @throws InventoryDockException if the input is empty, missing required fields, or uses an unknown category.
      */
-    public Command parse(String input) throws DukeException {
+    public Command parse(String input) throws InventoryDockException {
         assert input != null : "AddCommandParser received null input.";
         if (input.isEmpty()) {
             logger.log(Level.WARNING, "Add command input is empty.");
-            throw new DukeException("Input is empty.");
+            throw new InventoryDockException("Input is empty.");
         }
 
         String trimmedInput = input.trim();
@@ -41,13 +41,13 @@ public class AddCommandParser {
      * Ensures the shared fields needed by all add-item workflows are present.
      *
      * @param input normalized add-command input.
-     * @throws DukeException if the item name or category is missing.
+     * @throws InventoryDockException if the item name or category is missing.
      */
-    private void validateRequiredFields(String input) throws DukeException {
+    private void validateRequiredFields(String input) throws InventoryDockException {
         String category = extractFieldValue(input, "category/");
         if (category == null || category.isEmpty()) {
             logger.log(Level.WARNING, "Missing category in add command.");
-            throw new DukeException("Missing category.");
+            throw new InventoryDockException("Missing category.");
         }
     }
 
@@ -84,9 +84,9 @@ public class AddCommandParser {
      * @param input normalized add-command input.
      * @param category normalized category name.
      * @return parsed add-item command for the category.
-     * @throws DukeException if the category is unsupported.
+     * @throws InventoryDockException if the category is unsupported.
      */
-    private Command parseByCategory(String input, String category) throws DukeException {
+    private Command parseByCategory(String input, String category) throws InventoryDockException {
         AddItemCommandParser parser = new AddItemCommandParser();
 
         switch (category) {
@@ -118,7 +118,7 @@ public class AddCommandParser {
             return parser.handleAccessories(input);
         default:
             logger.log(Level.WARNING, "Unknown add command category: " + category);
-            throw new DukeException("Unknown category: " + category);
+            throw new InventoryDockException("Unknown category: " + category);
         }
     }
 }

@@ -1,6 +1,6 @@
 package seedu.inventorydock.parser;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,16 +22,16 @@ public class BinLocationParser {
      *
      * @param input raw bin search input.
      * @return normalized bin search input.
-     * @throws DukeException if the input does not match a supported bin-search format.
+     * @throws InventoryDockException if the input does not match a supported bin-search format.
      */
-    public static String parseSearchInput(String input) throws DukeException {
+    public static String parseSearchInput(String input) throws InventoryDockException {
         assert input != null : "BinLocationParser received null input.";
 
         String normalizedInput = input.trim().toLowerCase();
 
         if (normalizedInput.isEmpty()) {
             logger.log(Level.WARNING, "Bin search input is empty.");
-            throw new DukeException(INVALID_BIN_SEARCH_MESSAGE);
+            throw new InventoryDockException(INVALID_BIN_SEARCH_MESSAGE);
         }
 
         int dashIndex = normalizedInput.indexOf('-');
@@ -42,12 +42,12 @@ public class BinLocationParser {
             }
 
             logger.log(Level.WARNING, "Invalid bin search input without dash: " + normalizedInput);
-            throw new DukeException(INVALID_BIN_SEARCH_MESSAGE);
+            throw new InventoryDockException(INVALID_BIN_SEARCH_MESSAGE);
         }
 
         if (dashIndex != normalizedInput.lastIndexOf('-')) {
             logger.log(Level.WARNING, "Invalid bin search input with multiple dashes: " + normalizedInput);
-            throw new DukeException(INVALID_BIN_SEARCH_MESSAGE);
+            throw new InventoryDockException(INVALID_BIN_SEARCH_MESSAGE);
         }
 
         String firstPart = normalizedInput.substring(0, dashIndex);
@@ -55,7 +55,7 @@ public class BinLocationParser {
 
         if (!isSingleLetter(firstPart) || !isInteger(secondPart)) {
             logger.log(Level.WARNING, "Invalid bin search input format: " + normalizedInput);
-            throw new DukeException(INVALID_BIN_SEARCH_MESSAGE);
+            throw new InventoryDockException(INVALID_BIN_SEARCH_MESSAGE);
         }
         return normalizedInput;
     }

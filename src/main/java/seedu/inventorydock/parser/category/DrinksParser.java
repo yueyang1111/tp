@@ -3,7 +3,7 @@ package seedu.inventorydock.parser.category;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 import seedu.inventorydock.parser.FieldParser;
 
 /**
@@ -33,33 +33,33 @@ public class DrinksParser {
      *
      * @param input User input containing drink fields.
      * @return A {@code DrinksParser} containing the parsed values.
-     * @throws DukeException If any required field is missing or invalid.
+     * @throws InventoryDockException If any required field is missing or invalid.
      */
-    public static DrinksParser parse(String input) throws DukeException {
+    public static DrinksParser parse(String input) throws InventoryDockException {
         assert input != null : "DrinksParser received null input.";
         logger.log(Level.INFO, "Processing Drinks special fields.");
 
         String brand = FieldParser.extractField(input, "brand/", "flavour/");
         if (brand == null || brand.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing brand for drinks.");
-            throw new DukeException("Missing brand for drinks.");
+            throw new InventoryDockException("Missing brand for drinks.");
         }
 
         String flavour = FieldParser.extractField(input, "flavour/", "isCarbonated/");
         if (flavour == null || flavour.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing flavour for drinks.");
-            throw new DukeException("Missing flavour for drinks.");
+            throw new InventoryDockException("Missing flavour for drinks.");
         }
 
         String isCarbonatedString = FieldParser.extractField(input, "isCarbonated/", null);
         if (isCarbonatedString == null || isCarbonatedString.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing carbonation for drinks.");
-            throw new DukeException("Missing carbonation for drinks.");
+            throw new InventoryDockException("Missing carbonation for drinks.");
         }
 
         if (!(isCarbonatedString.equalsIgnoreCase("true") || isCarbonatedString.equalsIgnoreCase("false"))) {
             logger.log(Level.WARNING, "Carbonation must be true or false");
-            throw new DukeException("Carbonation must be true or false");
+            throw new InventoryDockException("Carbonation must be true or false");
         }
         boolean isCarbonated = Boolean.parseBoolean(isCarbonatedString);
 

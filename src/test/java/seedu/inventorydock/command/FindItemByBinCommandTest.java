@@ -2,7 +2,6 @@ package seedu.inventorydock.command;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seedu.inventorydock.exception.DukeException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.Item;
@@ -36,7 +35,7 @@ public class FindItemByBinCommandTest {
     }
 
     @Test
-    public void execute_exactBinSearch_doesNotOvermatchBinPrefix() throws DukeException {
+    public void execute_exactBinSearch_doesNotOvermatchBinPrefix() {
         FindItemByBinCommand command = new FindItemByBinCommand("a-1");
         TestUI ui = new TestUI();
 
@@ -50,7 +49,7 @@ public class FindItemByBinCommandTest {
     }
 
     @Test
-    public void execute_letterSearch_showsAllItemsWithMatchingLetter() throws DukeException {
+    public void execute_letterSearch_showsAllItemsWithMatchingLetter() {
         FindItemByBinCommand command = new FindItemByBinCommand("a");
         TestUI ui = new TestUI();
 
@@ -63,7 +62,7 @@ public class FindItemByBinCommandTest {
     }
 
     @Test
-    public void execute_numberSearch_matchesExactNumberOnly() throws DukeException {
+    public void execute_numberSearch_matchesExactNumberOnly() {
         FindItemByBinCommand command = new FindItemByBinCommand("10");
         TestUI ui = new TestUI();
 
@@ -76,7 +75,7 @@ public class FindItemByBinCommandTest {
     }
 
     @Test
-    public void execute_noMatchingBin_showsNoItemsFoundMessage() throws DukeException {
+    public void execute_noMatchingBin_showsNoItemsFoundMessage() {
         FindItemByBinCommand command = new FindItemByBinCommand("z");
         TestUI ui = new TestUI();
 

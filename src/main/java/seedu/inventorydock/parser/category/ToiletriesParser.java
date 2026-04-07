@@ -1,6 +1,6 @@
 package seedu.inventorydock.parser.category;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 import seedu.inventorydock.parser.FieldParser;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,25 +30,25 @@ public class ToiletriesParser {
      *
      * @param input User input containing toiletries fields.
      * @return A {@code ToiletriesParser} containing the parsed values.
-     * @throws DukeException If any required field is missing or invalid.
+     * @throws InventoryDockException If any required field is missing or invalid.
      */
-    public static ToiletriesParser parse(String input) throws DukeException {
+    public static ToiletriesParser parse(String input) throws InventoryDockException {
         assert input != null : "ToiletriesParser received null inputs.";
         String brand = FieldParser.extractField(input, "brand/", "isLiquid/");
         if (brand == null || brand.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing brand for toiletries.");
-            throw new DukeException("Missing brand for toiletries.");
+            throw new InventoryDockException("Missing brand for toiletries.");
         }
 
         String liquidString = FieldParser.extractField(input, "isLiquid/", null);
         if (liquidString == null || liquidString.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing liquid field for toiletries.");
-            throw new DukeException("Missing liquid field for toiletries.");
+            throw new InventoryDockException("Missing liquid field for toiletries.");
         }
 
         if (!(liquidString.equalsIgnoreCase("true") || liquidString.equalsIgnoreCase("false"))) {
             logger.log(Level.WARNING, "Liquid field must be true or false.");
-            throw new DukeException("Liquid field must be true or false.");
+            throw new InventoryDockException("Liquid field must be true or false.");
         }
         boolean isLiquid = Boolean.parseBoolean(liquidString);
 

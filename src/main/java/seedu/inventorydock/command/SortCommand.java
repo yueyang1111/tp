@@ -1,6 +1,6 @@
 package seedu.inventorydock.command;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InvalidDateException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.Item;
@@ -36,10 +36,9 @@ public class SortCommand extends Command {
      *
      * @param inventory Inventory to display.
      * @param ui User interface used to display the sorted inventory.
-     * @throws DukeException If an error occurs during execution.
      */
     @Override
-    public void execute(Inventory inventory, UI ui) throws DukeException {
+    public void execute(Inventory inventory, UI ui) {
         assert inventory != null : "SortCommand received null inventory.";
         assert ui != null : "SortCommand received null UI.";
         assert sortType != null : "SortCommand received null sort type.";
@@ -103,7 +102,7 @@ public class SortCommand extends Command {
     private LocalDate parseExpiryDate(String expiryDate) {
         try {
             return DateParser.parseDate(expiryDate);
-        } catch (DukeException e) {
+        } catch (InvalidDateException e) {
             return LocalDate.MAX;
         }
     }

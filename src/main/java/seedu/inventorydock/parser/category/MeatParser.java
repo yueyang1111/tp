@@ -1,6 +1,6 @@
 package seedu.inventorydock.parser.category;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 import seedu.inventorydock.parser.FieldParser;
 
 import java.util.logging.Level;
@@ -28,31 +28,31 @@ public class MeatParser {
         this.isFrozen = isFrozen;
     }
 
-    public static MeatParser parse(String input) throws DukeException {
+    public static MeatParser parse(String input) throws InventoryDockException {
         assert input != null : "MeatParser received null input.";
         logger.log(Level.INFO, "Processing Meat special fields.");
 
         String meatType = FieldParser.extractField(input, "meatType/", "origin/");
         if (meatType == null || meatType.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing meatType for meat.");
-            throw new DukeException("Missing meatType for meat.");
+            throw new InventoryDockException("Missing meatType for meat.");
         }
 
         String origin = FieldParser.extractField(input, "origin/", "isFrozen/");
         if (origin == null || origin.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing origin for meat.");
-            throw new DukeException("Missing origin for meat.");
+            throw new InventoryDockException("Missing origin for meat.");
         }
 
         String isFrozenString = FieldParser.extractField(input, "isFrozen/", null);
         if (isFrozenString == null || isFrozenString.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing isFrozen for meat.");
-            throw new DukeException("Missing isFrozen for meat.");
+            throw new InventoryDockException("Missing isFrozen for meat.");
         }
 
         if (!(isFrozenString.equalsIgnoreCase("true") || isFrozenString.equalsIgnoreCase("false"))) {
             logger.log(Level.WARNING, "isFrozen must be true or false");
-            throw new DukeException("isFrozen must be true or false");
+            throw new InventoryDockException("isFrozen must be true or false");
         }
         boolean isFrozen = Boolean.parseBoolean(isFrozenString);
 

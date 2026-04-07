@@ -1,6 +1,6 @@
 package seedu.inventorydock.parser.category;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 import seedu.inventorydock.parser.FieldParser;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,26 +30,26 @@ public class FruitParser {
      *
      * @param input User input containing fruit fields.
      * @return A {@code FruitParser} containing the parsed values.
-     * @throws DukeException If any required field is missing or invalid.
+     * @throws InventoryDockException If any required field is missing or invalid.
      */
-    public static FruitParser parse(String input) throws DukeException {
+    public static FruitParser parse(String input) throws InventoryDockException {
         assert input != null : "FruitParser received null input.";
 
         String size = FieldParser.extractField(input, "size/", "isRipe/");
         if (size == null || size.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing size for fruit.");
-            throw new DukeException("Missing size for fruit.");
+            throw new InventoryDockException("Missing size for fruit.");
         }
 
         String ripeString = FieldParser.extractField(input, "isRipe/", null);
         if (ripeString == null || ripeString.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing ripeness for fruit.");
-            throw new DukeException("Missing ripeness for fruit.");
+            throw new InventoryDockException("Missing ripeness for fruit.");
         }
 
         if (!(ripeString.equalsIgnoreCase("true") || ripeString.equalsIgnoreCase("false"))) {
             logger.log(Level.WARNING, "Ripeness must be true or false");
-            throw new DukeException("Ripeness must be true or false");
+            throw new InventoryDockException("Ripeness must be true or false");
         }
         boolean isRipe = Boolean.parseBoolean(ripeString);
 

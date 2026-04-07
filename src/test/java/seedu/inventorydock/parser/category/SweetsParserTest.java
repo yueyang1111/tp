@@ -1,7 +1,7 @@
 package seedu.inventorydock.parser.category;
 
 import org.junit.jupiter.api.Test;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,7 +17,7 @@ public class SweetsParserTest {
     @Test
     public void parse_missingBrand_throwsException() {
         String input = "brand/ sweetnessLevel/High isChewy/true";
-        DukeException e = assertThrows(DukeException.class,
+        InventoryDockException e = assertThrows(InventoryDockException.class,
                 () -> SweetsParser.parse(input));
         assertEquals("Missing brand for sweets.", e.getMessage());
     }
@@ -25,7 +25,7 @@ public class SweetsParserTest {
     @Test
     public void parse_missingSweetnessLevel_throwsException() {
         String input = "brand/Haribo sweetnessLevel/ isChewy/true";
-        DukeException e = assertThrows(DukeException.class,
+        InventoryDockException e = assertThrows(InventoryDockException.class,
                 () -> SweetsParser.parse(input));
         assertEquals("Missing sweetness level for sweets.", e.getMessage());
     }

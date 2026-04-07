@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 
 import seedu.inventorydock.command.AddItemCommand;
 import seedu.inventorydock.command.Command;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 import seedu.inventorydock.model.Item;
 import seedu.inventorydock.model.items.Accessories;
 import seedu.inventorydock.model.items.Burger;
@@ -48,9 +48,9 @@ public class AddItemCommandParser {
      *
      * @param input raw add-item arguments for the fruit workflow.
      * @return add-item command containing a {@link Fruit}.
-     * @throws DukeException if any required field is missing or malformed.
+     * @throws InventoryDockException if any required field is missing or malformed.
      */
-    public Command handleFruit(String input) throws DukeException {
+    public Command handleFruit(String input) throws InventoryDockException {
         assert input != null : "AddItemCommandParser received null fruit input.";
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
                 "expiryDate/", "size/", "isRipe/");
@@ -68,9 +68,9 @@ public class AddItemCommandParser {
      *
      * @param input raw add-item arguments for the snack workflow.
      * @return add-item command containing a {@link Snack}.
-     * @throws DukeException if any required field is missing or malformed.
+     * @throws InventoryDockException if any required field is missing or malformed.
      */
-    public Command handleSnack(String input) throws DukeException {
+    public Command handleSnack(String input) throws InventoryDockException {
         assert input != null : "AddItemCommandParser received null snack input.";
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
                 "expiryDate/", "brand/", "isCrunchy/");
@@ -88,9 +88,9 @@ public class AddItemCommandParser {
      *
      * @param input raw add-item arguments for the toiletries workflow.
      * @return add-item command containing a {@link Toiletries}.
-     * @throws DukeException if any required field is missing or malformed.
+     * @throws InventoryDockException if any required field is missing or malformed.
      */
-    public Command handleToiletries(String input) throws DukeException {
+    public Command handleToiletries(String input) throws InventoryDockException {
         assert input != null : "AddItemCommandParser received null toiletries input.";
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
                 "expiryDate/", "brand/", "isLiquid/");
@@ -108,9 +108,9 @@ public class AddItemCommandParser {
      *
      * @param input raw add-item arguments for the vegetable workflow.
      * @return add-item command containing a {@link Vegetable}.
-     * @throws DukeException if any required field is missing or malformed.
+     * @throws InventoryDockException if any required field is missing or malformed.
      */
-    public Command handleVegetables(String input) throws DukeException {
+    public Command handleVegetables(String input) throws InventoryDockException {
         assert input != null : "AddItemCommandParser received null vegetable input.";
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
                 "expiryDate/", "isLeafy/");
@@ -128,9 +128,9 @@ public class AddItemCommandParser {
      *
      * @param input raw add-item arguments for the drinks workflow.
      * @return add-item command containing a {@link Drinks}.
-     * @throws DukeException if any required field is missing or malformed.
+     * @throws InventoryDockException if any required field is missing or malformed.
      */
-    public Command handleDrinks(String input) throws DukeException {
+    public Command handleDrinks(String input) throws InventoryDockException {
         assert input != null : "AddItemCommandParser received null drinks input.";
         logger.log(Level.INFO, "Parsing add-item command for drinks.");
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
@@ -150,9 +150,9 @@ public class AddItemCommandParser {
      *
      * @param input raw add-item arguments for the ice cream workflow.
      * @return add-item command containing an {@link IceCream}.
-     * @throws DukeException if any required field is missing or malformed.
+     * @throws InventoryDockException if any required field is missing or malformed.
      */
-    public Command handleIceCream(String input) throws DukeException {
+    public Command handleIceCream(String input) throws InventoryDockException {
         assert input != null : "AddItemCommandParser received null ice cream input.";
         logger.log(Level.INFO, "Parsing add-item command for ice cream.");
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
@@ -172,9 +172,9 @@ public class AddItemCommandParser {
      *
      * @param input raw add-item arguments for the sweets workflow.
      * @return add-item command containing a {@link Sweets}.
-     * @throws DukeException if any required field is missing or malformed.
+     * @throws InventoryDockException if any required field is missing or malformed.
      */
-    public Command handleSweets(String input) throws DukeException {
+    public Command handleSweets(String input) throws InventoryDockException {
         assert input != null : "AddItemCommandParser received null sweets input.";
         logger.log(Level.INFO, "Parsing add-item command for sweets.");
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
@@ -194,9 +194,9 @@ public class AddItemCommandParser {
      *
      * @param input raw add-item arguments for the set meal workflow.
      * @return add-item command containing a {@link SetMeal}.
-     * @throws DukeException if any required field is missing or malformed.
+     * @throws InventoryDockException if any required field is missing or malformed.
      */
-    public Command handleSetMeal(String input) throws DukeException {
+    public Command handleSetMeal(String input) throws InventoryDockException {
         assert input != null : "AddItemCommandParser received null set meal input.";
         logger.log(Level.INFO, "Parsing add-item command for set meal.");
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
@@ -216,9 +216,9 @@ public class AddItemCommandParser {
      *
      * @param input raw add-item arguments for the seafood workflow.
      * @return add-item command containing a {@link Seafood}.
-     * @throws DukeException if any required field is missing or malformed.
+     * @throws InventoryDockException if any required field is missing or malformed.
      */
-    public Command handleSeafood(String input) throws DukeException {
+    public Command handleSeafood(String input) throws InventoryDockException {
         assert input != null : "AddItemCommandParser received null seafood input.";
         logger.log(Level.INFO, "Parsing add-item command for seafood.");
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
@@ -238,9 +238,9 @@ public class AddItemCommandParser {
      *
      * @param input raw add-item arguments for the meat workflow.
      * @return add-item command containing a {@link Meat}.
-     * @throws DukeException if any required field is missing or malformed.
+     * @throws InventoryDockException if any required field is missing or malformed.
      */
-    public Command handleMeat(String input) throws DukeException {
+    public Command handleMeat(String input) throws InventoryDockException {
         assert input != null : "AddItemCommandParser received null meat input.";
         logger.log(Level.INFO, "Parsing add-item command for meat.");
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
@@ -260,9 +260,9 @@ public class AddItemCommandParser {
      *
      * @param input raw add-item arguments for the pet food workflow.
      * @return add-item command containing a {@link PetFood}.
-     * @throws DukeException if any required field is missing or malformed.
+     * @throws InventoryDockException if any required field is missing or malformed.
      */
-    public Command handlePetFood(String input) throws DukeException {
+    public Command handlePetFood(String input) throws InventoryDockException {
         assert input != null : "AddItemCommandParser received null pet food input.";
         logger.log(Level.INFO, "Parsing add-item command for pet food.");
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
@@ -282,9 +282,9 @@ public class AddItemCommandParser {
      *
      * @param input raw add-item arguments for the accessories workflow.
      * @return add-item command containing an {@link Accessories}.
-     * @throws DukeException if any required field is missing or malformed.
+     * @throws InventoryDockException if any required field is missing or malformed.
      */
-    public Command handleAccessories(String input) throws DukeException {
+    public Command handleAccessories(String input) throws InventoryDockException {
         assert input != null : "AddItemCommandParser received null accessories input.";
         logger.log(Level.INFO, "Parsing add-item command for accessories.");
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",
@@ -305,9 +305,9 @@ public class AddItemCommandParser {
      *
      * @param input raw add-item arguments for the burger workflow.
      * @return add-item command containing a {@link Burger}.
-     * @throws DukeException if any required field is missing or malformed.
+     * @throws InventoryDockException if any required field is missing or malformed.
      */
-    public Command handleBurger(String input) throws DukeException {
+    public Command handleBurger(String input) throws InventoryDockException {
         assert input != null : "AddItemCommandParser received null burger input.";
         logger.log(Level.INFO, "Parsing add-item command for burger.");
         InputValidator.validate(input, "category/", "item/", "bin/", "qty/",

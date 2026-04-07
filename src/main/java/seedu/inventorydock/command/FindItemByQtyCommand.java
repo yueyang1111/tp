@@ -1,6 +1,7 @@
 package seedu.inventorydock.command;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InvalidCommandException;
+import seedu.inventorydock.exception.MissingArgumentException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.Item;
@@ -32,20 +33,26 @@ public class FindItemByQtyCommand extends Command {
      *
      * @param qtyInput raw quantity input.
      * @return parsed positive quantity.
-     * @throws DukeException if the quantity is not an integer or is not positive.
+     * @throws MissingArgumentException if the quantity input is empty.
+     * @throws InvalidCommandException if the quantity is not an integer or is not positive.
      */
-    public static int parseQtyInput(String qtyInput) throws DukeException {
+    public static int parseQtyInput(String qtyInput) throws MissingArgumentException, InvalidCommandException {
+        if (qtyInput == null || qtyInput.trim().isEmpty()) {
+            logger.log(Level.WARNING, "Empty quantity input received.");
+            throw new MissingArgumentException("Quantity is missing.");
+        }
+
         int parsedQty;
         try {
             parsedQty = Integer.parseInt(qtyInput.trim());
         } catch (NumberFormatException e) {
             logger.log(Level.WARNING, "Invalid quantity format: " + qtyInput);
-            throw new DukeException("Quantity must be an integer.");
+            throw new InvalidCommandException("Quantity must be an integer.");
         }
 
         if (parsedQty <= 0) {
             logger.log(Level.WARNING, "Non-positive quantity input: " + parsedQty);
-            throw new DukeException("Quantity must be a positive integer.");
+            throw new InvalidCommandException("Quantity must be a positive integer.");
         }
         assert parsedQty >= 0 : "FindItemByQtyCommand parsed negative quantity input.";
 
@@ -57,10 +64,9 @@ public class FindItemByQtyCommand extends Command {
      *
      * @param inventory inventory to search.
      * @param ui user interface used to display search results.
-     * @throws DukeException included for command interface compatibility.
      */
     @Override
-    public void execute(Inventory inventory, UI ui) throws DukeException {
+    public void execute(Inventory inventory, UI ui) {
         assert inventory != null : "FindItemByQtyCommand received null inventory.";
         assert ui != null : "FindItemByQtyCommand received null UI.";
 

@@ -1,6 +1,5 @@
 package seedu.inventorydock.command;
 
-import seedu.inventorydock.exception.DukeException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.Item;
@@ -33,10 +32,9 @@ public class FindItemByBinCommand extends Command {
      *
      * @param inventory inventory to search.
      * @param ui user interface used to display search results.
-     * @throws DukeException included for command interface compatibility.
      */
     @Override
-    public void execute(Inventory inventory, UI ui) throws DukeException {
+    public void execute(Inventory inventory, UI ui) {
         assert inventory != null : "FindItemByBinCommand received null inventory.";
         assert ui != null : "FindItemByBinCommand received null UI.";
         assert binInput != null : "FindItemByBinCommand received null bin input.";

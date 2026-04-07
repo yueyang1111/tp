@@ -2,7 +2,8 @@ package seedu.inventorydock.command;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InvalidCommandException;
+import seedu.inventorydock.exception.MissingArgumentException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.Item;
@@ -38,7 +39,7 @@ public class FindItemByCategoryCommandTest {
     }
 
     @Test
-    public void execute_existingCategory_showsItemsInCategory() throws DukeException {
+    public void execute_existingCategory_showsItemsInCategory() {
         FindItemByCategoryCommand command = new FindItemByCategoryCommand("fruits");
         TestUI ui = new TestUI();
 
@@ -53,7 +54,7 @@ public class FindItemByCategoryCommandTest {
     }
 
     @Test
-    public void execute_emptyCategory_showsNoItemsFoundMessage() throws DukeException {
+    public void execute_emptyCategory_showsNoItemsFoundMessage() {
         FindItemByCategoryCommand command = new FindItemByCategoryCommand("snacks");
         TestUI ui = new TestUI();
 
@@ -65,7 +66,7 @@ public class FindItemByCategoryCommandTest {
     }
 
     @Test
-    public void execute_nonExistingCategory_showsCategoryNotFound() throws DukeException {
+    public void execute_nonExistingCategory_showsCategoryNotFound() {
         FindItemByCategoryCommand command = new FindItemByCategoryCommand("toiletries");
         TestUI ui = new TestUI();
 
@@ -77,7 +78,7 @@ public class FindItemByCategoryCommandTest {
     }
 
     @Test
-    public void execute_caseInsensitiveCategory_showsMatchingItems() throws DukeException {
+    public void execute_caseInsensitiveCategory_showsMatchingItems() {
         FindItemByCategoryCommand command = new FindItemByCategoryCommand("FRUITS");
         TestUI ui = new TestUI();
 
@@ -88,7 +89,7 @@ public class FindItemByCategoryCommandTest {
     }
 
     @Test
-    public void execute_doesNotMutateInventory_inventoryRemainsUnchanged() throws DukeException {
+    public void execute_doesNotMutateInventory_inventoryRemainsUnchanged() {
         FindItemByCategoryCommand command = new FindItemByCategoryCommand("vegetables");
         TestUI ui = new TestUI();
 
@@ -100,13 +101,14 @@ public class FindItemByCategoryCommandTest {
     }
 
     @Test
-    public void parseCategoryInput_validCategory_returnsNormalizedCategory() throws DukeException {
+    public void parseCategoryInput_validCategory_returnsNormalizedCategory()
+            throws InvalidCommandException, MissingArgumentException {
         assertEquals("fruits", FindItemByCategoryCommand.parseCategoryInput(" Fruits "));
     }
 
     @Test
     public void parseCategoryInput_numericCategory_throwsException() {
-        DukeException exception = assertThrows(DukeException.class,
+        InvalidCommandException exception = assertThrows(InvalidCommandException.class,
                 () -> FindItemByCategoryCommand.parseCategoryInput("123"));
 
         assertEquals("Category must be a string.", exception.getMessage());

@@ -1,10 +1,10 @@
 package seedu.inventorydock.parser.category;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 
 public class InputValidator {
     public static void validate(
-            String input, String... fields) throws DukeException {
+            String input, String... fields) throws InventoryDockException {
         assert input != null : "InputValidator received null input.";
         assert fields != null && fields.length > 0 : "Fields must be provide for validation.";
 
@@ -14,11 +14,11 @@ public class InputValidator {
             int current = input.indexOf(field);
 
             if (current == -1) {
-                throw new DukeException("Missing required field: " + field);
+                throw new InventoryDockException("Missing required field: " + field);
             }
 
             if (current < previous) {
-                throw new DukeException("Fields must follow the correct order. " +
+                throw new InventoryDockException("Fields must follow the correct order. " +
                         "Run 'help' for supported command.");
             }
             previous = current;

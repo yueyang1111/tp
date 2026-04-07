@@ -2,7 +2,7 @@ package seedu.inventorydock.parser;
 
 import seedu.inventorydock.command.Command;
 import seedu.inventorydock.command.SortCommand;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,14 +19,14 @@ public class SortCommandParser {
      *
      * @param input raw arguments following the {@code sort} command word.
      * @return parsed command ready for execution.
-     * @throws DukeException if the sort type is missing or invalid.
+     * @throws InventoryDockException if the sort type is missing or invalid.
      */
-    public Command parse(String input) throws DukeException {
+    public Command parse(String input) throws InventoryDockException {
         assert input != null : "SortCommandParser received null input.";
         String trimmedInput = input.trim();
         if (trimmedInput.isEmpty()) {
             logger.log(Level.WARNING, "Sort command missing sort type.");
-            throw new DukeException(
+            throw new InventoryDockException(
                     "Please specify what to sort by. Use: sort name, sort expirydate, or sort qty.");
         }
 
@@ -39,7 +39,7 @@ public class SortCommandParser {
             return new SortCommand(sortType);
         default:
             logger.log(Level.WARNING, "Unknown sort type: " + sortType);
-            throw new DukeException("Unknown sort type: '" + sortType + "'. "
+            throw new InventoryDockException("Unknown sort type: '" + sortType + "'. "
                     + "Use: sort name, sort expirydate, or sort qty.");
         }
     }

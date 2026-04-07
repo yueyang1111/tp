@@ -2,7 +2,7 @@ package seedu.inventorydock.command;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InvalidDateException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.items.Fruit;
@@ -45,7 +45,7 @@ public class FindItemByExpiryDateCommandTest {
     }
 
     @Test
-    public void execute_matchingItems_showsAllItemsExpiringOnOrBeforeDate() throws DukeException {
+    public void execute_matchingItems_showsAllItemsExpiringOnOrBeforeDate() throws InvalidDateException {
         FindItemByExpiryDateCommand command = new FindItemByExpiryDateCommand("2026-3-21");
         TestUI ui = new TestUI();
 
@@ -58,7 +58,7 @@ public class FindItemByExpiryDateCommandTest {
     }
 
     @Test
-    public void execute_noMatchingItems_showsNoItemsFoundMessage() throws DukeException {
+    public void execute_noMatchingItems_showsNoItemsFoundMessage() throws InvalidDateException {
         FindItemByExpiryDateCommand command = new FindItemByExpiryDateCommand("2026-3-18");
         TestUI ui = new TestUI();
 
@@ -73,13 +73,13 @@ public class FindItemByExpiryDateCommandTest {
         FindItemByExpiryDateCommand command = new FindItemByExpiryDateCommand("21-3-2026");
         TestUI ui = new TestUI();
 
-        DukeException exception = assertThrows(DukeException.class,
+        InvalidDateException exception = assertThrows(InvalidDateException.class,
                 () -> command.execute(inventory, ui));
         assertEquals("Invalid date. Please use yyyy-M-d.", exception.getMessage());
     }
 
     @Test
-    public void execute_doesNotMutateInventory_inventoryRemainsUnchanged() throws DukeException {
+    public void execute_doesNotMutateInventory_inventoryRemainsUnchanged() throws InvalidDateException {
         FindItemByExpiryDateCommand command = new FindItemByExpiryDateCommand("2026-4-1");
         TestUI ui = new TestUI();
 
@@ -91,7 +91,7 @@ public class FindItemByExpiryDateCommandTest {
     }
 
     @Test
-    public void execute_vegetableItemsIncludedWhenMatchingDate() throws DukeException {
+    public void execute_vegetableItemsIncludedWhenMatchingDate() throws InvalidDateException {
         Category vegetablesCategory = new Category("vegetables");
         vegetablesCategory.addItem(new Vegetable("spinach", 7, "D-1",
                 "2026-3-20", true));

@@ -1,6 +1,7 @@
 package seedu.inventorydock.command;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.CategoryNotFoundException;
+import seedu.inventorydock.exception.MissingArgumentException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.Item;
@@ -34,21 +35,22 @@ public class AddItemCommand extends Command {
      *
      * @param inventory inventory to mutate.
      * @param ui user interface used to display the result.
-     * @throws DukeException if the category does not exist or the item is null.
+     * @throws CategoryNotFoundException if the category does not exist.
+     * @throws MissingArgumentException if the item is null.
      */
     @Override
-    public void execute(Inventory inventory, UI ui) throws DukeException {
+    public void execute(Inventory inventory, UI ui) throws CategoryNotFoundException, MissingArgumentException {
         assert inventory != null : "AddItemCommand received null inventory.";
         Category category = inventory.findCategoryByName(categoryName);
 
         if (category == null) {
             logger.log(Level.WARNING, "Category not found while adding item: " + categoryName);
-            throw new DukeException("Category not found: " + categoryName);
+            throw new CategoryNotFoundException("Category not found: " + categoryName);
         }
 
         if (item == null) {
             logger.log(Level.WARNING, "Null item supplied to AddItemCommand.");
-            throw new DukeException("Item cannot be null.");
+            throw new MissingArgumentException("Item cannot be null.");
         }
 
         category.addItem(item);

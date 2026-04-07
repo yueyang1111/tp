@@ -1,7 +1,8 @@
 package seedu.inventorydock.storage;
 
 import seedu.inventorydock.command.Command;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
+import seedu.inventorydock.exception.StorageException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.Item;
@@ -58,9 +59,9 @@ public class Storage {
      *
      * @param inventory Inventory to populate with loaded data.
      * @param ui UI used to display skipped lines.
-     * @throws DukeException If storage file cannot be read.
+     * @throws InventoryDockException If storage file cannot be read.
      */
-    public void load(Inventory inventory, UI ui) throws DukeException {
+    public void load(Inventory inventory, UI ui) throws InventoryDockException {
         assert inventory != null : "Storage.load received null inventory.";
         assert ui != null : "Storage.load received null ui.";
         logger.log(Level.INFO, "Starting inventory load from file: " + dataFile.getPath());
@@ -74,7 +75,7 @@ public class Storage {
                     logger.log(Level.INFO, "Parsing stored line: " + line);
                     Command command = parseStoredLine(line, addItemCommandParser);
                     command.execute(inventory, null);
-                } catch (DukeException e) {
+                } catch (InventoryDockException e) {
                     logger.log(Level.WARNING, "Skipped corrupted line: " + line
                             + ", Reason: " + e.getMessage());
                     ui.showSkippedLine(line, e.getMessage());
@@ -83,7 +84,7 @@ public class Storage {
             logger.log(Level.INFO, "Finished loading inventory.");
         } catch (IOException e) {
             logger.log(Level.WARNING, "Unable to read storage file.");
-            throw new DukeException("Unable to read storage file.");
+            throw new StorageException("Unable to read storage file.", e);
         }
     }
 
@@ -93,9 +94,9 @@ public class Storage {
      * @param line The storage line from file representing an item.
      * @param parser Parser to interpret the line.
      * @return The command corresponding to the stored item.
-     * @throws DukeException If the line cannot be parsed.
+     * @throws InventoryDockException If the line cannot be parsed.
      */
-    private Command parseStoredLine(String line, AddItemCommandParser parser) throws DukeException {
+    private Command parseStoredLine(String line, AddItemCommandParser parser) throws InventoryDockException {
         assert line != null : "Storage.parseStoredLine received null line.";
         assert parser != null : "Storage.parseStoredLine received null parser.";
         String category = extractCategory(line);
@@ -129,7 +130,7 @@ public class Storage {
             return parser.handleAccessories(line);
         default:
             logger.log(Level.WARNING, "Unknown category in storage.");
-            throw new DukeException("Unknown category in storage.");
+            throw new StorageException("Unknown category in storage.");
         }
     }
 
@@ -138,9 +139,9 @@ public class Storage {
      *
      * @param line The storage line.
      * @return The category name in lowercase.
-     * @throws DukeException If the category field is missing.
+     * @throws InventoryDockException If the category field is missing.
      */
-    private String extractCategory(String line) throws DukeException {
+    private String extractCategory(String line) throws InventoryDockException {
         assert line != null : "Storage.extractCategory received null line.";
         String[] tokens = line.trim().split(" ");
 
@@ -150,16 +151,16 @@ public class Storage {
             }
         }
 
-        throw new DukeException("Missing category in storage line: " + line);
+        throw new StorageException("Missing category in storage line: " + line);
     }
 
     /**
      * Save the current inventory into storage file.
      *
      * @param inventory Inventory containing all the items to be saved.
-     * @throws DukeException If data cannot be written into the storage file.
+     * @throws InventoryDockException If data cannot be written into the storage file.
      */
-    public void save(Inventory inventory) throws DukeException {
+    public void save(Inventory inventory) throws InventoryDockException {
         assert inventory != null : "Storage.save received null inventory.";
         List<String> lines = new ArrayList<>();
         logger.log(Level.INFO, "Starting inventory save to file: " + dataFile.getPath());
@@ -176,7 +177,7 @@ public class Storage {
             logger.log(Level.INFO, "Saved inventory to storage file.");
         } catch (IOException e) {
             logger.log(Level.WARNING, "Unable to save inventory.");
-            throw new DukeException("Unable to save inventory.");
+            throw new StorageException("Unable to save inventory.", e);
         }
     }
 

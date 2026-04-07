@@ -1,6 +1,6 @@
 package seedu.inventorydock.parser.category;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 import seedu.inventorydock.parser.FieldParser;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,33 +32,33 @@ public class PetFoodParser {
      *
      * @param input User input containing pet food fields.
      * @return A {@code PetFoodParser} containing the parsed values.
-     * @throws DukeException If any required field is missing or invalid.
+     * @throws InventoryDockException If any required field is missing or invalid.
      */
-    public static PetFoodParser parse(String input) throws DukeException {
+    public static PetFoodParser parse(String input) throws InventoryDockException {
         assert input != null : "PetFoodParser received null input.";
         logger.log(Level.INFO, "Processing PetFood special fields.");
 
         String petType = FieldParser.extractField(input, "petType/", "brand/");
         if (petType == null || petType.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing petType for pet food.");
-            throw new DukeException("Missing petType for pet food.");
+            throw new InventoryDockException("Missing petType for pet food.");
         }
 
         String brand = FieldParser.extractField(input, "brand/", "isDryFood/");
         if (brand == null || brand.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing brand for pet food.");
-            throw new DukeException("Missing brand for pet food.");
+            throw new InventoryDockException("Missing brand for pet food.");
         }
 
         String isDryFoodString = FieldParser.extractField(input, "isDryFood/", null);
         if (isDryFoodString == null || isDryFoodString.trim().isEmpty()) {
             logger.log(Level.WARNING, "Missing isDryFood for pet food.");
-            throw new DukeException("Missing isDryFood for pet food.");
+            throw new InventoryDockException("Missing isDryFood for pet food.");
         }
 
         if (!(isDryFoodString.equalsIgnoreCase("true") || isDryFoodString.equalsIgnoreCase("false"))) {
             logger.log(Level.WARNING, "isDryFood must be true or false");
-            throw new DukeException("isDryFood must be true or false");
+            throw new InventoryDockException("isDryFood must be true or false");
         }
         boolean isDryFood = Boolean.parseBoolean(isDryFoodString);
 

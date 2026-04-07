@@ -1,6 +1,7 @@
 package seedu.inventorydock.command;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InvalidCommandException;
+import seedu.inventorydock.exception.MissingArgumentException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.Item;
@@ -31,18 +32,20 @@ public class FindItemByCategoryCommand extends Command {
      *
      * @param categoryInput raw category input.
      * @return normalized category input.
-     * @throws DukeException if the category is empty or numeric.
+     * @throws MissingArgumentException if the category is empty.
+     * @throws InvalidCommandException if the category is numeric.
      */
-    public static String parseCategoryInput(String categoryInput) throws DukeException {
+    public static String parseCategoryInput(String categoryInput)
+            throws MissingArgumentException, InvalidCommandException {
         String trimmedCategory = categoryInput.trim();
         if (trimmedCategory.isEmpty()) {
             logger.log(Level.WARNING, "Empty category input received.");
-            throw new DukeException("Category cannot be empty.");
+            throw new MissingArgumentException("Category cannot be empty.");
         }
         try {
             Integer.parseInt(trimmedCategory);
             logger.log(Level.WARNING, "Numeric category input received: " + trimmedCategory);
-            throw new DukeException("Category must be a string.");
+            throw new InvalidCommandException("Category must be a string.");
         } catch (NumberFormatException e) {
             assert !trimmedCategory.isEmpty() : "FindItemByCategoryCommand parsed empty category input.";
             return trimmedCategory.toLowerCase();
@@ -54,10 +57,9 @@ public class FindItemByCategoryCommand extends Command {
      *
      * @param inventory inventory to search.
      * @param ui user interface used to display search results.
-     * @throws DukeException included for command interface compatibility.
      */
     @Override
-    public void execute(Inventory inventory, UI ui) throws DukeException {
+    public void execute(Inventory inventory, UI ui) {
         assert inventory != null : "FindItemByCategoryCommand received null inventory.";
         assert ui != null : "FindItemByCategoryCommand received null UI.";
         assert categoryInput != null : "FindItemByCategoryCommand received null category input.";

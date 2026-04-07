@@ -2,7 +2,7 @@ package seedu.inventorydock.command;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InvalidCommandException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.Item;
@@ -37,7 +37,7 @@ public class FindItemByQtyCommandTest {
     }
 
     @Test
-    public void execute_thresholdQuantity_showsItemsWithQuantityInputOrLower() throws DukeException {
+    public void execute_thresholdQuantity_showsItemsWithQuantityInputOrLower() {
         FindItemByQtyCommand command = new FindItemByQtyCommand(10);
         TestUI ui = new TestUI();
 
@@ -54,7 +54,7 @@ public class FindItemByQtyCommandTest {
     }
 
     @Test
-    public void execute_higherThreshold_includesLowerQuantities() throws DukeException {
+    public void execute_higherThreshold_includesLowerQuantities() {
         FindItemByQtyCommand command = new FindItemByQtyCommand(15);
         TestUI ui = new TestUI();
 
@@ -69,7 +69,7 @@ public class FindItemByQtyCommandTest {
     }
 
     @Test
-    public void execute_quantityBelowAllItems_showsNoItemsFoundMessage() throws DukeException {
+    public void execute_quantityBelowAllItems_showsNoItemsFoundMessage() {
         FindItemByQtyCommand command = new FindItemByQtyCommand(5);
         TestUI ui = new TestUI();
 
@@ -82,7 +82,7 @@ public class FindItemByQtyCommandTest {
 
     @Test
     public void parseQtyInput_nonInteger_throwsException() {
-        DukeException exception = assertThrows(DukeException.class,
+        InvalidCommandException exception = assertThrows(InvalidCommandException.class,
                 () -> FindItemByQtyCommand.parseQtyInput("abc"));
 
         assertEquals("Quantity must be an integer.", exception.getMessage());
@@ -90,7 +90,7 @@ public class FindItemByQtyCommandTest {
 
     @Test
     public void parseQtyInput_zero_throwsException() {
-        DukeException exception = assertThrows(DukeException.class,
+        InvalidCommandException exception = assertThrows(InvalidCommandException.class,
                 () -> FindItemByQtyCommand.parseQtyInput("0"));
 
         assertEquals("Quantity must be a positive integer.", exception.getMessage());

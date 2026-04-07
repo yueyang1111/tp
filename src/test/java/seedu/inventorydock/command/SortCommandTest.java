@@ -2,7 +2,6 @@ package seedu.inventorydock.command;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.inventorydock.exception.DukeException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.Item;
@@ -17,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class SortCommandTest {
 
     @Test
-    public void execute_sortByName_callsUiWithSortedCopy() throws DukeException {
+    public void execute_sortByName_callsUiWithSortedCopy() {
         Inventory inventory = new Inventory();
         Category fruits = new Category("fruits");
         fruits.addItem(new Item("Banana", 5, "A1", "2026-12-01"));
@@ -37,7 +36,7 @@ public class SortCommandTest {
     }
 
     @Test
-    public void execute_sortByExpiryDate_callsUiWithSortedCopy() throws DukeException {
+    public void execute_sortByExpiryDate_callsUiWithSortedCopy() {
         Inventory inventory = new Inventory();
         Category fruits = new Category("fruits");
         fruits.addItem(new Item("Apple", 5, "A1", "2026-12-01"));
@@ -56,7 +55,7 @@ public class SortCommandTest {
     }
 
     @Test
-    public void execute_sortByQty_callsUiWithSortedCopy() throws DukeException {
+    public void execute_sortByQty_callsUiWithSortedCopy() {
         Inventory inventory = new Inventory();
         Category fruits = new Category("fruits");
         fruits.addItem(new Item("Apple", 3, "A1", "2026-12-01"));

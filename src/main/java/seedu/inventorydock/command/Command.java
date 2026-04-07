@@ -1,6 +1,6 @@
 package seedu.inventorydock.command;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.ui.UI;
 
@@ -14,9 +14,9 @@ public abstract class Command {
      *
      * @param inventory The inventory data structure to be modified or accessed.
      * @param ui The user interface used to display feedback or errors to the user.
-     * @throws DukeException If an error occurs during the execution of the command.
+     * @throws InventoryDockException If an error occurs during the execution of the command.
      */
-    public abstract void execute(Inventory inventory, UI ui) throws DukeException;
+    public abstract void execute(Inventory inventory, UI ui) throws InventoryDockException;
 
     /**
      * Indicates whether this command should terminate the application.

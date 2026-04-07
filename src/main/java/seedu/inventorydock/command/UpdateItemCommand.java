@@ -1,6 +1,10 @@
 package seedu.inventorydock.command;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.CategoryNotFoundException;
+import seedu.inventorydock.exception.InventoryDockException;
+import seedu.inventorydock.exception.InvalidCommandException;
+import seedu.inventorydock.exception.ItemNotFoundException;
+import seedu.inventorydock.exception.MissingArgumentException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.Item;
@@ -44,22 +48,24 @@ public class UpdateItemCommand extends Command {
      *
      * @param inventory Inventory containing the item to update.
      * @param ui User interface used to display update results.
-     * @throws DukeException If the category, item index, or update values are invalid.
+     * @throws InventoryDockException If the category, item index, or update values are invalid.
      */
     @Override
-    public void execute(Inventory inventory, UI ui) throws DukeException {
+    public void execute(Inventory inventory, UI ui) throws InventoryDockException {
         assert inventory != null : "UpdateItemCommand received null inventory.";
         assert ui != null : "UpdateItemCommand received null UI.";
 
         Category category = inventory.findCategoryByName(categoryName);
         if (category == null) {
             logger.log(Level.WARNING, "Category not found while updating item: " + categoryName);
-            throw new DukeException("Category not found: " + categoryName);
+            throw new CategoryNotFoundException("Category not found: " + categoryName);
         }
 
         if (itemIndex < 1 || itemIndex > category.getItemCount()) {
             logger.log(Level.WARNING, "Invalid item index while updating item: " + itemIndex);
-            throw new DukeException("Invalid item index: " + itemIndex);
+            throw new ItemNotFoundException(
+                "Item at index " + itemIndex + 
+                " not found in category '" + categoryName + "'.");
         }
 
         Item item = category.getItem(itemIndex - 1);
@@ -76,9 +82,9 @@ public class UpdateItemCommand extends Command {
      * Only supported update prefixes are accepted.
      *
      * @param item Item to be updated.
-     * @throws DukeException If an update field is unsupported or contains an invalid value.
+     * @throws InventoryDockException If an update field is unsupported or contains an invalid value.
      */
-    private void applyUpdates(Item item) throws DukeException {
+    private void applyUpdates(Item item) throws InventoryDockException {
         for (Map.Entry<String, String> entry : updates.entrySet()) {
             String field = entry.getKey();
             String value = entry.getValue();
@@ -100,7 +106,7 @@ public class UpdateItemCommand extends Command {
                 item.setExpiryDate(value.trim());
                 break;
             default:
-                throw new DukeException("Only newItem/, bin/, qty/, and expiryDate/ can be updated.");
+                throw new InvalidCommandException("Only newItem/, bin/, qty/, and expiryDate/ can be updated.");
             }
         }
     }
@@ -111,12 +117,12 @@ public class UpdateItemCommand extends Command {
      *
      * @param value Value to validate.
      * @param message Error message to use when validation fails.
-     * @throws DukeException If the value is null or blank.
+     * @throws InventoryDockException If the value is null or blank.
      */
     private void validateNonEmpty(String value,
-                                  String message) throws DukeException {
+                                  String message) throws InventoryDockException {
         if (value == null || value.trim().isEmpty()) {
-            throw new DukeException(message);
+            throw new MissingArgumentException(message);
         }
     }
 }

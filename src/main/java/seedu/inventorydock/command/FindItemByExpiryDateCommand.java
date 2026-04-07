@@ -1,6 +1,6 @@
 package seedu.inventorydock.command;
 
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InvalidDateException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.Item;
@@ -40,10 +40,10 @@ public class FindItemByExpiryDateCommand extends Command {
      *
      * @param inventory Inventory containing the items to search.
      * @param ui User interface used to display search results.
-     * @throws DukeException If the supplied expiry date cannot be parsed.
+     * @throws InvalidDateException If the supplied expiry date cannot be parsed.
      */
     @Override
-    public void execute(Inventory inventory, UI ui) throws DukeException {
+    public void execute(Inventory inventory, UI ui) throws InvalidDateException {
         assert inventory != null : "FindItemByExpiryDateCommand received null inventory.";
         assert ui != null : "FindItemByExpiryDateCommand received null UI.";
         assert expiryDateInput != null : "FindItemByExpiryDateCommand received null expiry date.";

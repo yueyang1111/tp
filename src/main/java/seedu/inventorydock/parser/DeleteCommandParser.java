@@ -4,7 +4,10 @@ package seedu.inventorydock.parser;
 import seedu.inventorydock.command.Command;
 import seedu.inventorydock.command.DeleteCategoryCommand;
 import seedu.inventorydock.command.DeleteItemCommand;
-import seedu.inventorydock.exception.DukeException;
+import seedu.inventorydock.exception.InventoryDockException;
+import seedu.inventorydock.exception.InvalidCommandException;
+import seedu.inventorydock.exception.InvalidIndexException;
+import seedu.inventorydock.exception.MissingArgumentException;
 
 
 import java.util.logging.Level;
@@ -29,13 +32,13 @@ public class DeleteCommandParser {
      * @param input The arguments following the "delete"
      *              command word.
      * @return The parsed Command.
-     * @throws DukeException If the input is invalid.
+     * @throws InventoryDockException If the input is invalid.
      */
-    public Command parse(String input) throws DukeException {
+    public Command parse(String input) throws InventoryDockException {
         assert input != null : "DeleteCommandParser received null input.";
         if (input.isEmpty()) {
             logger.log(Level.WARNING, "Delete command missing target.");
-            throw new DukeException("Please specify what to delete. Use: delete category/CATEGORY "
+            throw new MissingArgumentException("Please specify what to delete. Use: delete category/CATEGORY "
                     + "index/INDEX or delete category/CATEGORY");
         }
 
@@ -47,7 +50,7 @@ public class DeleteCommandParser {
             int sep = token.indexOf('/');
             if (sep <= 0 || sep == token.length() - 1) {
                 logger.log(Level.WARNING, "Invalid delete token: " + token);
-                throw new DukeException("Invalid token: '" + token + "'. Use: delete "
+                throw new InvalidCommandException("Invalid token: '" + token + "'. Use: delete "
                         + "category/CATEGORY index/INDEX or delete category/CATEGORY");
             }
             String key = token.substring(0, sep).trim().toLowerCase();
@@ -62,14 +65,14 @@ public class DeleteCommandParser {
                 break;
             default:
                 logger.log(Level.WARNING, "Unknown delete field: " + key);
-                throw new DukeException("Unknown field: '" + key + "'. Use: delete "
+                throw new InvalidCommandException("Unknown field: '" + key + "'. Use: delete "
                         + "category/CATEGORY index/INDEX or delete category/CATEGORY");
             }
         }
 
         if (categoryName == null || categoryName.isEmpty()) {
             logger.log(Level.WARNING, "Delete command missing category.");
-            throw new DukeException("Missing category. Use: delete category/CATEGORY index/INDEX "
+            throw new MissingArgumentException("Missing category. Use: delete category/CATEGORY index/INDEX "
                     + "or delete category/CATEGORY");
         }
 
@@ -88,21 +91,21 @@ public class DeleteCommandParser {
      * @param indexString  The string representation of the
      *                     item index.
      * @return The parsed DeleteItemCommand.
-     * @throws DukeException If the index is invalid.
+     * @throws InventoryDockException If the index is invalid.
      */
     private Command parseDeleteItem(String categoryName,
-                                    String indexString) throws DukeException {
+                                    String indexString) throws InventoryDockException {
         int itemIndex;
         try {
             itemIndex = Integer.parseInt(indexString);
         } catch (NumberFormatException e) {
             logger.log(Level.WARNING, "Non-integer index: " + indexString);
-            throw new DukeException("Item index must be an integer.");
+            throw new InvalidIndexException("Item index must be an integer.", e);
         }
 
         if (itemIndex <= 0) {
             logger.log(Level.WARNING, "Non-positive index: " + itemIndex);
-            throw new DukeException("Item index must be a positive integer.");
+            throw new InvalidIndexException("Item index must be a positive integer.");
         }
 
         return new DeleteItemCommand(categoryName, itemIndex);
