@@ -235,3 +235,81 @@ Valid `SORT_TYPE` values:
 * `name`: Sorts items alphabetically by item name, ignoring letter case
 * `expirydate` : Sort items by expiry date, from earliest to latest
 * `qty` : Sorts items by quantity, from highest to lowest
+
+Examples:
+
+* `sort name`
+* `sort expirydate`
+* `sort qty`
+
+Expected result:
+
+* Items in each category are sorted according to the chosen sort type.
+* Category order remains unchanged.
+* If the inventory is empty, the app shows Inventory is empty.
+
+### Update an item: `update`
+
+Updates an existing item in a category by its item index.
+
+Format:
+
+`update category/CATEGORY index/INDEX [newItem/NEW_NAME] [bin/NEW_BIN] [qty/NEW_QUANTITY] [expiryDate/NEW_DATE]`
+
+Updatable fields:
+
+* `newItem/` changes the item name
+* `bin/` changes the bin location
+* `qty/` changes the quantity
+* `expiryDate/` changes the expiry date
+
+Notes:
+
+* `INDEX` is the item number within that category, using 1-based indexing.
+* You must provide at least one field to update.
+* Category-specific fields such as `brand/`, `isRipe/`, or `flavour/` cannot be updated with this command.
+
+Examples:
+
+* `update category/fruits index/1 qty/25`
+* `update category/fruits index/1 newItem/green_apple bin/A-2 expiryDate/2026-4-1`
+
+Expected result:
+
+* The app updates the selected item.
+* The app confirms which item was updated.
+* If the item name changed, the new item name is shown as well.
+
+### Delete an item: `delete category/... index/...`
+
+Deletes one item from a category by its item index.
+
+Format:
+
+`delete category/CATEGORY index/INDEX`
+
+Notes:
+
+* `INDEX` is the item number within that category, using 1-based indexing.
+
+Example:
+
+`delete category/fruits index/2`
+
+Expected result:
+
+* The selected item is removed from the category.
+* The app confirms the deleted item name and category.
+
+### Clear a category: `delete category/...`
+
+Clears all items in a category.
+
+Format:
+
+`delete category/CATEGORY`
+
+Important:
+
+* This command does not remove the category itself from InventoryDock.
+* If the category is not empty, the app asks for confirmation.
