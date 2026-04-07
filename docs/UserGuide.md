@@ -156,3 +156,82 @@ Expected result:
 * Items expiring on the given date are included.
 * Items expiring before the given date are also included.
 * If nothing matches, the app shows `No items found expiring by DATE.`
+
+### Finding items by bin: `find bin/...`
+Shows all items that match a bin search.
+
+Format: `find bin/BIN_INPUT`
+
+Valid `BIN_INPUT` values:
+
+* Full bin location, for example `A-10`
+* Bin letter only, for example `A`
+* Bin number only, for example `10`
+
+Examples:
+
+`find bin/A-10`
+
+`find bin/A`
+
+`find bin/10`
+
+Expected result:
+
+* A full bin location matches only that exact bin.
+* A bin letter matches all items in bins with that letter.
+* A bin number matches all items in bins with that number.
+* If no items match, the app shows `No items found in bin location: BIN_INPUT.`
+
+### Finding items by quantity: `find qty/...`
+Shows all items whose quantity is less than or equal to the specified quantity.
+
+Format: `find qty/QUANTITY`
+
+Notes:
+
+* `QUANTITY` must be a positive integer.
+* This search is inclusive. For example, `find qty/15` includes items with quantity `15` and items with smaller quantities.
+
+Examples:
+
+* `find qty/10`
+* `find qty/15`
+
+Expected result:
+
+* Items with quantity equal to the given value are included.
+* Items with quantity lower than the given value are also included.
+* If nothing matches, the app shows `No items found with quantity: QUANTITY.`
+
+### View help: `help`
+Shows the list of available commands and the link to the published user guide.
+
+Format:
+
+`help`
+
+### Listing all items: `list`
+Lists the entire inventory grouped by category.
+
+Format: `list`
+
+Example:
+
+`list`
+
+Expected result:
+
+* All categories are shown in numbered order.
+* Items under each category are listed with their details.
+* If the inventory is empty, the app shows `Inventory is empty.`
+
+### Sorting items: `sort`
+Lists the full inventory grouped by category, with the items inside each category sorted by the chosen field.
+
+Format: `sort SORT_TYPE`
+
+Valid `SORT_TYPE` values:
+* `name`: Sorts items alphabetically by item name, ignoring letter case
+* `expirydate` : Sort items by expiry date, from earliest to latest
+* `qty` : Sorts items by quantity, from highest to lowest
