@@ -41,13 +41,13 @@ class UI {
   + showNumberedList(...)
 }
 
-class DukeException
+class InventoryDockException
 
 Command <|-- FindItemByQtyCommand
 FindItemParser ..> FindItemByQtyCommand : creates
 FindItemByQtyCommand --> Inventory : queries
 FindItemByQtyCommand --> UI : displays through
-FindItemByQtyCommand ..> DukeException
+FindItemByQtyCommand ..> InventoryDockException
 Inventory "1" o-- "*" Category
 Category "1" o-- "*" Item
 @enduml

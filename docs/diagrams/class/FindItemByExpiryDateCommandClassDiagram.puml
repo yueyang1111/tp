@@ -1,0 +1,63 @@
+@startuml
+title Class Diagram for FindItemByExpiryDateCommand Feature
+skinparam classAttributeIconSize 0
+hide circle
+left to right direction
+
+class "{abstract}\nCommand" as Command {
+  + execute(inventory: Inventory, ui: UI)
+}
+
+class FindItemParser {
+  + parse(input: String)
+}
+
+class FindItemByExpiryDateCommand {
+  - expiryDateInput: String
+  + execute(inventory: Inventory, ui: UI)
+}
+
+class DateParser {
+  + parseDate(date: String)
+  + validateDate(date: String)
+}
+
+class Inventory {
+  + getCategories()
+}
+
+class Category {
+  - name: String
+  + getName()
+  + getItems()
+}
+
+class Item {
+  - name: String
+  - expiryDate: String
+  + getExpiryDate()
+}
+
+class UI {
+  + formatNoItemsFoundMessage(...)
+  + formatFoundItemsMessage(...)
+  + formatFindResultsHeader(...)
+  + showMessage(...)
+  + showNumberedList(...)
+  + showDivider()
+}
+
+note as N1
+  The command scans all categories and items,
+  compares each item's expiry date with the
+  cutoff date, and displays matching results.
+end note
+
+Command <|-- FindItemByExpiryDateCommand
+FindItemParser ..> FindItemByExpiryDateCommand : creates
+FindItemByExpiryDateCommand ..> DateParser : validates with
+FindItemByExpiryDateCommand --> Inventory : queries
+FindItemByExpiryDateCommand --> UI : displays through
+Inventory "1" o-- "*" Category
+Category "1" o-- "*" Item
+@enduml

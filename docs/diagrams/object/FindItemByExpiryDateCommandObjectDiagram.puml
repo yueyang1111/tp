@@ -1,0 +1,43 @@
+@startuml
+title Object Diagram for FindItemByExpiryDateCommand Feature
+hide circle
+left to right direction
+
+object "<u>findParser:FindItemParser</u>" as parser
+object "<u>cmd:FindItemByExpiryDateCommand</u>" as command {
+  expiryDateInput = "2026-3-25"
+}
+object "<u>dateParser:DateParser</u>" as dateParser
+object "<u>inventory:Inventory</u>" as inventory
+object "<u>fruits:Category</u>" as fruits {
+  name = "fruits"
+}
+object "<u>drinks:Category</u>" as drinks {
+  name = "drinks"
+}
+object "<u>apple:Item</u>" as apple {
+  name = "apple"
+  expiryDate = "2026-3-20"
+}
+object "<u>orangeJuice:Item</u>" as orangeJuice {
+  name = "orangeJuice"
+  expiryDate = "2026-4-01"
+}
+object "<u>:UI</u>" as ui
+
+note as N1
+  This snapshot shows one execution of
+  find expiryDate/2026-3-25.
+  The apple item matches because its expiry
+  date is on or before the cutoff date.
+end note
+
+parser --> command : creates >
+command --> dateParser : parses with >
+command --> inventory : queries >
+command --> ui : displays through >
+inventory --> fruits : contains >
+inventory --> drinks : contains >
+fruits --> apple : contains >
+drinks --> orangeJuice : contains >
+@enduml

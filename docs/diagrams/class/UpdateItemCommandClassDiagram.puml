@@ -1,0 +1,71 @@
+@startuml
+title Class Diagram for UpdateItemCommand Feature
+skinparam classAttributeIconSize 0
+hide circle
+left to right direction
+
+class "{abstract}\nCommand" as Command {
+  + execute(inventory: Inventory, ui: UI)
+}
+
+class UpdateCommandParser {
+  + parse(input: String)
+}
+
+class UpdateItemCommand {
+  - categoryName: String
+  - itemIndex: int
+  - updates: Map<String, String>
+  + execute(inventory: Inventory, ui: UI)
+}
+
+class Inventory {
+  + findCategoryByName(categoryName: String)
+}
+
+class Category {
+  - name: String
+  + getItemCount()
+  + getItem(index: int)
+  + getName()
+}
+
+class Item {
+  - name: String
+  - quantity: int
+  - binLocation: String
+  - expiryDate: String
+  + getName()
+  + setName(name: String)
+  + setBinLocation(binLocation: String)
+  + setQuantity(quantity: int)
+  + setExpiryDate(expiryDate: String)
+}
+
+class CommonFieldParser {
+  + parseQuantity(quantityString: String)
+  + validateExpiryDate(expiryDate: String)
+}
+
+class UI {
+  + showItemUpdated(...)
+}
+
+note as N1
+  The update map can contain one or more
+  supported fields such as newItem, bin,
+  qty, and expiryDate.
+  The diagram shows the shared update path
+  rather than every exception subtype.
+end note
+
+Command <|-- UpdateItemCommand
+UpdateCommandParser ..> UpdateItemCommand : creates
+UpdateItemCommand --> Inventory : queries through
+UpdateItemCommand --> Category : retrieves item from
+UpdateItemCommand --> Item : updates
+UpdateItemCommand ..> CommonFieldParser : validates with
+UpdateItemCommand --> UI : shows result via
+Inventory "1" o-- "*" Category
+Category "1" o-- "*" Item
+@enduml

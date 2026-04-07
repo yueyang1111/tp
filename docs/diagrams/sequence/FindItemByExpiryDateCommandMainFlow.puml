@@ -1,5 +1,5 @@
 @startuml
-title Sequence Diagram for FindItemCommand (Main Flow: expiryDate)
+title Sequence Diagram for FindItemByExpiryDateCommand (Main Control Flow Only)
 
 autonumber
 hide footbox
@@ -90,4 +90,3 @@ deactivate FindItemByExpiryDateCommand
 deactivate InventoryDock
 deactivate UI
 @enduml
-

@@ -1,0 +1,41 @@
+@startuml
+title Class Diagram for InventoryDock Exception Hierarchy
+skinparam classAttributeIconSize 0
+hide circle
+top to bottom direction
+
+class "Exception" as JavaException
+
+class InventoryDockException {
+  + InventoryDockException(message: String)
+  + InventoryDockException(message: String, cause: Throwable)
+}
+
+class CategoryNotFoundException
+class InvalidCommandException
+class InvalidDateException
+class InvalidFilterException
+class InvalidIndexException {
+  + InvalidIndexException(message: String)
+  + InvalidIndexException(message: String, cause: Throwable)
+}
+class ItemNotFoundException
+class MissingArgumentException {
+  + MissingArgumentException(message: String)
+  + MissingArgumentException(message: String, cause: Throwable)
+}
+class StorageException {
+  + StorageException(message: String)
+  + StorageException(message: String, cause: Throwable)
+}
+
+JavaException <|-- InventoryDockException
+InventoryDockException <|-- CategoryNotFoundException
+InventoryDockException <|-- InvalidCommandException
+InventoryDockException <|-- InvalidDateException
+InventoryDockException <|-- InvalidFilterException
+InventoryDockException <|-- InvalidIndexException
+InventoryDockException <|-- ItemNotFoundException
+InventoryDockException <|-- MissingArgumentException
+InventoryDockException <|-- StorageException
+@enduml

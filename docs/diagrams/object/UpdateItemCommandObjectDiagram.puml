@@ -1,0 +1,51 @@
+@startuml
+title Object Diagram for UpdateItemCommand Feature
+hide circle
+left to right direction
+
+object "<u>updateParser:UpdateCommandParser</u>" as parser
+object "<u>cmd:UpdateItemCommand</u>" as command {
+  categoryName = "fruits"
+  itemIndex = 1
+  updates = {qty=20, expiryDate=2026-4-15}
+}
+object "<u>inventory:Inventory</u>" as inventory
+object "<u>fruits:Category</u>" as fruits {
+  name = "fruits"
+}
+object "<u>snacks:Category</u>" as snacks {
+  name = "snacks"
+}
+object "<u>apple:Item</u>" as apple {
+  name = "apple"
+  quantity = 20
+  binLocation = "A1"
+  expiryDate = "2026-4-15"
+}
+object "<u>chips:Item</u>" as chips {
+  name = "chips"
+  quantity = 8
+  binLocation = "B2"
+  expiryDate = "2026-5-01"
+}
+object "<u>fieldParser:CommonFieldParser</u>" as fieldParser
+object "<u>:UI</u>" as ui
+
+note as N1
+  This snapshot shows one execution after the
+  first fruits item has been updated.
+  The command targets item index 1 and applies
+  two field changes through the shared update map.
+end note
+
+parser --> command : creates >
+command --> inventory : queries >
+command --> fruits : targets >
+command --> apple : updates >
+command --> fieldParser : validates with >
+command --> ui : shows result via >
+inventory --> fruits : contains >
+inventory --> snacks : contains >
+fruits --> apple : contains >
+snacks --> chips : contains >
+@enduml

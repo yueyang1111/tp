@@ -4,6 +4,7 @@
 
 1. [Acknowledgements](#acknowledgements)
 2. [Design and Implementation](#design--implementation)
+   - [Exception Hierarchy](#exception-hierarchy)
    - [Find Item by Expiry Date](#find-item-by-expiry-date-feature)
    - [Find Item by Category](#find-item-by-category-feature)
    - [Find Item by Bin](#find-item-by-bin-feature)
@@ -69,6 +70,16 @@ existing components.
 The overall architecture of the application is shown below.
 
 ![OverallClassDiagram](diagrams/class/OverallClass.png)
+
+### Exception Hierarchy
+
+The application uses a shared custom exception base class, `InventoryDockException`, so the main
+runtime can catch command, parsing, and storage failures through a single type while still preserving
+more specific subclasses for clearer intent.
+
+The exception hierarchy is shown below.
+
+![ExceptionHierarchyClassDiagram](diagrams/class/ExceptionHierarchyClassDiagram.png)
 
 ### Add Item Feature
 
@@ -295,6 +306,18 @@ This design was chosen because it follows the same separation of concerns alread
 
 As a result, the new enhancement could be added without changing the overall architecture of the system.
 It is an extension of the existing command pipeline rather than a separate subsystem.
+
+The main interaction for this flow is illustrated below.
+
+![FindItemByExpiryDateCommandMainFlow](diagrams/FindItemByExpiryDateCommandMainFlow.png)
+
+The main structural relationships for this feature are shown below.
+
+![FindItemByExpiryDateCommandClassDiagram](diagrams/class/FindItemByExpiryDateCommandClassDiagram.png)
+
+A representative object snapshot for this feature is shown below.
+
+![FindItemByExpiryDateCommandObjectDiagram](diagrams/object/FindItemByExpiryDateCommandObjectDiagram.png)
 
 #### Component-level implementation
 
@@ -961,6 +984,18 @@ of the application:
 
 As a result, the update feature integrates cleanly into the existing command pipeline without requiring
 a separate editing subsystem.
+
+The main interaction for this flow is illustrated below.
+
+![UpdateItemCommandMainFlow](diagrams/UpdateItemCommandMainFlow.png)
+
+The main structural relationships for this feature are shown below.
+
+![UpdateItemCommandClassDiagram](diagrams/class/UpdateItemCommandClassDiagram.png)
+
+A representative object snapshot for this feature is shown below.
+
+![UpdateItemCommandObjectDiagram](diagrams/object/UpdateItemCommandObjectDiagram.png)
 
 #### Component-level implementation
 
