@@ -10,7 +10,7 @@ This guide covers the commands needed to add items, list all stored items, and s
 1. Ensure that you have Java 17 or above installed.
 2. Download the latest version of the application jar.
 3. Open a terminal in the project folder.
-4. Run `java -jar duke.jar`.
+4. Run `java -jar tp.main.jar`.
 5. Type a command and press Enter.
 
 ## Command Format
@@ -44,13 +44,6 @@ Notes about the command format:
 * Words in `UPPER_CASE` are placeholders you should replace with your own values.
 * Item and category values are matched case-insensitively by the app.
 * For `add`, fields must appear in the correct order.
-
-### View help: `help`
-Shows the list of available commands and the link to the published user guide.
-
-Format:
-
-`help`
 
 ### Adding an item: `add`
 Adds a new item to an existing category.
@@ -108,64 +101,6 @@ Expected result:
 * The item is added to the specified category.
 * The app confirms the item name, quantity, category, and bin location.
 
-### Listing all items: `list`
-Lists the entire inventory grouped by category.
-
-Format: `list`
-
-Example:
-
-`list`
-
-Expected result:
-
-* All categories are shown in numbered order.
-* Items under each category are listed with their details.
-* If the inventory is empty, the app shows `Inventory is empty.`
-
-### Sorting items: `sort`
-Lists the full inventory grouped by category, with the items inside each category sorted by the chosen field.
-
-Format: `sort SORT_TYPE`
-
-Valid `SORT_TYPE` values:
-* `name`: Sorts items alphabetically by item name, ignoring letter case
-* `expirydate` : Sort items by expiry date, from earliest to latest
-* `qty` : Sorts items by quantity, from highest to lowest
-
-Examples:
-
-* `sort name`
-* `sort expirydate`
-* `sort qty`
-
-Expected result:
-
-* Items in each category are sorted according to the chosen sort type.
-* Category order remains unchanged.
-* If the inventory is empty, the app shows Inventory is empty.
-
-### Find items by keyword: `find keyword/...`
-Finds items whose names contain the given keyword.
-
-Format:
-
-`find keyword/KEYWORD`
-
-Notes:
-
-* Matching is case-insensitive.
-* Partial matches work. For example, `apple` matches `apple`, `pineapple`, and `apple_juice`.
-
-Examples:
-
-* `find keyword/apple`
-* `find keyword/chip`
-
-Expected result:
-
-* Matching items are listed together with their category names.
-* If nothing matches, the app shows `No items found matching keyword: KEYWORD.`
 
 ### Finding items by category: `find category/...`
 Shows all items stored in a specified category.
@@ -181,25 +116,6 @@ Expected result:
 * If the category exists and contains items, the app lists all items in that category.
 * If the category exists but has no items, the app shows `No items found in category: CATEGORY.`
 * If the category does not exist, the app shows an error that the category was not found.
-
-### Find items by expiry date: `find expiryDate/...`
-
-Shows all items whose expiry date is on or before the specified date.
-
-Format:
-
-`find expiryDate/DATE`
-
-Examples:
-
-* `find expiryDate/2026-3-21`
-* `find expiryDate/2026-12-31`
-
-Expected result:
-
-* Items expiring on the given date are included.
-* Items expiring before the given date are also included.
-* If nothing matches, the app shows `No items found expiring by DATE.`
 
 ### Finding items by bin: `find bin/...`
 Shows all items that match a bin search.
@@ -248,83 +164,21 @@ Expected result:
 * Items with quantity lower than the given value are also included.
 * If nothing matches, the app shows `No items found with quantity: QUANTITY.`
 
-### Update an item: `update`
 
-Updates an existing item in a category by its item index.
+### Listing all items: `list`
+Lists the entire inventory grouped by category.
 
-Format:
-
-`update category/CATEGORY index/INDEX [newItem/NEW_NAME] [bin/NEW_BIN] [qty/NEW_QUANTITY] [expiryDate/NEW_DATE]`
-
-Updatable fields:
-
-* `newItem/` changes the item name
-* `bin/` changes the bin location
-* `qty/` changes the quantity
-* `expiryDate/` changes the expiry date
-
-Notes:
-
-* `INDEX` is the item number within that category, using 1-based indexing.
-* You must provide at least one field to update.
-* Category-specific fields such as `brand/`, `isRipe/`, or `flavour/` cannot be updated with this command.
-
-Examples:
-
-* `update category/fruits index/1 qty/25`
-* `update category/fruits index/1 newItem/green_apple bin/A-2 expiryDate/2026-4-1`
-
-Expected result:
-
-* The app updates the selected item.
-* The app confirms which item was updated.
-* If the item name changed, the new item name is shown as well.
-
-### Delete an item: `delete category/... index/...`
-
-Deletes one item from a category by its item index.
-
-Format:
-
-`delete category/CATEGORY index/INDEX`
-
-Notes:
-
-* `INDEX` is the item number within that category, using 1-based indexing.
+Format: `list`
 
 Example:
 
-`delete category/fruits index/2`
+`list`
 
 Expected result:
 
-* The selected item is removed from the category.
-* The app confirms the deleted item name and category.
-
-### Clear a category: `delete category/...`
-
-Clears all items in a category.
-
-Format:
-
-`delete category/CATEGORY`
-
-Important:
-
-* This command does not remove the category itself from InventoryDock.
-* If the category is not empty, the app asks for confirmation.
-* Type `yes` to continue.
-* Any other reply cancels the operation.
-
-Example:
-
-`delete category/fruits`
-
-Expected result:
-
-* If confirmed, all items in the category are cleared.
-* The category remains available for future items.
-* If cancelled, no items are removed.
+* All categories are shown in numbered order.
+* Items under each category are listed with their details.
+* If the inventory is empty, the app shows `Inventory is empty.`
 
 ## Error Handling
 
