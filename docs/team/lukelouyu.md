@@ -14,7 +14,7 @@ My main contributions focused on extending InventoryDock’s category-based inve
 
 ## Extended the item model with category-specific item classes
 
-I implemented item subclasses under `src/main/java/seedu/duke/model/items` to support different inventory categories:
+I implemented item subclasses under `src/main/java/seedu/inventorydock/model/items` to support different inventory categories:
 
 - `Accessories.java`
 - `Burger.java`
@@ -46,7 +46,7 @@ This improves data organisation and supports a clearer separation of responsibil
 
 ## Implemented category-specific parsers for structured item input
 
-I implemented category-specific parsers under `src/main/java/seedu/duke/parser/category` to support parsing and validation of item-type-specific fields:
+I implemented category-specific parsers under `src/main/java/seedu/inventorydock/parser/category` to support parsing and validation of item-type-specific fields:
 
 - `AccessoriesParser.java`
 - `BurgerParser.java`
