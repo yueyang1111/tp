@@ -373,15 +373,15 @@ Sequence diagrams:
 
 1. Parse and command creation.
 
-`FindItemByQtyCommandParseFlow.png` is not present in the repository. The source for this diagram should be added under `docs/diagrams/sequence/` if a rendered image is needed here.
+![FindItemByQtyCommandParseFlow](diagrams/sequence/FindItemByQtyCommandParseFlow-Sequence_Diagram_for_FindItemByQtyCommand__Parse_and_Command_Creation_.png)
 
 2. Inventory scan and quantity matching.
 
-`FindItemByQtyCommandMatchingFlow.png` is not present in the repository. The source for this diagram should be added under `docs/diagrams/sequence/` if a rendered image is needed here.
+![FindItemByQtyCommandMatchingFlow](diagrams/sequence/FindItemByQtyCommandMatchingFlow-Sequence_Diagram_for_FindItemByQtyCommand__Inventory_Scan_and_Quantity_Matching_.png)
 
 3. Result display.
 
-`FindItemByQtyCommandDisplayFlow.png` is not present in the repository. The source for this diagram should be added under `docs/diagrams/sequence/` if a rendered image is needed here.
+![FindItemByQtyCommandDisplayFlow](diagrams/sequence/FindItemByQtyCommandDisplayFlow-Sequence_Diagram_for_FindItemByQtyCommand__Result_Display_.png)
 
 Class and object diagrams:
 

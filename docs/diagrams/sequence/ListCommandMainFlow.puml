@@ -1,0 +1,55 @@
+@startuml
+title Sequence Diagram for ListCommand (Main Control Flow Only)
+
+autonumber
+hide footbox
+
+actor User
+participant ":UI" as UI
+participant ":InventoryDock" as InventoryDock
+participant ":Parser" as Parser
+participant ":ListCommand" as ListCommand
+participant ":Inventory" as Inventory
+participant ":Category" as Category
+
+User -> UI: enter list command
+activate UI
+UI -> InventoryDock: input
+activate InventoryDock
+InventoryDock -> Parser: parse(input)
+activate Parser
+
+create ListCommand
+Parser -> ListCommand: ListCommand()
+activate ListCommand
+ListCommand --> Parser: command
+Parser --> InventoryDock: command
+deactivate Parser
+
+InventoryDock -> ListCommand: execute(inventory, ui)
+activate ListCommand
+ListCommand -> UI: showInventory(inventory)
+activate UI
+UI -> Inventory: getCategories()
+activate Inventory
+Inventory --> UI: categories
+deactivate Inventory
+
+loop for each category
+    UI -> Category: getName(), getItemCount(), getItems()
+    activate Category
+    Category --> UI: category details
+    deactivate Category
+    loop for each item in category
+        UI --> User: display item line
+    end
+end
+UI --> User: display inventory listing
+
+deactivate UI
+deactivate ListCommand
+
+deactivate InventoryDock
+deactivate UI
+@enduml
+
