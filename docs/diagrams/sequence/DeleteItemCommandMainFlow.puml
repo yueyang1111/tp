@@ -1,88 +1,49 @@
-@startuml
-title Sequence Diagram for DeleteItemCommand (Main Control Flow Only)
-
-autonumber
-hide footbox
-
+@startuml Sequence Diagram for DeleteItemCommand
 actor User
 participant ":UI" as UI
 participant ":InventoryDock" as InventoryDock
 participant ":Parser" as Parser
 participant ":DeleteCommandParser" as DeleteCommandParser
-participant ":DeleteItemCommand" as DeleteItemCommand
 participant ":Inventory" as Inventory
 participant ":Category" as Category
 participant ":Item" as Item
 
-User -> UI: enter delete item command
-activate UI
-UI -> InventoryDock: input
-activate InventoryDock
-InventoryDock -> Parser: parse(input)
-activate Parser
+User -> UI : 1 enter delete item command
+UI -> InventoryDock : 2 input
+InventoryDock -> Parser : 3 parse(input)
+Parser -> DeleteCommandParser : 4 parse(arguments)
+DeleteCommandParser -> DeleteCommandParser : 5 parseDeleteItem(categoryName, indexString)
+DeleteCommandParser <-- DeleteCommandParser : 6 itemIndex
+create ":DeleteItemCommand" as DeleteItemCommand
+DeleteCommandParser -> DeleteItemCommand : 7 DeleteItemCommand(categoryName, itemIndex)
+DeleteCommandParser <-- DeleteItemCommand : 8 command
+Parser <-- DeleteCommandParser : 9 command
+InventoryDock <-- Parser : 10 command
+InventoryDock -> DeleteItemCommand : 11 execute(inventory, ui)
+DeleteItemCommand -> Inventory : 12 findCategoryByName(categoryName)
+DeleteItemCommand <-- Inventory : 13 category
 
-Parser -> DeleteCommandParser: parse(arguments)
-activate DeleteCommandParser
+alt [category is null]
+    DeleteItemCommand -> UI : 14 showCategoryNotFound(categoryName)
+    UI --> User : 15 display error
 
-DeleteCommandParser -> DeleteCommandParser: parseDeleteItem(categoryName, indexString)
-activate DeleteCommandParser
-DeleteCommandParser --> DeleteCommandParser: itemIndex
-deactivate DeleteCommandParser
+else [category found]
+    alt [itemIndex < 1 or itemIndex > category.getItemCount()]
+        DeleteItemCommand -> UI : 16 showError("Invalid item index: ...")
+        UI --> User : 17 display error
 
-create DeleteItemCommand
-DeleteCommandParser -> DeleteItemCommand: DeleteItemCommand(categoryName, itemIndex)
-activate DeleteItemCommand
-DeleteItemCommand --> DeleteCommandParser: command
-deactivate DeleteItemCommand
-DeleteCommandParser --> Parser: command
-deactivate DeleteCommandParser
-Parser --> InventoryDock: command
-deactivate Parser
-
-InventoryDock -> DeleteItemCommand: execute(inventory, ui)
-activate DeleteItemCommand
-DeleteItemCommand -> Inventory: findCategoryByName(categoryName)
-activate Inventory
-Inventory --> DeleteItemCommand: category
-deactivate Inventory
-
-alt category is null
-    DeleteItemCommand -> UI: showCategoryNotFound(categoryName)
-    activate UI
-    UI --> User: display error
-    deactivate UI
-else category found
-    alt itemIndex < 1 or itemIndex > category.getItemCount()
-        DeleteItemCommand -> UI: showError("Invalid item index: ...")
-        activate UI
-        UI --> User: display error
-        deactivate UI
-    else valid index
-        DeleteItemCommand -> Category: getItem(itemIndex - 1)
-        activate Category
-        Category --> DeleteItemCommand: item
-        deactivate Category
-
-        DeleteItemCommand -> Category: removeItem(itemIndex - 1)
-        activate Category
-        Category --> DeleteItemCommand
-        deactivate Category
-
-        DeleteItemCommand -> Item: getName()
-        activate Item
-        Item --> DeleteItemCommand: itemName
-        deactivate Item
-
-        DeleteItemCommand -> UI: showItemDeleted(itemName, categoryName)
-        activate UI
-        UI --> User: display confirmation
-        deactivate UI
+    else [valid index]
+        DeleteItemCommand -> Category : 18 getItem(itemIndex - 1)
+        DeleteItemCommand <-- Category : 19 item
+        DeleteItemCommand -> Category : 20 removeItem(itemIndex - 1)
+        DeleteItemCommand <-- Category : 21
+        DeleteItemCommand -> Item : 22 getName()
+        DeleteItemCommand <-- Item : 23 itemName
+        DeleteItemCommand -> UI : 24 showItemDeleted(itemName, categoryName)
+        UI --> User : 25 display confirmation
     end
 end
 
-DeleteItemCommand --> InventoryDock: display information
-deactivate DeleteItemCommand
-deactivate InventoryDock
-deactivate UI
-@enduml
+InventoryDock -> UI : 26 display information
 
+@enduml

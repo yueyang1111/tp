@@ -1,0 +1,25 @@
+@startuml
+title Sequence Diagram for FindItemByKeywordCommand (Result Display)
+
+autonumber
+hide footbox
+
+actor User
+participant ":FindItemByKeywordCommand" as FindItemByKeywordCommand
+participant ":UI" as UI
+
+alt no matches found
+    FindItemByKeywordCommand -> UI: showMessage("No items found matching keyword: ...")
+    activate UI
+    UI --> User: display no-match message
+    deactivate UI
+else matches found
+    FindItemByKeywordCommand -> UI: showDivider()
+    activate UI
+    FindItemByKeywordCommand -> UI: showMessage("Items matching keyword '...':")
+    FindItemByKeywordCommand -> UI: showNumberedList(matches)
+    FindItemByKeywordCommand -> UI: showDivider()
+    UI --> User: display matching items
+    deactivate UI
+end
+@enduml

@@ -1,0 +1,33 @@
+@startuml
+title Sequence Diagram for FindItemByKeywordCommand (Parse and Command Creation)
+
+autonumber
+hide footbox
+
+actor User
+participant ":UI" as UI
+participant ":InventoryDock" as InventoryDock
+participant ":Parser" as Parser
+participant ":FindItemParser" as FindItemParser
+participant ":FindItemByKeywordCommand" as FindItemByKeywordCommand
+
+User -> UI: enter find keyword command
+activate UI
+UI -> InventoryDock: input
+activate InventoryDock
+InventoryDock -> Parser: parse(input)
+activate Parser
+Parser -> FindItemParser: parse(arguments)
+activate FindItemParser
+create FindItemByKeywordCommand
+FindItemParser -> FindItemByKeywordCommand: FindItemByKeywordCommand(keyword)
+activate FindItemByKeywordCommand
+FindItemByKeywordCommand --> FindItemParser: command
+deactivate FindItemByKeywordCommand
+FindItemParser --> Parser: command
+deactivate FindItemParser
+Parser --> InventoryDock: command
+deactivate Parser
+deactivate InventoryDock
+deactivate UI
+@enduml

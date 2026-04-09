@@ -1,0 +1,35 @@
+@startuml
+title Sequence Diagram for FindItemByKeywordCommand (Inventory Scan and Keyword Matching)
+
+autonumber
+hide footbox
+
+participant ":FindItemByKeywordCommand" as FindItemByKeywordCommand
+participant ":Inventory" as Inventory
+participant ":Category" as Category
+participant ":Item" as Item
+
+FindItemByKeywordCommand -> Inventory: getCategories()
+activate Inventory
+Inventory --> FindItemByKeywordCommand: categories
+deactivate Inventory
+
+loop for each category in categories
+    FindItemByKeywordCommand -> Category: getItems()
+    activate Category
+    Category --> FindItemByKeywordCommand: items
+    deactivate Category
+
+    loop for each item in items
+        FindItemByKeywordCommand -> Item: getName()
+        activate Item
+        Item --> FindItemByKeywordCommand: itemName
+        deactivate Item
+
+        FindItemByKeywordCommand -> FindItemByKeywordCommand: itemNameLower.contains(keywordLower)
+        activate FindItemByKeywordCommand
+        FindItemByKeywordCommand --> FindItemByKeywordCommand
+        deactivate FindItemByKeywordCommand
+    end
+end
+@enduml

@@ -1134,244 +1134,42 @@ The following enhancements can be considered to improve the storage component.
 2. Instead of skipping malformed lines completely, the system could attempt partial recovery and
    provide more detailed diagnostics to the user. This would reduce potential data loss.
 
-### Delete Item Feature
+### Delete Feature
 
-Another core feature of the product is the ability to delete an item from a specific category using
-the command `delete category/CATEGORY index/INDEX`.
+The product provides two `delete` commands that share a common parser flow:
 
-This feature is necessary because users need to remove items that are no longer available, have been
-fully consumed, or were added by mistake. Without a targeted delete operation, users would have no way
-to keep the inventory accurate over time. The delete-item command solves this by allowing the user to
-specify the category and the 1-based index of the item to remove.
+1. `Parser` recognises the `delete` command word and delegates to `DeleteCommandParser`.
+2. `DeleteCommandParser` extracts the `category/` field and checks for an `index/` field.
+3. If `index/` is present, a `DeleteItemCommand` is created. Otherwise, a `DeleteCategoryCommand` is created.
+4. The command executes against `Inventory` and displays results through `UI`.
 
-For example, if the user enters `delete category/fruits index/1`, the system locates the `fruits`
-category, removes the first item in it, and displays a confirmation message showing which item was
-deleted.
+This section covers both subfeatures and highlights their unique behaviour.
 
-#### High-level design
+#### Delete Item
 
-At a high level, this feature fits into the existing command-based architecture of the application.
-The flow is as follows:
+Command format: `delete category/CATEGORY index/INDEX`
 
-1. The user enters a `delete` command with both `category/` and `index/` fields.
-2. `Parser` recognises the `delete` command word and delegates the remaining input to
-   `DeleteCommandParser`.
-3. `DeleteCommandParser` extracts the category name and index string, validates them, and creates a
-   `DeleteItemCommand`.
-4. The command is executed with access to the current `Inventory` and `UI`.
-5. The command looks up the category, validates the index, removes the item, and shows a confirmation
-   message.
+Removes a single item at the given 1-based index from the specified category. The command looks up the category via `inventory.findCategoryByName(...)`, validates the index range, retrieves the item with `category.getItem(itemIndex - 1)`, removes it with `category.removeItem(...)`, and shows a confirmation message.
 
-The main interaction for this flow is illustrated below.
+Validation is layered: `DeleteCommandParser` rejects missing fields, non-integer indices, and non-positive integers at parse time. `DeleteItemCommand` catches non-existent categories and out-of-range indices at execution time.
 
-![DeleteItemCommandMainFlow](diagrams/sequence/DeleteItemCommandMainFlow-Sequence_Diagram_for_DeleteItemCommand__Main_Control_Flow_Only_.png)
+Sequence diagram:
 
-The main structural relationships for this feature are shown below.
+![DeleteItemCommandMainFlow](diagrams/sequence/DeleteItemCommandMainFlow.png)
+
+Class and object diagrams:
 
 ![DeleteItemCommandClassDiagram](diagrams/class/DeleteItemCommandClassDiagram.png)
 
-A representative object snapshot for this feature is shown below.
-
 ![DeleteItemCommandObjectDiagram](diagrams/object/DeleteItemCommandObjectDiagram.png)
 
-This design was chosen because it follows the same separation of concerns used throughout the project:
+#### Delete Category
 
-- `Parser` and `DeleteCommandParser` interpret user input.
-- `DeleteItemCommand` performs the inventory mutation.
-- Model classes such as `Inventory`, `Category`, and `Item` hold the application state.
-- `UI` presents confirmation or error messages to the user.
+Command format: `delete category/CATEGORY`
 
-As a result, the delete-item feature integrates cleanly into the existing command pipeline without
-requiring changes to the overall architecture.
+Clears all items within the specified category. Because this is a higher-risk operation, the command prompts the user for confirmation (must type `yes`, case-insensitive) before proceeding. If the category is already empty, the prompt is skipped.
 
-#### Component-level implementation
-
-The feature is mainly implemented using the following classes:
-
-- `Parser`
-- `DeleteCommandParser`
-- `DeleteItemCommand`
-- `Inventory`
-- `Category`
-- `Item`
-- `UI`
-
-The responsibilities of these classes are as follows:
-
-- `Parser` detects the `delete` command word and delegates to `DeleteCommandParser`.
-- `DeleteCommandParser` tokenises the arguments, extracts `category/` and `index/` fields, validates
-  that the index is a positive integer, and constructs a `DeleteItemCommand`.
-- `DeleteItemCommand` performs the actual removal of the item from the inventory.
-- `Inventory` provides category lookup through `findCategoryByName(...)`.
-- `Category` provides item access through `getItem(...)` and removal through `removeItem(...)`.
-- `Item` provides the name of the deleted item for the confirmation message.
-- `UI` displays the result to the user.
-
-The parser logic deliberately separates field extraction from index validation.
-`DeleteCommandParser.parse(...)` handles tokenisation and field extraction, while the private helper
-`parseDeleteItem(...)` is responsible for converting the index string into a valid integer. This keeps
-each method focused on a single concern.
-
-#### Command execution flow
-
-When `DeleteItemCommand.execute()` is called, the implementation performs the following sequence:
-
-1. Assert that `inventory`, `ui`, and `categoryName` are not `null`.
-2. Call `inventory.findCategoryByName(categoryName)` to locate the target category.
-3. If the category is not found, call `ui.showCategoryNotFound(categoryName)` and return.
-4. Check whether `itemIndex` is within the valid range (1 to `category.getItemCount()`).
-5. If the index is out of range, call `ui.showError(...)` with a message describing the valid range
-   and return.
-6. Retrieve the item at position `itemIndex - 1` using `category.getItem(...)`.
-7. Remove the item at position `itemIndex - 1` using `category.removeItem(...)`.
-8. Log the deletion at `INFO` level.
-9. Call `ui.showItemDeleted(item.getName(), category.getName())` to confirm the deletion to the user.
-
-#### Error handling and validation
-
-Validation is split across the parser layer and the command layer.
-
-`DeleteCommandParser` rejects input that is empty, contains unrecognised fields, or is missing the
-required `category/` field. If `index/` is provided, `parseDeleteItem(...)` rejects non-integer values
-and non-positive integers before a `DeleteItemCommand` is created.
-
-`DeleteItemCommand` performs execution-time checks. If the category does not exist in the inventory,
-the command shows a category-not-found message. If the index is out of bounds for the resolved
-category, the command shows an error message indicating the valid range.
-
-This layered approach ensures that syntactically invalid input is caught at parse time, while
-semantically invalid operations such as referencing a missing category or an out-of-range index are
-caught at execution time.
-
-#### Alternatives considered
-
-Several alternatives were considered when implementing this feature.
-
-Alternative 1: Delete by item name instead of index.
-
-This was rejected because multiple items can share the same name across or within categories. Using an
-index removes ambiguity and ensures the user can target a specific item.
-
-Alternative 2: Require a confirmation prompt before every item deletion.
-
-This was rejected because individual item deletions are low-risk and easily reversible by re-adding the
-item. The confirmation prompt is reserved for the higher-impact `DeleteCategoryCommand`, which clears
-all items in a category at once.
-
-Alternative 3: Let `DeleteCommandParser` also handle the category-not-found check.
-
-This was rejected because category existence is a runtime concern that depends on the current inventory
-state. Keeping this check in the command layer preserves the separation between parsing and execution.
-
-#### Current limitations
-
-The current implementation has some limitations.
-
-- There is no undo mechanism. Once an item is deleted, it must be manually re-added.
-- The command uses a 1-based index, which requires the user to run `list` or `find` beforehand to
-  determine the correct index.
-- Deleting an item shifts the indices of subsequent items, which may confuse users performing multiple
-  consecutive deletions.
-
-These limitations are acceptable for the current project scope.
-
-#### Possible future improvements
-
-If this feature is extended in future versions, the following improvements could be considered:
-
-- Add an undo or soft-delete mechanism that allows recently deleted items to be restored.
-- Support deletion by item name with a disambiguation prompt when multiple matches exist.
-- Display the updated item list after a successful deletion so the user can see the new indices.
-- Support batch deletion by accepting multiple indices in a single command.
-
-### Delete Category Feature
-
-Another core feature of the product is the ability to clear all items within a category using the
-command `delete category/CATEGORY`.
-
-This feature is necessary because users sometimes need to remove an entire category's worth of items
-at once, for example when a product line is discontinued or when restocking requires a full reset of
-a category. Without a bulk-delete operation, users would have to remove each item individually using
-`delete category/CATEGORY index/INDEX`, which is tedious and error-prone for categories with many items.
-
-For example, if the user enters `delete category/fruits`, the system locates the `fruits` category,
-prompts the user for confirmation if items exist, and clears all items upon receiving a `yes` response.
-
-#### High-level design
-
-At a high level, this feature reuses the same command-based architecture and parser pipeline as the
-single-item delete feature. The flow is as follows:
-
-1. The user enters a `delete` command with only the `category/` field and no `index/` field.
-2. `Parser` recognises the `delete` command word and delegates to `DeleteCommandParser`.
-3. `DeleteCommandParser` detects that no `index/` field is present and creates a
-   `DeleteCategoryCommand` instead of a `DeleteItemCommand`.
-4. The command is executed with access to the current `Inventory` and `UI`.
-5. If the category is not empty, the command prompts the user for confirmation via `UI`.
-6. If the user confirms, the command clears all items from the category.
-
-The main interaction for this flow is illustrated below.
-
-![DeleteCategoryCommandMainFlow](diagrams/sequence/DeleteCategoryCommandMainFlow-Sequence_Diagram_for_DeleteCategoryCommand__Main_Control_Flow_Only_.png)
-
-The main structural relationships for this feature are shown below.
-
-![DeleteCategoryCommandClassDiagram](diagrams/class/DeleteCategoryCommandClassDiagram.png)
-
-A representative object snapshot for this feature is shown below.
-
-![DeleteCategoryCommandObjectDiagram](diagrams/object/DeleteCategoryCommandObjectDiagram.png)
-This design was chosen because it follows the same separation of concerns used throughout the project:
-
-- `DeleteCommandParser` interprets user input and decides which delete command to create.
-- `DeleteCategoryCommand` performs the confirmation and bulk-clear logic.
-- Model classes such as `Inventory` and `Category` hold the application state.
-- `UI` handles the confirmation prompt and result messages.
-
-The key design distinction from `DeleteItemCommand` is the confirmation prompt. Because clearing an
-entire category is a higher-risk operation than removing a single item, the command requires the user
-to type `yes` before proceeding. This prevents accidental data loss.
-
-#### Component-level implementation
-
-The feature is mainly implemented using the following classes:
-
-- `Parser`
-- `DeleteCommandParser`
-- `DeleteCategoryCommand`
-- `Inventory`
-- `Category`
-- `UI`
-
-The responsibilities of these classes are as follows:
-
-- `Parser` detects the `delete` command word and delegates to `DeleteCommandParser`.
-- `DeleteCommandParser` determines that no `index/` field is present and constructs a
-  `DeleteCategoryCommand` with the category name.
-- `DeleteCategoryCommand` performs the category lookup, confirmation prompt, and item clearing.
-- `Inventory` provides category lookup through `findCategoryByName(...)`.
-- `Category` provides `isEmpty()`, `getItemCount()`, and `getItems().clear()` for the clearing logic.
-- `UI` displays the confirmation prompt, cancellation message, or cleared-category message.
-
-#### Command execution flow
-
-When `DeleteCategoryCommand.execute()` is called, the implementation performs the following sequence:
-
-1. Assert that `inventory`, `ui`, and `categoryName` are not `null`.
-2. Call `inventory.findCategoryByName(categoryName)` to locate the target category.
-3. If the category is not found, call `ui.showCategoryNotFound(categoryName)` and return.
-4. If the category is not empty:
-   a. Call `ui.showDeleteCategoryConfirmation(categoryName, category.getItemCount())` to display the
-   prompt.
-   b. Read the user's response via `ui.readCommand()`.
-   c. If the response is not `yes` (case-insensitive), call
-   `ui.showDeleteCategoryCancelled(categoryName)` and return.
-   d. Call `category.getItems().clear()` to remove all items.
-   e. Call `ui.showCategoryItemsCleared(categoryName)`.
-5. Log the deletion at `INFO` level.
-6. Call `ui.showCategoryDeleted(categoryName)`.
-
-The core confirmation logic is:
+The core confirmation logic:
 
 ```java
 if (!category.isEmpty()) {
@@ -1388,190 +1186,50 @@ if (!category.isEmpty()) {
 }
 ```
 
-This ensures that the user is always informed of the consequences before a bulk deletion proceeds.
+Sequence diagram:
 
-#### Error handling and validation
+![DeleteCategoryCommandMainFlow](diagrams/sequence/DeleteCategoryCommandMainFlow.png)
 
-Validation is split across the parser layer and the command layer.
+Class and object diagrams:
 
-`DeleteCommandParser` handles syntax-level validation. It rejects empty input, unrecognised fields,
-and missing `category/` fields before any command object is created.
+![DeleteCategoryCommandClassDiagram](diagrams/class/DeleteCategoryCommandClassDiagram.png)
 
-`DeleteCategoryCommand` handles execution-time validation. If the category does not exist in the
-inventory, the command shows a category-not-found message via `UI`. If the user does not confirm the
-deletion (including providing a `null` response), the command cancels gracefully.
+![DeleteCategoryCommandObjectDiagram](diagrams/object/DeleteCategoryCommandObjectDiagram.png)
 
-The confirmation check uses `equalsIgnoreCase("yes")`, which means responses such as `Yes`, `YES`,
-and `YeS` are all accepted.
+#### Design decisions
 
-#### Alternatives considered
+- **Index-based deletion** was chosen over name-based deletion because multiple items can share the same name.
+- **Confirmation prompt** is used only for category clearing (high-risk), not for single-item deletion (low-risk, easily reversible).
+- **Category clearing** removes items but preserves the category object, since categories are predefined.
+- The `delete` command word is reused for both operations; the parser distinguishes them by the presence of `index/`.
 
-Several alternatives were considered when implementing this feature.
+#### Current limitations and future improvements
 
-Alternative 1: Remove the category object from the inventory entirely instead of clearing its items.
+- No undo mechanism; deleted items must be re-added manually.
+- Deleting an item shifts subsequent indices, which may confuse users performing consecutive deletions.
+- The confirmation prompt accepts only `yes`; other affirmative phrases are treated as cancellations.
 
-This was rejected because categories in the application are predefined. Removing the category object
-would prevent users from adding items back into the same category later without recreating it.
-
-Alternative 2: Skip the confirmation prompt and clear immediately.
-
-This was rejected because clearing all items in a category is a high-impact operation. A confirmation
-prompt prevents accidental data loss and gives the user a chance to reconsider.
-
-Alternative 3: Require a different command word such as `clear` instead of reusing `delete`.
-
-This was rejected because reusing the `delete` command word with different argument patterns is more
-consistent with the existing command structure. The parser can distinguish between item deletion and
-category clearing based on the presence or absence of the `index/` field.
-
-#### Current limitations
-
-The current implementation has some limitations.
-
-- There is no undo mechanism. Once items are cleared, they must be re-added manually.
-- The confirmation prompt accepts only `yes` as a positive response. Other affirmative phrases are
-  treated as cancellations.
-- If the category is already empty, the command still calls `showCategoryDeleted` without informing
-  the user that no items were actually removed.
-
-These limitations are acceptable for the current project scope.
-
-#### Possible future improvements
-
-If this feature is extended in future versions, the following improvements could be considered:
-
-- Add an undo or soft-delete mechanism to restore recently cleared categories.
-- Display the list of items that will be removed before the confirmation prompt.
-- Inform the user explicitly when the category was already empty.
-- Support clearing multiple categories in a single command.
+Possible improvements include an undo/soft-delete mechanism, batch deletion, deletion by item name with disambiguation, and displaying updated indices after deletion.
 
 ### Help Feature
 
-The product also supports displaying help information using the `help` command.
+Command format: `help`
 
-This feature is important because new users need a quick reference to discover which commands are
-available without reading external documentation first. The help command provides a summary of
-available commands and directs the user to the full User Guide for detailed usage and examples.
+Displays a summary of available commands and a link to the User Guide. The command is intentionally minimal: `HelpCommand.execute()` delegates entirely to `ui.showHelp()`, which prints the command list and URL.
 
-For example, when the user enters `help`, the system displays the list of command words and a URL
-to the User Guide.
+This design keeps help output concise and avoids duplicating detailed usage that already exists in the User Guide. The command summary is currently hard-coded in `UI.showHelp()`.
 
-#### High-level design
-
-At a high level, the feature is intentionally minimal and fits directly into the existing command
-architecture:
-
-1. The user enters a `help` command.
-2. `Parser` recognises the command word and constructs a `HelpCommand`.
-3. `InventoryDock` executes the command with the current `Inventory` and `UI`.
-4. `HelpCommand` delegates rendering to `UI.showHelp()`.
-5. `UI` prints the available commands and the User Guide link.
-
-The main interaction for this flow is illustrated below.
+Sequence diagram:
 
 ![HelpCommandMainFlow](diagrams/sequence/HelpCommandMainFlow-Sequence_Diagram_for_HelpCommand__Main_Control_Flow_Only_.png)
 
-The main structural relationships for this feature are shown below.
+Class and object diagrams:
 
 ![HelpCommandClassDiagram](diagrams/class/HelpCommandClassDiagram.png)
 
-A representative object snapshot for this feature is shown below.
-
 ![HelpCommandObjectDiagram](diagrams/object/HelpCommandObjectDiagram.png)
 
-This design was chosen because displaying help does not require separate parsing logic beyond
-recognising the command word. The command object acts as a bridge between the parser and the UI,
-consistent with the architecture used for `ListCommand` and other simple commands.
-
-#### Component-level implementation
-
-The feature is mainly implemented using the following classes:
-
-- `Parser`
-- `HelpCommand`
-- `UI`
-
-The responsibilities of these classes are as follows:
-
-- `Parser` detects the `help` command and returns a new `HelpCommand`.
-- `HelpCommand` represents the help operation and triggers the display behaviour.
-- `UI` formats and prints the help message including the command summary and User Guide link.
-
-This design keeps the command itself lightweight. Since help is a read-only operation that does not
-interact with the inventory, the command simply delegates to `UI.showHelp()`.
-
-#### Command execution flow
-
-When `HelpCommand.execute()` is called, the implementation performs the following sequence:
-
-1. Call `ui.showHelp()`.
-2. Inside `UI.showHelp()`:
-   a. Display a divider.
-   b. Print the list of available command words: `add, delete, update, find, list, help, bye`.
-   c. Print a blank line.
-   d. Print a message directing the user to the User Guide URL.
-   e. Display a closing divider.
-
-The command logic is intentionally short:
-
-```java
-public void execute(Inventory inventory, UI ui) {
-    ui.showHelp();
-}
-```
-
-This reflects the design decision that `HelpCommand` should trigger the operation, while formatting
-and presentation remain the responsibility of the UI.
-
-#### Why the feature is implemented this way
-
-The most important design choice here is that the help command shows a brief summary of command words
-and a User Guide link instead of displaying detailed usage for every command inline.
-
-This was chosen for two reasons.
-
-First, it keeps the help output concise. Displaying full command formats, examples, and notes for
-every command would produce a very long output that is difficult to scan quickly. A short summary
-with a link to external documentation strikes a better balance.
-
-Second, it avoids duplication. If detailed usage were maintained both in the help output and in the
-User Guide, any change to a command format would need to be updated in two places.
-
-#### Alternatives considered
-
-Several alternatives were considered when implementing this feature.
-
-Alternative 1: Display full usage details for every command directly in the help output.
-
-This was rejected because it produces a long wall of text that is hard to read in a CLI environment.
-Users who need detailed guidance are better served by the User Guide.
-
-Alternative 2: Support `help COMMAND` to show usage for a specific command.
-
-This is a reasonable enhancement for the future, but was not implemented in the current version to
-keep the feature simple.
-
-Alternative 3: Remove the help command entirely and rely on the User Guide alone.
-
-This was rejected because users expect a `help` command in a CLI application. Even a brief response
-reassures the user that help is available and points them to the right resource.
-
-#### Current limitations
-
-The current implementation has some limitations.
-
-- The command does not support targeted help for individual commands.
-- The command summary is hard-coded in `UI.showHelp()`, so adding a new command requires updating
-  the help output manually.
-
-These limitations are acceptable for the current project scope.
-
-#### Possible future improvements
-
-If this feature is extended in future versions, the following improvements could be considered:
-
-- Support `help COMMAND` to display detailed usage for a specific command.
-- Auto-generate the command list from a registry instead of hard-coding it.
+A possible future improvement is supporting `help COMMAND` to show detailed usage for a specific command.
 
 ## Product scope
 ### Target user profile

@@ -1,99 +1,57 @@
-@startuml
-title Sequence Diagram for DeleteCategoryCommand (Main Control Flow Only)
-
-autonumber
-hide footbox
-
+@startuml Sequence Diagram for DeleteCategoryCommand
 actor User
 participant ":UI" as UI
 participant ":InventoryDock" as InventoryDock
 participant ":Parser" as Parser
 participant ":DeleteCommandParser" as DeleteCommandParser
-participant ":DeleteCategoryCommand" as DeleteCategoryCommand
 participant ":Inventory" as Inventory
 participant ":Category" as Category
 
-User -> UI: enter delete category command
-activate UI
-UI -> InventoryDock: input
-activate InventoryDock
-InventoryDock -> Parser: parse(input)
-activate Parser
+User -> UI : 1 enter delete category command
+UI -> InventoryDock : 2 input
+InventoryDock -> Parser : 3 parse(input)
+Parser -> DeleteCommandParser : 4 parse(arguments)
+create ":DeleteCategoryCommand" as DeleteCategoryCommand
+DeleteCommandParser -> DeleteCategoryCommand : 5 DeleteCategoryCommand(categoryName)
+DeleteCommandParser <-- DeleteCategoryCommand : 6 command
+Parser <-- DeleteCommandParser : 7 command
+InventoryDock <-- Parser : 8 command
+InventoryDock -> DeleteCategoryCommand : 9 execute(inventory, ui)
+DeleteCategoryCommand -> Inventory : 10 findCategoryByName(categoryName)
+DeleteCategoryCommand <-- Inventory : 11 category
 
-Parser -> DeleteCommandParser: parse(arguments)
-activate DeleteCommandParser
+alt [category is null]
+    DeleteCategoryCommand -> UI : 12 showCategoryNotFound(categoryName)
+    UI --> User : 13 display error
 
-create DeleteCategoryCommand
-DeleteCommandParser -> DeleteCategoryCommand: DeleteCategoryCommand(categoryName)
-activate DeleteCategoryCommand
-DeleteCategoryCommand --> DeleteCommandParser: command
-deactivate DeleteCategoryCommand
-DeleteCommandParser --> Parser: command
-deactivate DeleteCommandParser
-Parser --> InventoryDock: command
-deactivate Parser
+else [category found]
+    alt [category is not empty]
+        DeleteCategoryCommand -> Category : 14 getItemCount()
+        DeleteCategoryCommand <-- Category : 15 itemCount
+        DeleteCategoryCommand -> UI : 16 showDeleteCategoryConfirmation(categoryName, itemCount)
+        UI --> User : 17 display confirmation prompt
+        DeleteCategoryCommand -> UI : 18 readCommand()
+        DeleteCategoryCommand <-- UI : 19 response
 
-InventoryDock -> DeleteCategoryCommand: execute(inventory, ui)
-activate DeleteCategoryCommand
-DeleteCategoryCommand -> Inventory: findCategoryByName(categoryName)
-activate Inventory
-Inventory --> DeleteCategoryCommand: category
-deactivate Inventory
+        alt [response is not "yes"]
+            DeleteCategoryCommand -> UI : 20 showDeleteCategoryCancelled(categoryName)
+            UI --> User : 21 display cancellation
 
-alt category is null
-    DeleteCategoryCommand -> UI: showCategoryNotFound(categoryName)
-    activate UI
-    UI --> User: display error
-    deactivate UI
-else category found
-    alt category is not empty
-        DeleteCategoryCommand -> Category: getItemCount()
-        activate Category
-        Category --> DeleteCategoryCommand: itemCount
-        deactivate Category
-
-        DeleteCategoryCommand -> UI: showDeleteCategoryConfirmation(categoryName, itemCount)
-        activate UI
-        UI --> User: display confirmation prompt
-        deactivate UI
-
-        DeleteCategoryCommand -> UI: readCommand()
-        activate UI
-        UI --> DeleteCategoryCommand: response
-        deactivate UI
-
-        alt response is not "yes"
-            DeleteCategoryCommand -> UI: showDeleteCategoryCancelled(categoryName)
-            activate UI
-            UI --> User: display cancellation
-            deactivate UI
-        else response is "yes"
-            DeleteCategoryCommand -> Category: getItems().clear()
-            activate Category
-            Category --> DeleteCategoryCommand
-            deactivate Category
-
-            DeleteCategoryCommand -> UI: showCategoryItemsCleared(categoryName)
-            activate UI
-            UI --> User: display items cleared
-            deactivate UI
-
-            DeleteCategoryCommand -> UI: showCategoryDeleted(categoryName)
-            activate UI
-            UI --> User: display confirmation
-            deactivate UI
+        else [response is "yes"]
+            DeleteCategoryCommand -> Category : 22 getItems().clear()
+            DeleteCategoryCommand <-- Category : 23
+            DeleteCategoryCommand -> UI : 24 showCategoryItemsCleared(categoryName)
+            UI --> User : 25 display items cleared
+            DeleteCategoryCommand -> UI : 26 showCategoryDeleted(categoryName)
+            UI --> User : 27 display confirmation
         end
-    else category is empty
-        DeleteCategoryCommand -> UI: showCategoryDeleted(categoryName)
-        activate UI
-        UI --> User: display confirmation
-        deactivate UI
+
+    else [category is empty]
+        DeleteCategoryCommand -> UI : 28 showCategoryDeleted(categoryName)
+        UI --> User : 29 display confirmation
     end
 end
 
-DeleteCategoryCommand --> InventoryDock: display information
-deactivate DeleteCategoryCommand
-deactivate InventoryDock
-deactivate UI
-@enduml
+InventoryDock -> UI : 30 display information
 
+@enduml
