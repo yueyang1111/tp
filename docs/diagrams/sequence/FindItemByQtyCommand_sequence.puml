@@ -72,7 +72,7 @@ alt no matches found
     FindItemByQtyCommand -> UI: showMessage(noItemsMessage)
     UI --> User: display no-match message
     deactivate UI
-else matches found
+else else
     FindItemByQtyCommand -> UI: formatFoundItemsMessage(matches.size(), "with quantity '" + qtyInput + "'")
     activate UI
     UI --> FindItemByQtyCommand: foundItemsMessage
@@ -91,3 +91,5 @@ deactivate FindItemByQtyCommand
 deactivate InventoryDock
 deactivate UI
 @enduml
+
+

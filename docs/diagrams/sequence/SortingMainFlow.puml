@@ -77,6 +77,8 @@ else valid sort type
             activate SortCommand
             SortCommand --> SortCommand
             deactivate SortCommand
+        else else
+            SortCommand --> InventoryDock: throw InvalidCommandException
         end
 
         SortCommand --> SortCommand: comparator
@@ -122,6 +124,8 @@ else valid sort type
         SortCommand --> SortCommand: "quantity"
     else sortType is "expirydate"
         SortCommand --> SortCommand: "expiry date"
+    else else
+        SortCommand --> InventoryDock: throw InvalidCommandException
     end
     deactivate SortCommand
 
@@ -132,6 +136,9 @@ else valid sort type
 
     SortCommand --> InventoryDock
     deactivate SortCommand
+else else
+    SortCommandParser --> Parser: throw InvalidCommandException
+    Parser --> InventoryDock: exception
 end
 
 @enduml

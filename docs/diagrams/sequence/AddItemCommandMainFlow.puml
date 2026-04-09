@@ -68,6 +68,13 @@ else other supported category
     activate AddItemCommandParser
     AddItemCommandParser --> AddCommandParser: command
     deactivate AddItemCommandParser
+else else
+    AddCommandParser --> Parser: throw InvalidCommandException("Unknown category: " + category)
+    deactivate AddCommandParser
+    Parser --> InventoryDock: exception
+    deactivate Parser
+    deactivate InventoryDock
+    deactivate UI
 end
 
 AddCommandParser --> Parser: command
