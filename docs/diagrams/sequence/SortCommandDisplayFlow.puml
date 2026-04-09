@@ -1,0 +1,55 @@
+@startuml
+title Sequence Diagram for SortCommand (Sorted Inventory Display)
+
+autonumber
+hide footbox
+
+actor User
+participant ":SortCommand" as SortCommand
+participant ":UI" as UI
+participant ":Inventory" as Inventory
+participant ":Category" as Category
+
+User -> SortCommand: execute(inventory, ui)
+activate SortCommand
+
+SortCommand -> SortCommand: formatSortLabel()
+activate SortCommand
+SortCommand --> SortCommand: sortLabel
+deactivate SortCommand
+
+SortCommand -> UI: showSortedInventory(inventory, sortedItemsByCategory, sortLabel)
+activate UI
+
+UI -> Inventory: getCategories()
+activate Inventory
+Inventory --> UI: categories
+deactivate Inventory
+
+alt inventory is empty
+    UI -> User: display "Inventory is empty."
+else categories exist
+    UI -> User: display sorted inventory header
+
+    loop for each category
+        UI -> Category: getName()
+        activate Category
+        Category --> UI: category name
+        deactivate Category
+
+        UI -> Category: getItemCount()
+        activate Category
+        Category --> UI: item count
+        deactivate Category
+
+        UI -> User: display category details
+        UI -> User: display corresponding sorted item list
+    end
+end
+
+UI --> SortCommand
+deactivate UI
+
+SortCommand --> User
+deactivate SortCommand
+@enduml

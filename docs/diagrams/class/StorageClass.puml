@@ -9,33 +9,15 @@ class Storage {
   + load(inventory: Inventory, ui: UI)
   + save(inventory: Inventory)
   - parseStoredLine(line: String, parser: AddItemCommandParser)
-  - extractCategory(line: String)
-  - formatItem(item: Item, categoryName: String)
 }
 
-class AddItemCommandParser {
-  + handleFruit(input: String)
-  + handleSnack(input: String)
-  + handleDrinks(input: String)
-  + handleVegetables(input: String)
-  + handleToiletries(input: String)
-  + handleIceCream(input: String)
-  + handleSweets(input: String)
-  + handleBurger(input: String)
-  + handleSetMeal(input: String)
-  + handleSeafood(input: String)
-  + handleMeat(input: String)
-  + handlePetFood(input: String)
-  + handleAccessories(input: String)
-}
+class AddItemCommandParser
 
 class "{abstract}\nCommand" as Command {
   + execute(inventory: Inventory, ui: UI)
 }
 
 class AddItemCommand {
-  - categoryName: String
-  - item: Item
   + execute(inventory: Inventory, ui: UI)
 }
 
@@ -44,7 +26,6 @@ class Inventory {
 }
 
 class Category {
-  - name: String
   + getName()
   + getItems()
 }
@@ -57,8 +38,7 @@ class UI {
   + showSkippedLine(line: String, reason: String)
 }
 
-class File {
-}
+class File
 
 note as N1
   Storage loads persisted lines by reusing

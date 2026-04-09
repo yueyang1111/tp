@@ -1,0 +1,47 @@
+@startuml
+title Sequence Diagram for SortCommand (Parse and Command Creation)
+
+autonumber
+hide footbox
+
+actor User
+participant ":UI" as UI
+participant ":InventoryDock" as InventoryDock
+participant ":Parser" as Parser
+participant ":SortCommandParser" as SortCommandParser
+participant ":SortCommand" as SortCommand
+
+User -> UI: enter sort command
+activate UI
+UI -> InventoryDock: input
+activate InventoryDock
+InventoryDock -> Parser: parse(input)
+activate Parser
+
+Parser -> SortCommandParser: parse(arguments)
+activate SortCommandParser
+SortCommandParser -> SortCommandParser: trim input
+activate SortCommandParser
+SortCommandParser --> SortCommandParser
+deactivate SortCommandParser
+
+alt input is empty
+    SortCommandParser --> Parser: throw MissingArgumentException
+else sort type is invalid
+    SortCommandParser --> Parser: throw InvalidCommandException
+else valid sort type
+    create SortCommand
+    SortCommandParser -> SortCommand: SortCommand(sortType)
+    activate SortCommand
+    SortCommand --> SortCommandParser: command
+    deactivate SortCommand
+
+    SortCommandParser --> Parser: command
+end
+
+deactivate SortCommandParser
+Parser --> InventoryDock: command / exception
+deactivate Parser
+deactivate InventoryDock
+deactivate UI
+@enduml

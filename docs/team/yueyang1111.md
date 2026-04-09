@@ -110,7 +110,6 @@ These are the parts in the user guide that I have wrote or updated:
 
 - [Storage Feature](../UserGuide.md#data-storage)
 - [Sorting feature](../UserGuide.md#sorting-items-sort)
-- [Error Handling](../UserGuide.md#error-handling)
 
 ### Contributions to the Developer Guide
 
@@ -138,7 +137,7 @@ I also contributed to and updated UML sequence diagrams to illustrate the storag
 between components, as well as the sorting command execution flow.
 
 Class diagrams I contributed:
-- [OverallClass.puml](../diagrams/class/OverallClass.puml)
+- [ArchitectureDiagram.puml](../diagrams/ArchitectureDiagram.puml)
 - [SortingClassDiagram.puml](../diagrams/class/SortingClassDiagram.puml)
 - [StorageClassDiagram.puml](../diagrams/class/StorageClass.puml)
 
@@ -148,7 +147,9 @@ Object diagrams I contributed:
 - [StorageSavingObjectDiagram.puml](../diagrams/object/StorageSavingObjectDiagram.puml)
   
 Sequence diagrams I contributed:
-- [SortingMainFlow.puml](../diagrams/sequence/SortingMainFlow.puml)
+- [SortCommandDisplayFlow.puml](../diagrams/sequence/SortCommandDisplayFlow.puml)
+- [SortCommandParseFlow.puml](../diagrams/sequence/SortCommandParseFlow.puml)
+- [SortCommadSortingFlow.puml](../diagrams/sequence/SortCommandSortingFlow.puml)
 - [StorageLoadingMainFlow.puml](../diagrams/sequence/StorageLoadingMainFlow.puml)
 - [StorageSavingMainFlow.puml](../diagrams/sequence/StorageSavingMainFlow.puml)
 
@@ -157,6 +158,7 @@ Sequence diagrams I contributed:
 1. Helped improve project reliability by refining core infrastructure such as exception handling, storage, and logging.
 2. Assisted with integration work related to parser logic and feature interaction.
 3. Helped maintain code quality through cleanup, validation improvements, and debugging support.
+4. Added automated tests for `Storage`, `LoggerConfig`, `DateParser`, and some of the category parsing.
 
 ### Review and Mentoring Contributions
 

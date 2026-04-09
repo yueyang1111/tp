@@ -806,13 +806,9 @@ The product also supports displaying the current inventory with items sorted wit
 the `sort` command.
 
 This feature is useful because users may want to inspect the inventory from a different perspective without changing 
-the actual stored order of items. For example, a user may want to see which items are expiring earliest, which items 
-have the lowest quantity or items in alphabetical order. The sort command solves this by generating a sorted view 
-of the inventory while keeping items group under their original categories.
-
-For example, if the user enters`sort expirydate`, the system displays all categories as usual, but the items inside 
-each category are shown in ascending expiry date order, allowing the user to quickly identify items that are
-expiring soon.
+the actual stored order of items. For example, if the user enters`sort expirydate`, the system displays all categories 
+as usual, but the items inside each category are shown in ascending expiry date order, allowing the user to quickly 
+identify items that are expiring soon.
 
 #### High-level design
 
@@ -854,6 +850,10 @@ The responsibilities these classes are as follows:
 This design keeps parsing, sorting and presentation responsibilities separate, The parser only interprets
 the command, the command prepares the sorted result and the UI remains responsible for rendering it.
 
+The main structural relationships for this feature are shown below.
+
+![SortingClassDiagram](diagrams/class/SortingClassDiagram.png)
+
 #### Command execution flow
 
 When `SortCommand.execute()` is called the implementation performs the following sequence:
@@ -869,13 +869,20 @@ When `SortCommand.execute()` is called the implementation performs the following
 This means the command does not directly modify the order of items stored inside the actual inventory. Instead, it
 prepares a sorted view for display.
 
-The main interaction for this flow is illustrated below.
+The sort feature can be understood as three smaller interactions: parsing the command, preparing the sorted view, 
+and displaying the sorted inventory.
 
-![SortingMainFlow](diagrams/sequence/SortingMainFlow.png)
+The parsing and command creation flow is shown below.
 
-The main structural relationships for this feature are shown below.
+![SortCommandParseFlow](diagrams/sequence/SortCommandParseFlow.png)
 
-![SortingClassDiagram](diagrams/class/SortingClassDiagram.png)
+The sorting preparation flow is shown below.
+
+![SortCommandSortingFlow](diagrams/sequence/SortCommandSortingFlow.png)
+
+The sorted inventory display flow is shown below.
+
+![SortCommandDisplayFlow](diagrams/sequence/SortCommandDisplayFlow.png)
 
 A representative object snapshot for this feature is shown below.
 
@@ -926,10 +933,10 @@ sorted. This keeps the output structure familiar and consistent with the normal 
 
 Input validation is handled mainly by `SortCommandParser`.
 
-If the user enters `sort` without providing a sort type, the parser throws a `InventoryDockException` indicating that a valid
-sort type is required.
+If the user enters `sort` without providing a sort type, the parser throws a `MissingArgumentException` indicating 
+that a valid sort type is required.
 
-If the user provides an unsupported sort type, the parser throws a `InventoryDockException` listing the valid options,
+If the user provides an unsupported sort type, the parser throws a `InvalidCommandException` listing the valid options,
 such as `name`, `expirydate`, and `qty`.
 
 At execution time, the command handles an empty inventory gracefully. The UI displays the appropriate empty inventory
@@ -1061,13 +1068,7 @@ When the application loads data from file, `Storage` performs the following sequ
 7. Skip malformed lines where appropriate.
 8. Continue until the entire file has been processed.
 
-This design allows the application to reconstruct the same logical inventory state from the
-saved text data.
-
-The loading process depends on the file format remaining consistent with the save format.
-Since both directions are controlled by `Storage`, the implementation can ensure that the data
-written is also the data that can be read back correctly.
-
+This design allows the application to reconstruct the same logical inventory state from the saved text data. 
 This approach reuses existing parsing logic, ensuring consistency between user input handling and
 stored data reconstruction.
 
@@ -1087,9 +1088,8 @@ If the file does not exist, the application can start with an empty inventory in
 crashing. This is because the absence of a save file may simply mean that the program is being
 run for the first time.
 
-If a line is malformed, the exception is caught and the line is skipped. A warning is
-logged and the user is informed via the UI, detailing the line that was skipped and the
-reason for skipping.
+If a line is malformed, the exception is caught and the line is skipped. The user is informed via the UI, detailing 
+the line that was skipped and the reason for skipping.
 
 #### Why the storage component is implemented this way
 
@@ -1102,16 +1102,12 @@ libraries or database setup, which makes the application easier to develop and t
 Second, the saved data is readable which is useful during debugging because we can inspect the
 contents of the file directly and verify whether items are being written correctly.
 
-Third, the amount of data in the application is relatively small. Hence, a plain text file is
-sufficient and avoids unnecessary complexity.
-
 #### Alternatives considered
 
 Alternative 1: Store each category in a separate file.
 
-This could improve file organization, especially if categories become large. It was rejected because
-it would make file management more complicated and require the application to coordinate multiple
-save files instead of just one.
+This could improve file organization, especially if categories become large. It was rejected because it would 
+make file management more complicated and require coordinating multiple saved files instead of just one.
 
 Alternative 2: Use JSON format.
 
@@ -1123,15 +1119,11 @@ introduce additional complexity which is unnecessary for our project scope.
 The current storage implementation has several limitations.
 
 1. The storage system relies on a fixed text format with prefixes such as `category/`, `item/`.
-   If the format is modified or corrupted, the parser may fail to reconstruct the item correctly.
-2. During loading, each stored line is converted into a Command using `AddItemCommandParser` and executed.
-   While this ensures consistency with user input handling, it introduces coupling between storage logic and
-   command parsing logic. Any changes in parsing behaviour may affect the loading process.
-3. Malformed or corrupted lines are skipped during loading. While this prevents crashes, it may result
+   If the format is modified or corrupted, the parser will fail to reconstruct the item correctly.
+2. Malformed or corrupted lines are skipped during loading. While this prevents crashes, it may result
    in data loss and incomplete reconstruction of the inventory.
 
-For the current version of the application, these limitations are acceptable, but they may become
-relevant if the system grows more complex.
+For the current version of the application, these limitations are still acceptable.
 
 #### Possible future improvements
 
@@ -1139,9 +1131,7 @@ The following enhancements can be considered to improve the storage component.
 
 1. Introduce structured storage format, such as JSON. This will help to improve robustness and
    make format easier to extend.
-2. The system could directly construct `Item` objects instead of converting stored lines into
-   commands. This would reduce coupling and improve clarity of storage logic.
-3. Instead of skipping malformed lines completely, the system could attempt partial recovery and
+2. Instead of skipping malformed lines completely, the system could attempt partial recovery and
    provide more detailed diagnostics to the user. This would reduce potential data loss.
 
 ### Delete Item Feature

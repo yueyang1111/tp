@@ -1,0 +1,73 @@
+@startuml
+title Sequence Diagram for SortCommand (Sorting Preparation)
+
+autonumber
+hide footbox
+
+participant ":SortCommand" as SortCommand
+participant ":Inventory" as Inventory
+participant ":Category" as Category
+participant ":DateParser" as DateParser
+
+SortCommand -> SortCommand: getSortedItemsByCategory(inventory)
+activate SortCommand
+
+SortCommand -> Inventory: getCategories()
+activate Inventory
+Inventory --> SortCommand: categories
+deactivate Inventory
+
+loop for each category
+    SortCommand -> Category: getItems()
+    activate Category
+    Category --> SortCommand: item list
+    deactivate Category
+
+    SortCommand -> SortCommand: create copied item list
+    activate SortCommand
+    SortCommand --> SortCommand: copied list created
+    deactivate SortCommand
+
+    SortCommand -> SortCommand: getComparator()
+    activate SortCommand
+    alt sortType is "name"
+        SortCommand --> SortCommand: Comparator<Item> by name
+    else sortType is "qty"
+        SortCommand --> SortCommand: Comparator<Item> by quantity (descending)
+    else sortType is "expirydate"
+        SortCommand --> SortCommand: Comparator<Item> by expiry date
+    end
+    deactivate SortCommand
+
+    SortCommand -> SortCommand: sortedItems.sort(comparator)
+    activate SortCommand
+
+    opt sortType is "expirydate"
+        loop comparator evaluates item expiry dates
+            SortCommand -> SortCommand: parseExpiryDate(item.getExpiryDate())
+            activate SortCommand
+            SortCommand -> DateParser: parseDate(expiryDate)
+            activate DateParser
+            alt date is valid
+                DateParser --> SortCommand: LocalDate
+            else date is invalid
+                DateParser --> SortCommand: InvalidDateException
+                SortCommand -> SortCommand: return LocalDate.MAX
+            end
+            deactivate DateParser
+            deactivate SortCommand
+        end
+    end
+
+    SortCommand --> SortCommand: items sorted
+    deactivate SortCommand
+
+    SortCommand -> SortCommand: add sortedItems to sortedItemsByCategory
+    activate SortCommand
+    SortCommand --> SortCommand: list updated
+    deactivate SortCommand
+end
+
+SortCommand --> SortCommand: sortedItemsByCategory
+deactivate SortCommand
+@enduml
