@@ -74,7 +74,7 @@ public class CommonFieldParser {
      *
      * @param quantityString Quantity string to parse.
      * @return Parsed quantity.
-     * @throws InventoryDockException If the quantity is missing, non-numeric, or not positive.
+     * @throws InventoryDockException If the quantity is missing, non-numeric, too large or not positive.
      */
     public static int parseQuantity(String quantityString) throws InventoryDockException {
         if (quantityString == null
@@ -83,20 +83,24 @@ public class CommonFieldParser {
             throw new InventoryDockException("Missing quantity.");
         }
 
-        int quantity;
         try {
-            quantity = Integer.parseInt(quantityString.trim());
+            long parsedQuantity = Long.parseLong(quantityString.trim());
+
+            if (parsedQuantity > Integer.MAX_VALUE) {
+                logger.log(Level.WARNING, "Quantity exceeded maximum value: " + parsedQuantity);
+                throw new InventoryDockException("Quantity exceeded the max value.");
+            }
+
+            if (parsedQuantity <= 0) {
+                logger.log(Level.WARNING, "Non-positive quantity encountered: " + parsedQuantity);
+                throw new InventoryDockException("Quantity must be a positive integer.");
+            }
+
+            return (int) parsedQuantity;
         } catch (NumberFormatException e) {
             logger.log(Level.WARNING, "Invalid quantity format: " + quantityString);
             throw new InventoryDockException("Quantity must be an integer.");
         }
-
-        if (quantity <= 0) {
-            logger.log(Level.WARNING, "Non-positive quantity encountered: " + quantity);
-            throw new InventoryDockException("Quantity must be a positive integer.");
-        }
-
-        return quantity;
     }
 
     /**

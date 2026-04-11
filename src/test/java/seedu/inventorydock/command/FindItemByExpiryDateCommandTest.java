@@ -75,7 +75,7 @@ public class FindItemByExpiryDateCommandTest {
 
         InvalidDateException exception = assertThrows(InvalidDateException.class,
                 () -> command.execute(inventory, ui));
-        assertEquals("Invalid date. Please use yyyy-M-d.", exception.getMessage());
+        assertEquals("Invalid date. Please enter a valid calendar date in yyyy-M-d format.", exception.getMessage());
     }
 
     @Test

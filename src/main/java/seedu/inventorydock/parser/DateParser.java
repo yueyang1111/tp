@@ -5,13 +5,14 @@ import seedu.inventorydock.exception.InvalidDateException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 
 /**
  * Utility class for validating and parsing date strings.
  */
 public class DateParser {
     private static final DateTimeFormatter FORMATTER =
-            DateTimeFormatter.ofPattern("yyyy-M-d");
+            DateTimeFormatter.ofPattern("uuuu-M-d").withResolverStyle(ResolverStyle.STRICT);
 
     /**
      * Validates that the given date string is nonempty and follows the expected format of yyyy-M-d.
@@ -42,7 +43,7 @@ public class DateParser {
         try {
             return LocalDate.parse(date.trim(), FORMATTER);
         } catch (DateTimeParseException e) {
-            throw new InvalidDateException("Invalid date. Please use yyyy-M-d.");
+            throw new InvalidDateException("Invalid date. Please enter a valid calendar date in yyyy-M-d format.");
         }
     }
 }

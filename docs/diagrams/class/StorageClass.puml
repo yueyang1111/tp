@@ -1,6 +1,7 @@
 @startuml
 title Class Diagram for Storage Feature
 skinparam classAttributeIconSize 0
+skinparam linetype ortho
 hide circle
 left to right direction
 
