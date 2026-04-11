@@ -93,20 +93,20 @@ Expected result:
 * The item is added to the specified category.
 * The app confirms the item name, quantity, category, and bin location.
 * Duplicate check rule for `add` (if-else style):
-* If `category/` and `item/` are the same, then compare batch fields (`expiryDate/` and category-specific fields).
-* If any batch field is different, the item is treated as a new batch of items and is added.
-* Else, if `category/` and `item/` are the same but only `qty/` and/or `bin/` are different, it is treated as a duplicate.
-* If a duplicate is detected, the command is rejected with:
-  `Duplicate item found for category/CATEGORY item/ITEM.`
+  * If `category/` and `item/` are the same, compare only batch fields (`expiryDate/` and category-specific fields)
+  * If any batch field is different, the item is treated as a new batch and is added.
+  * Else, if `category/` and `item/` are the same but only `qty/` and/or `bin/` are different, it is treated as a duplicate.
+  * If a duplicate is detected, the command is rejected with:
+    `Duplicate item found for category/CATEGORY item/ITEM.`
 
 Example (`fruits`: `size/` + `isRipe/`):
 * Existing add command:
-  `add category/fruits item/apple bin/A-10 qty/10 expiryDate/2026-6-5 size/medium isRipe/true`
+  * `add category/fruits item/apple bin/A-10 qty/10 expiryDate/2026-6-5 size/medium isRipe/true`
 * This command causes the duplicate exception (only `bin/` and `qty/` changed):
-  `add category/fruits item/apple bin/B-20 qty/99 expiryDate/2026-6-5 size/medium isRipe/true`
+  * `add category/fruits item/apple bin/B-20 qty/99 expiryDate/2026-6-5 size/medium isRipe/true`
   Result: `Duplicate item found for category/fruits item/apple.`
 * This command is allowed as a new batch of items (`expiryDate/` changed):
-  `add category/fruits item/apple bin/B-20 qty/99 expiryDate/2026-6-6 size/medium isRipe/true`
+  * `add category/fruits item/apple bin/B-20 qty/99 expiryDate/2026-6-6 size/medium isRipe/true`
 
 ### Find items by keyword: `find keyword/...`
 Finds items whose names contain the given keyword.
@@ -400,6 +400,7 @@ When an error occurs, the app prints an error message and waits for the next com
   `delete category/CATEGORY index/INDEX`
 * Clear a category
   `delete category/CATEGORY`
+
 
 
 
