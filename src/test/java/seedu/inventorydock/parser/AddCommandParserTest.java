@@ -33,6 +33,14 @@ public class AddCommandParserTest {
     }
 
     @Test
+    public void parse_invalidBinFormat_throwsException() {
+        InventoryDockException exception = assertThrows(InventoryDockException.class,
+                () -> parser.parse("category/fruits item/apple bin/A10 qty/3 expiryDate/2026-03-20 "
+                        + "size/big isRipe/true"));
+        assertEquals("Bin location must be LETTER-NUMBER (e.g. A-10).", exception.getMessage());
+    }
+
+    @Test
     public void parse_validFruitInput_returnsAddItemCommand() throws InventoryDockException {
         assertInstanceOf(AddItemCommand.class,
                 parser.parse("category/fruits item/apple bin/A-10 qty/3 expiryDate/2026-03-20 size/big isRipe/true"));
@@ -44,4 +52,3 @@ public class AddCommandParserTest {
                 parser.parse("category/FRUITS item/apple bin/A-10 qty/3 expiryDate/2026-03-20 size/big isRipe/true"));
     }
 }
-
