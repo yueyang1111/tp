@@ -24,6 +24,10 @@ class AddItemCommand {
   + execute(inventory: Inventory, ui: UI)
 }
 
+class DuplicateIdentityParser {
+  + buildBatchIdentityKey(category: String, target: Item): String
+}
+
 class Inventory {
   + findCategoryByName(categoryName: String)
 }
@@ -59,9 +63,9 @@ AddCommandParser ..> AddItemCommandParser : delegates to
 AddItemCommandParser ..> AddItemCommand : creates
 AddItemCommand --> Inventory : looks up category
 AddItemCommand --> Category : duplicate check + add
+AddItemCommand ..> DuplicateIdentityParser : builds duplicate key
 AddItemCommand ..> InventoryDockException : throws on duplicate
 AddItemCommand --> UI : success/error display
 Inventory "1" o-- "*" Category
 Category "1" o-- "*" Item
 @enduml
-

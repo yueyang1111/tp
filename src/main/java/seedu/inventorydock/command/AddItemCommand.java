@@ -8,6 +8,7 @@ import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.Item;
 import seedu.inventorydock.parser.DateParser;
+import seedu.inventorydock.parser.DuplicateIdentityParser;
 import seedu.inventorydock.ui.UI;
 import java.time.LocalDate;
 import java.util.logging.Level;
@@ -78,9 +79,9 @@ public class AddItemCommand extends Command {
         assert category != null : "Category cannot be null while checking duplicates.";
         assert candidate != null : "Candidate item cannot be null while checking duplicates.";
 
-        String candidateIdentity = buildBatchIdentityKey(category.getName(), candidate);
+        String candidateIdentity = DuplicateIdentityParser.buildBatchIdentityKey(category.getName(), candidate);
         for (Item existing : category.getItems()) {
-            String existingIdentity = buildBatchIdentityKey(category.getName(), existing);
+            String existingIdentity = DuplicateIdentityParser.buildBatchIdentityKey(category.getName(), existing);
             if (existingIdentity.equals(candidateIdentity)) {
                 return existing;
             }
@@ -88,33 +89,5 @@ public class AddItemCommand extends Command {
         return null;
     }
 
-    /**
-     * Builds a normalized identity key for duplicate checks.
-     * The key intentionally ignores qty and bin fields so that only logical batch identity is compared.
-     *
-     * @param category Name of the category containing the item.
-     * @param target Item whose identity key is built.
-     * @return Normalized identity key.
-     */
-    private String buildBatchIdentityKey(String category, Item target) {
-        assert category != null : "Category cannot be null when building duplicate identity key.";
-        assert target != null : "Item cannot be null when building duplicate identity key.";
-
-        String storageString = target.toStorageString(category);
-        StringBuilder key = new StringBuilder();
-
-        String[] tokens = storageString.split(" ");
-        for (String token : tokens) {
-            if (token.startsWith("qty/") || token.startsWith("bin/")) {
-                continue;
-            }
-            key.append(token.toLowerCase()).append(" ");
-        }
-
-        return key.toString().trim();
-    }
 }
-
-
-
 

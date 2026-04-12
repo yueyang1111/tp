@@ -1182,18 +1182,18 @@ After setting up the application, proceed to the individual test cases below.
 ### Testing add item
 
 1. Ensure the target category already exists in the inventory, for example `fruits`.
-2. Run `add category/fruits item/apple bin/A1 qty/10 expiryDate/2026-4-01 size/medium isRipe/true`.
+2. Run `add category/fruits item/apple bin/A-1 qty/10 expiryDate/2026-4-01 size/medium isRipe/true`.
 3. Verify that the application shows a confirmation message for the added item.
 4. Run `list`.
 5. Verify that `apple` appears under the `fruits` category with the entered values.
-6. Run `add category/unknown item/apple bin/A1 qty/10 expiryDate/2026-4-01 size/medium isRipe/true`.
+6. Run `add category/unknown item/apple bin/A-1 qty/10 expiryDate/2026-4-01 size/medium isRipe/true`.
 7. Verify that the application shows `Category not found: unknown` or the corresponding category error.
-8. Run an add command with a missing required field, for example `add category/fruits bin/A1 qty/10 expiryDate/2026-4-01 size/medium isRipe/true`.
+8. Run an add command with a missing required field, for example `add category/fruits bin/A-1 qty/10 expiryDate/2026-4-01 size/medium isRipe/true`.
 9. Verify that the application shows the appropriate validation error for the missing field.
-10. Run `add category/fruits item/apple bin/B9 qty/99 expiryDate/2026-4-01 size/medium isRipe/true`.
+10. Run `add category/fruits item/apple bin/B-9 qty/99 expiryDate/2026-4-01 size/medium isRipe/true`.
 11. Verify that the application rejects it with `Duplicate item found for category/fruits item/apple.`
 12. Verify through `list` that no second identical batch was added to `fruits`.
-13. Run `add category/fruits item/apple bin/C1 qty/5 expiryDate/2026-4-02 size/medium isRipe/true`.
+13. Run `add category/fruits item/apple bin/C-1 qty/5 expiryDate/2026-4-02 size/medium isRipe/true`.
 14. Verify through `list` that this different batch is allowed and appears under `fruits`.
 
 ### Testing list command

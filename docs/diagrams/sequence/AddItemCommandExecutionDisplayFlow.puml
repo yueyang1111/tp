@@ -9,6 +9,7 @@ participant ":InventoryDock" as InventoryDock
 participant ":AddItemCommand" as AddItemCommand
 participant ":Inventory" as Inventory
 participant ":Category" as Category
+participant ":DuplicateIdentityParser" as DuplicateIdentityParser
 participant ":UI" as UI
 
 activate InventoryDock
@@ -25,10 +26,17 @@ alt category not found
     InventoryDock -> UI: showError("Category not found: ...")
     UI --> User: display error
 else else
-    AddItemCommand -> Category: findItemByName(itemName)
-    activate Category
-    Category --> AddItemCommand: existingItem / null
-    deactivate Category
+    loop for each existing item in category
+        AddItemCommand -> DuplicateIdentityParser: buildBatchIdentityKey(categoryName, candidate)
+        activate DuplicateIdentityParser
+        DuplicateIdentityParser --> AddItemCommand: candidateIdentity
+        deactivate DuplicateIdentityParser
+
+        AddItemCommand -> DuplicateIdentityParser: buildBatchIdentityKey(categoryName, existing)
+        activate DuplicateIdentityParser
+        DuplicateIdentityParser --> AddItemCommand: existingIdentity
+        deactivate DuplicateIdentityParser
+    end
 
     alt duplicate found
         AddItemCommand --> InventoryDock: throw InventoryDockException("Duplicate item found...")
@@ -51,4 +59,3 @@ end
 
 deactivate InventoryDock
 @enduml
-
