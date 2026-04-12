@@ -1145,15 +1145,15 @@ complex interfaces.
 
 | Version | As a ... | I want to ...             | So that I can ...                                           |
 |---------|----------|---------------------------|-------------------------------------------------------------|
-| v1.0    | new user | see usage instructions    | refer to them when I forget how to use the application      |
-| v1.0    | user     | add items                 | track inventory                                             |
-| v1.0    | user     | delete items              | remove outdated or incorrect entries                        |
-| v1.0    | user     | list items                | view all inventory at once                                  |
-| v2.0    | user     | find items by keyword     | locate an item without having to go through the entire list |
-| v2.0    | user     | find items by category    | find items in a particular category                         |
-| v2.0    | user     | find items by bin         | find items based on storage location                        |
-| v2.0    | user     | find items by expiry date | identify items expiring soon                                |
-| v2.0    | user     | update items              | correct or modify item details                              |
+| v1.0    | new user | see usage instructions    | recover quickly when I forget the command format            |
+| v1.0    | user     | add items                 | sync real-world items into the system                       |
+| v1.0    | user     | delete items              | remove entries that no longer reflect physical stock        |
+| v1.0    | user     | list items                | review the current inventory state in one place             |
+| v2.0    | user     | find items by keyword     | locate a product quickly when I only remember part of its name |
+| v2.0    | user     | find items by category    | inspect all items belonging to one category                 |
+| v2.0    | user     | find items by bin         | check what is stored at a specific physical location        |
+| v2.0    | user     | find items by expiry date | identify batches that need attention before they expire     |
+| v2.0    | user     | update items              | correct data-entry mistakes without re-adding the whole item |
 
 ## Non-Functional Requirements
 

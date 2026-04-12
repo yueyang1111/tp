@@ -374,6 +374,8 @@ When an error occurs, the app prints an error message and waits for the next com
 ## Command Summary
 * View help:
   `help`
+* Exit the app:
+  `bye`
 * Add item:
   `add category/CATEGORY item/ITEM bin/BIN qty/QUANTITY expiryDate/DATE ...`
 * List all items:
@@ -396,21 +398,3 @@ When an error occurs, the app prints an error message and waits for the next com
   `delete category/CATEGORY index/INDEX`
 * Clear a category
   `delete category/CATEGORY`
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
