@@ -4,6 +4,10 @@ package seedu.inventorydock.exception;
  * Signals that an inventory operation failed.
  */
 public class InventoryDockException extends Exception {
+    public String getErrorCategory() {
+        return "Error";
+    }
+
     /**
      * Creates an exception with the specified message.
      *
