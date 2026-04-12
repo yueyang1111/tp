@@ -2,6 +2,7 @@ package seedu.inventorydock.parser;
 
 import org.junit.jupiter.api.Test;
 import seedu.inventorydock.command.UpdateItemCommand;
+import seedu.inventorydock.exception.InvalidCommandException;
 import seedu.inventorydock.exception.InvalidIndexException;
 import seedu.inventorydock.exception.MissingArgumentException;
 
@@ -53,5 +54,23 @@ public class UpdateCommandParserTest {
         InvalidIndexException exception = assertThrows(InvalidIndexException.class,
                 () -> parser.parse("category/vegetables index/abc qty/25"));
         assertEquals("Item index must be an integer.", exception.getMessage());
+    }
+
+    @Test
+    public void parse_duplicateUpdateField_throwsException() {
+        UpdateCommandParser parser = new UpdateCommandParser();
+
+        InvalidCommandException exception = assertThrows(InvalidCommandException.class,
+                () -> parser.parse("category/vegetables index/1 qty/25 qty/30"));
+        assertEquals("Duplicate update field: qty/.", exception.getMessage());
+    }
+
+    @Test
+    public void parse_duplicateIndexField_throwsException() {
+        UpdateCommandParser parser = new UpdateCommandParser();
+
+        InvalidCommandException exception = assertThrows(InvalidCommandException.class,
+                () -> parser.parse("category/vegetables index/1 index/2 qty/25"));
+        assertEquals("Duplicate update field: index/.", exception.getMessage());
     }
 }

@@ -9,6 +9,14 @@ import seedu.inventorydock.exception.MissingArgumentException;
 import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.Item;
+import seedu.inventorydock.model.items.Accessories;
+import seedu.inventorydock.model.items.Drinks;
+import seedu.inventorydock.model.items.Fruit;
+import seedu.inventorydock.model.items.Meat;
+import seedu.inventorydock.model.items.Snack;
+import seedu.inventorydock.model.items.Toiletries;
+import seedu.inventorydock.model.items.Vegetable;
+import seedu.inventorydock.parser.DuplicateIdentityParser;
 import seedu.inventorydock.parser.category.CommonFieldParser;
 import seedu.inventorydock.ui.UI;
 
@@ -73,16 +81,19 @@ public class UpdateItemCommand extends Command {
 
         Item item = category.getItem(itemIndex - 1);
         String originalName = item.getName();
-        String originalBin = item.getBinLocation();
-        int originalQuantity = item.getQuantity();
-        String originalExpiryDate = item.getExpiryDate();
+        ItemSnapshot snapshot = ItemSnapshot.from(item);
 
-        applyUpdates(item);
+        try {
+            applyUpdates(item);
+        } catch (InventoryDockException e) {
+            restoreOriginalValues(item, snapshot);
+            throw e;
+        }
 
         Item duplicateItem = findDuplicateItem(category, item);
         if (duplicateItem != null && duplicateItem != item) {
             String attemptedName = item.getName();
-            restoreOriginalValues(item, originalName, originalBin, originalQuantity, originalExpiryDate);
+            restoreOriginalValues(item, snapshot);
             logger.log(Level.WARNING, "Duplicate item detected while updating category '"
                     + category.getName() + "' and name '" + attemptedName + "'.");
             throw new DuplicateItemException("Duplicate item found for category/" + category.getName()
@@ -123,8 +134,29 @@ public class UpdateItemCommand extends Command {
                 CommonFieldParser.validateExpiryDate(value);
                 item.setExpiryDate(value.trim());
                 break;
+            case "isRipe":
+                updateFruitField(item, value);
+                break;
+            case "isLeafy":
+                updateVegetableField(item, value);
+                break;
+            case "isLiquid":
+                updateToiletriesField(item, value);
+                break;
+            case "isCrunchy":
+                updateSnackField(item, value);
+                break;
+            case "isCarbonated":
+                updateDrinkField(item, value);
+                break;
+            case "isFrozen":
+                updateMeatField(item, value);
+                break;
+            case "isFragile":
+                updateAccessoriesField(item, value);
+                break;
             default:
-                throw new InvalidCommandException("Only newItem/, bin/, qty/, and expiryDate/ can be updated.");
+                throw new InvalidCommandException("Unsupported update field: " + field + "/.");
             }
         }
     }
@@ -153,12 +185,17 @@ public class UpdateItemCommand extends Command {
      * @param quantity Original quantity.
      * @param expiryDate Original expiry date.
      */
-    private void restoreOriginalValues(Item item, String name, String bin,
-                                       int quantity, String expiryDate) {
-        item.setName(name);
-        item.setBinLocation(bin);
-        item.setQuantity(quantity);
-        item.setExpiryDate(expiryDate);
+    private void restoreOriginalValues(Item item, ItemSnapshot snapshot) {
+        item.setName(snapshot.name);
+        item.setBinLocation(snapshot.bin);
+        item.setQuantity(snapshot.quantity);
+        item.setExpiryDate(snapshot.expiryDate);
+
+        if (snapshot.categorySpecificField == null) {
+            return;
+        }
+
+        applyCategorySpecificUpdate(item, snapshot.categorySpecificField, snapshot.categorySpecificValue);
     }
 
     /**
@@ -173,9 +210,9 @@ public class UpdateItemCommand extends Command {
         assert category != null : "Category cannot be null while checking duplicates.";
         assert candidate != null : "Candidate item cannot be null while checking duplicates.";
 
-        String candidateIdentity = buildBatchIdentityKey(category.getName(), candidate);
+        String candidateIdentity = DuplicateIdentityParser.buildBatchIdentityKey(category.getName(), candidate);
         for (Item existing : category.getItems()) {
-            String existingIdentity = buildBatchIdentityKey(category.getName(), existing);
+            String existingIdentity = DuplicateIdentityParser.buildBatchIdentityKey(category.getName(), existing);
             if (existingIdentity.equals(candidateIdentity)) {
                 return existing;
             }
@@ -183,31 +220,142 @@ public class UpdateItemCommand extends Command {
         return null;
     }
 
-    /**
-     * Builds a normalized identity key for duplicate checks.
-     * The key intentionally ignores qty and bin fields so that only logical batch identity is compared.
-     *
-     * @param category Name of the category containing the item.
-     * @param target Item whose identity key is built.
-     * @return Normalized identity key.
-     */
-    private String buildBatchIdentityKey(String category, Item target) {
-        assert category != null : "Category cannot be null when building duplicate identity key.";
-        assert target != null : "Item cannot be null when building duplicate identity key.";
+    private void updateFruitField(Item item, String value) throws InventoryDockException {
+        if (!(item instanceof Fruit fruit)) {
+            throw new InvalidCommandException("isRipe/ can only be updated for fruits.");
+        }
+        fruit.setRipe(parseBooleanValue(value, "isRipe/"));
+    }
 
-        String storageString = target.toStorageString(category);
-        StringBuilder key = new StringBuilder();
+    private void updateVegetableField(Item item, String value) throws InventoryDockException {
+        if (!(item instanceof Vegetable vegetable)) {
+            throw new InvalidCommandException("isLeafy/ can only be updated for vegetables.");
+        }
+        vegetable.setLeafy(parseBooleanValue(value, "isLeafy/"));
+    }
 
-        String[] tokens = storageString.split(" ");
-        for (String token : tokens) {
-            if (token.startsWith("qty/") || token.startsWith("bin/")) {
-                continue;
-            }
-            key.append(token.toLowerCase()).append(" ");
+    private void updateToiletriesField(Item item, String value) throws InventoryDockException {
+        if (!(item instanceof Toiletries toiletries)) {
+            throw new InvalidCommandException("isLiquid/ can only be updated for toiletries.");
+        }
+        toiletries.setLiquid(parseBooleanValue(value, "isLiquid/"));
+    }
+
+    private void updateSnackField(Item item, String value) throws InventoryDockException {
+        if (!(item instanceof Snack snack)) {
+            throw new InvalidCommandException("isCrunchy/ can only be updated for snacks.");
+        }
+        snack.setCrunchy(parseBooleanValue(value, "isCrunchy/"));
+    }
+
+    private void updateDrinkField(Item item, String value) throws InventoryDockException {
+        if (!(item instanceof Drinks drinks)) {
+            throw new InvalidCommandException("isCarbonated/ can only be updated for drinks.");
+        }
+        drinks.setCarbonated(parseBooleanValue(value, "isCarbonated/"));
+    }
+
+    private void updateMeatField(Item item, String value) throws InventoryDockException {
+        if (!(item instanceof Meat meat)) {
+            throw new InvalidCommandException("isFrozen/ can only be updated for meat.");
+        }
+        meat.setFrozen(parseBooleanValue(value, "isFrozen/"));
+    }
+
+    private void updateAccessoriesField(Item item, String value) throws InventoryDockException {
+        if (!(item instanceof Accessories accessories)) {
+            throw new InvalidCommandException("isFragile/ can only be updated for accessories.");
+        }
+        accessories.setFragile(parseBooleanValue(value, "isFragile/"));
+    }
+
+    private void applyCategorySpecificUpdate(Item item, String field, String value) {
+        switch (field) {
+        case "isRipe":
+            ((Fruit) item).setRipe(Boolean.parseBoolean(value));
+            break;
+        case "isLeafy":
+            ((Vegetable) item).setLeafy(Boolean.parseBoolean(value));
+            break;
+        case "isLiquid":
+            ((Toiletries) item).setLiquid(Boolean.parseBoolean(value));
+            break;
+        case "isCrunchy":
+            ((Snack) item).setCrunchy(Boolean.parseBoolean(value));
+            break;
+        case "isCarbonated":
+            ((Drinks) item).setCarbonated(Boolean.parseBoolean(value));
+            break;
+        case "isFrozen":
+            ((Meat) item).setFrozen(Boolean.parseBoolean(value));
+            break;
+        case "isFragile":
+            ((Accessories) item).setFragile(Boolean.parseBoolean(value));
+            break;
+        default:
+            throw new IllegalStateException("Unknown category-specific field: " + field);
+        }
+    }
+
+    private boolean parseBooleanValue(String value, String fieldName) throws InventoryDockException {
+        validateNonEmpty(value, "Missing value for " + fieldName);
+        String trimmedValue = value.trim();
+        if (!trimmedValue.equalsIgnoreCase("true") && !trimmedValue.equalsIgnoreCase("false")) {
+            throw new InvalidCommandException(fieldName + " must be true or false.");
+        }
+        return Boolean.parseBoolean(trimmedValue);
+    }
+
+    private static class ItemSnapshot {
+        private final String name;
+        private final String bin;
+        private final int quantity;
+        private final String expiryDate;
+        private final String categorySpecificField;
+        private final String categorySpecificValue;
+
+        private ItemSnapshot(String name, String bin, int quantity, String expiryDate,
+                             String categorySpecificField, String categorySpecificValue) {
+            this.name = name;
+            this.bin = bin;
+            this.quantity = quantity;
+            this.expiryDate = expiryDate;
+            this.categorySpecificField = categorySpecificField;
+            this.categorySpecificValue = categorySpecificValue;
         }
 
-        return key.toString().trim();
+        private static ItemSnapshot from(Item item) {
+            if (item instanceof Fruit fruit) {
+                return new ItemSnapshot(item.getName(), item.getBinLocation(), item.getQuantity(), item.getExpiryDate(),
+                        "isRipe", String.valueOf(fruit.isRipe()));
+            }
+            if (item instanceof Vegetable vegetable) {
+                return new ItemSnapshot(item.getName(), item.getBinLocation(), item.getQuantity(), item.getExpiryDate(),
+                        "isLeafy", String.valueOf(vegetable.isLeafy()));
+            }
+            if (item instanceof Toiletries toiletries) {
+                return new ItemSnapshot(item.getName(), item.getBinLocation(), item.getQuantity(), item.getExpiryDate(),
+                        "isLiquid", String.valueOf(toiletries.isLiquid()));
+            }
+            if (item instanceof Snack snack) {
+                return new ItemSnapshot(item.getName(), item.getBinLocation(), item.getQuantity(), item.getExpiryDate(),
+                        "isCrunchy", String.valueOf(snack.isCrunchy()));
+            }
+            if (item instanceof Drinks drinks) {
+                return new ItemSnapshot(item.getName(), item.getBinLocation(), item.getQuantity(), item.getExpiryDate(),
+                        "isCarbonated", String.valueOf(drinks.isCarbonated()));
+            }
+            if (item instanceof Meat meat) {
+                return new ItemSnapshot(item.getName(), item.getBinLocation(), item.getQuantity(), item.getExpiryDate(),
+                        "isFrozen", String.valueOf(meat.isFrozen()));
+            }
+            if (item instanceof Accessories accessories) {
+                return new ItemSnapshot(item.getName(), item.getBinLocation(), item.getQuantity(), item.getExpiryDate(),
+                        "isFragile", String.valueOf(accessories.isFragile()));
+            }
+            return new ItemSnapshot(item.getName(), item.getBinLocation(), item.getQuantity(), item.getExpiryDate(),
+                    null, null);
+        }
     }
 }
-
 

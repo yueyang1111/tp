@@ -44,6 +44,9 @@ public class UpdateCommandParser {
 
             String key = token.substring(0, separatorIndex);
             String value = token.substring(separatorIndex + 1);
+            if (fields.containsKey(key)) {
+                throw new InvalidCommandException("Duplicate update field: " + key + "/.");
+            }
             fields.put(key, value);
         }
 

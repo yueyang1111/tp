@@ -73,14 +73,59 @@ public class UpdateItemCommandTest {
     @Test
     public void execute_invalidNonCommonField_throwsException() {
         Map<String, String> updates = new LinkedHashMap<>();
-        updates.put("isRipe", "false");
+        updates.put("brand", "acme");
 
         UpdateItemCommand command = new UpdateItemCommand(
                 "fruits", 1, updates);
 
         InvalidCommandException exception = assertThrows(InvalidCommandException.class,
                 () -> command.execute(inventory, new UI()));
-        assertEquals("Only newItem/, bin/, qty/, and expiryDate/ can be updated.", exception.getMessage());
+        assertEquals("Unsupported update field: brand/.", exception.getMessage());
+    }
+
+    @Test
+    public void execute_categorySpecificBooleanField_itemUpdated() throws Exception {
+        Map<String, String> updates = new LinkedHashMap<>();
+        updates.put("isRipe", "false");
+
+        UpdateItemCommand command = new UpdateItemCommand(
+                "fruits", 1, updates);
+
+        command.execute(inventory, new UI());
+
+        Fruit updated = (Fruit) fruitsCategory.getItem(0);
+        assertEquals(false, updated.isRipe());
+    }
+
+    @Test
+    public void execute_invalidBooleanValue_rollsBackAndThrowsException() {
+        Map<String, String> updates = new LinkedHashMap<>();
+        updates.put("newItem", "green_apple");
+        updates.put("isRipe", "maybe");
+
+        UpdateItemCommand command = new UpdateItemCommand(
+                "fruits", 1, updates);
+
+        InvalidCommandException exception = assertThrows(InvalidCommandException.class,
+                () -> command.execute(inventory, new UI()));
+        assertEquals("isRipe/ must be true or false.", exception.getMessage());
+
+        Fruit original = (Fruit) fruitsCategory.getItem(0);
+        assertEquals("apple", original.getName());
+        assertEquals(true, original.isRipe());
+    }
+
+    @Test
+    public void execute_booleanFieldForWrongCategory_throwsException() {
+        Map<String, String> updates = new LinkedHashMap<>();
+        updates.put("isFrozen", "true");
+
+        UpdateItemCommand command = new UpdateItemCommand(
+                "fruits", 1, updates);
+
+        InvalidCommandException exception = assertThrows(InvalidCommandException.class,
+                () -> command.execute(inventory, new UI()));
+        assertEquals("isFrozen/ can only be updated for meat.", exception.getMessage());
     }
 
     @Test
