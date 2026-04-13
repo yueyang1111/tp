@@ -12,9 +12,11 @@ class InventoryDockException {
 }
 
 class CategoryNotFoundException
+class DuplicateItemException
 class ItemNotFoundException
 
 JavaException <|-- InventoryDockException
 InventoryDockException <|-- CategoryNotFoundException
+InventoryDockException <|-- DuplicateItemException
 InventoryDockException <|-- ItemNotFoundException
 @enduml

@@ -2,9 +2,7 @@
 
 ## Project: InventoryDock
 
-InventoryDock is a desktop inventory management application for users who prefer working with a Command Line Interface (CLI). It is written in Java and helps users manage categorized inventory items with details such as quantity, bin location, and expiry date.
-
-Given below are my contributions to the project.
+InventoryDock is a CLI based inventory management application that helps users manage categorized inventory items with details such as quantity, bin location, and expiry date.
 
 ### Code contributed 
 
@@ -37,7 +35,7 @@ Given below are my contributions to the project.
 
 **Feature 4: Exception hierarchy and error handling**
 
-- **Custom exception design:** Created the project's custom exception hierarchy around `InventoryDockException`, including specific exception types such as `MissingArgumentException`, `InvalidCommandException`, `InvalidFilterException`, `InvalidDateException`, `InvalidIndexException`, `CategoryNotFoundException`, `ItemNotFoundException`, and `StorageException`.
+- **Custom exception design:** Created the project's custom exception hierarchy around `InventoryDockException`, including specific exception types such as `MissingArgumentException`, `InvalidCommandException`, `InvalidFilterException`, `InvalidDateException`, `InvalidIndexException`, `CategoryNotFoundException`, `ItemNotFoundException`, `DuplicateItemException` and `StorageException`.
 - **Error-handling alignment:** Updated error handling across parsers, commands, and storage-related paths so the code throws the correct specific exception instead of relying on overly generic exceptions.
 - **Design choice:** Kept the shared base exception so `InventoryDock` can handle failures through one catch path, while still making the source of each failure clearer in the implementation and documentation.
 - **Codebase consistency:** Helped clean up stale exception usage and aligned the documented behaviour with the actual exception subtypes used in code.
@@ -61,8 +59,8 @@ Given below are my contributions to the project.
 
 - Led the design of the project's initial architecture so teammates could build on a consistent command-driven structure.
 - Helped define the responsibilities and interactions of key classes such as `Parser`, `Command`, `Inventory`, `Category`, `Item`, `Storage`, and `UI`.
-- Established an extensible model design that relied on polymorphism in the `Item` hierarchy, so shared behaviour could be handled through common abstractions while specific item types could still define their own fields and constraints.
-- Reviewed Java logging API documentation and helped standardise how loggers are declared across classes, as well as which logging levels should be used for different situations so logging behaviour stays more consistent across the codebase.
+- Established an extensible model design that relied on polymorphism in the `Item` and `InventoryDockException` hierarchy, so shared behaviour could be handled through common abstractions while specific item types could still define their own fields and constraints.
+- Reviewed Java logging API documentation and helped standardise how loggers are declared across classes, as well as which logging levels should be used for different situations to ensure consistency.
 
 ### Review/mentoring contributions
 
