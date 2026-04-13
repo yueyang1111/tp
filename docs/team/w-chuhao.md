@@ -138,25 +138,11 @@ My contributions covered:
 
 I also added and updated the UML diagrams used to support these Developer Guide sections. These diagrams document both the dynamic execution flow and the static relationships behind the features I implemented.
 
-Sequence diagrams I contributed:
-- [AddItemCommandParseRoutingFlow.puml](../diagrams/sequence/AddItemCommandParseRoutingFlow.puml)`r`n- [AddItemCommandSingleCategoryParsingFlow.puml](../diagrams/sequence/AddItemCommandSingleCategoryParsingFlow.puml)`r`n- [AddItemCommandExecutionDisplayFlow.puml](../diagrams/sequence/AddItemCommandExecutionDisplayFlow.puml)
-- [ListCommandParseFlow.puml](../diagrams/sequence/ListCommandParseFlow.puml)`r`n- [ListCommandTraversalFlow.puml](../diagrams/sequence/ListCommandTraversalFlow.puml)`r`n- [ListCommandDisplayFlow.puml](../diagrams/sequence/ListCommandDisplayFlow.puml)
-- [FindItemByCategoryCommandParseFlow.puml](../diagrams/sequence/FindItemByCategoryCommandParseFlow.puml)`r`n- [FindItemByCategoryCommandMatchingFlow.puml](../diagrams/sequence/FindItemByCategoryCommandMatchingFlow.puml)`r`n- [FindItemByCategoryCommandDisplayFlow.puml](../diagrams/sequence/FindItemByCategoryCommandDisplayFlow.puml)
-- [FindItemByBinCommandMainFlow.puml](../diagrams/sequence/FindItemByBinCommandMainFlow.puml)
+Diagram files I contributed:
+- Sequence diagrams: `AddItemCommandParseRoutingFlow`, `AddItemCommandSingleCategoryParsingFlow`, `AddItemCommandExecutionDisplayFlow`, `ListCommandParseFlow`, `ListCommandTraversalFlow`, `ListCommandDisplayFlow`, `FindItemByCategoryCommandParseFlow`, `FindItemByCategoryCommandMatchingFlow`, `FindItemByCategoryCommandDisplayFlow`, `FindItemByBinCommandMainFlow`
+- Class diagrams: `AddItemCommandClassDiagram`, `ListCommandClassDiagram`, `FindItemByCategoryCommandClassDiagram`, `FindItemByBinCommandClassDiagram`
+- Object diagrams: `AddItemCommandObjectDiagram`, `ListCommandObjectDiagram`, `FindItemByCategoryCommandObjectDiagram`, `FindItemByBinCommandObjectDiagram`
 
-Class diagrams I contributed:
-- [AddItemCommandClassDiagram.puml](../diagrams/class/AddItemCommandClassDiagram.puml)
-- [ListCommandClassDiagram.puml](../diagrams/class/ListCommandClassDiagram.puml)
-- [FindItemByCategoryCommandClassDiagram.puml](../diagrams/class/FindItemByCategoryCommandClassDiagram.puml)
-- [FindItemByBinCommandClassDiagram.puml](../diagrams/class/FindItemByBinCommandClassDiagram.puml)
-
-Object diagrams I contributed:
-- [AddItemCommandObjectDiagram.puml](../diagrams/object/AddItemCommandObjectDiagram.puml)
-- [ListCommandObjectDiagram.puml](../diagrams/object/ListCommandObjectDiagram.puml)
-- [FindItemByCategoryCommandObjectDiagram.puml](../diagrams/object/FindItemByCategoryCommandObjectDiagram.puml)
-- [FindItemByBinCommandObjectDiagram.puml](../diagrams/object/FindItemByBinCommandObjectDiagram.puml)
-
-I also updated the diagram set later to keep the generated documentation consistent after the product name was changed from Duke to InventoryDock.
 
 ### Contributions to Team-Based Tasks
 
@@ -175,6 +161,7 @@ I also updated the diagram set later to keep the generated documentation consist
 - [#57](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/57) Commented on the logging feature changes during team integration.
 - [#63](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/63) Helped refine the design of newly added item categories by pushing for a more consistent data model across item types.
 - [#86](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/86) Reviewed parsing improvements and suggested ways to keep item-field design more consistent for future iterations.
+
 
 
 
