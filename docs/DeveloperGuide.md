@@ -74,7 +74,9 @@ existing components.
 
 The overall architecture of the application is shown below.
 
-![ArchitectureDiagram](diagrams/ArchitectureDiagram.png)
+<p align="center">
+  <img src="diagrams/ArchitectureDiagram.png" width="700">
+</p>
 
 ### Exception Hierarchy
 
@@ -87,15 +89,21 @@ This keeps the inheritance structure visible without forcing every detail into a
 
 Parser and input exceptions:
 
-![ExceptionHierarchyParserClassDiagram](diagrams/class/ExceptionHierarchyParserClassDiagram.png)
+<p align="center">
+  <img src="diagrams/class/ExceptionHierarchyParserClassDiagram.png" width="850">
+</p>
 
 Inventory lookup exceptions:
 
-![ExceptionHierarchyInventoryClassDiagram](diagrams/class/ExceptionHierarchyInventoryClassDiagram.png)
+<p align="center">
+  <img src="diagrams/class/ExceptionHierarchyInventoryClassDiagram.png" width="850">
+</p>
 
 Storage exceptions:
 
-![ExceptionHierarchyStorageClassDiagram](diagrams/class/ExceptionHierarchyStorageClassDiagram.png)
+<p align="center">
+  <img src="diagrams/class/ExceptionHierarchyStorageClassDiagram.png" width="850">
+</p>
 
 ### Add Item Feature
 
@@ -130,23 +138,33 @@ Sequence diagrams:
 
 1. Parse routing and category dispatch.
 
-![AddItemCommandParseRoutingFlow](diagrams/sequence/AddItemCommandParseRoutingFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/AddItemCommandParseRoutingFlow.png" width="800">
+</p>
 
 2. Single-category parsing and command creation.
 
-![AddItemCommandSingleCategoryParsingFlow](diagrams/sequence/AddItemCommandSingleCategoryParsingFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/AddItemCommandSingleCategoryParsingFlow.png" width="800">
+</p>
 
 3. Command execution and user display.
 
-![AddItemCommandExecutionDisplayFlow](diagrams/sequence/AddItemCommandExecutionDisplayFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/AddItemCommandExecutionDisplayFlow.png" width="800">
+</p>
 
 The main structural relationships for this feature are shown below.
 
-![AddItemCommandClassDiagram](diagrams/class/AddItemCommandClassDiagram.png)
+<p align="center">
+  <img src="diagrams/class/AddItemCommandClassDiagram.png" width="850">
+</p>
 
 A representative object snapshot for this feature is shown below.
 
-![AddItemCommandObjectDiagram](diagrams/object/AddItemCommandObjectDiagram.png)
+<p align="center">
+  <img src="diagrams/object/AddItemCommandObjectDiagram.png" width="750">
+</p>
 
 This design was chosen because it preserves the same separation of responsibilities used elsewhere
 in the codebase:
@@ -299,21 +317,31 @@ Sequence diagrams:
 
 1. Parse and command creation.
 
-![FindItemByExpiryDateCommandParseFlow](diagrams/sequence/FindItemByExpiryDateCommandParseFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/FindItemByExpiryDateCommandParseFlow.png" width="800">
+</p>
 
 2. Date parsing and matching.
 
-![FindItemByExpiryDateCommandMatchingFlow](diagrams/sequence/FindItemByExpiryDateCommandMatchingFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/FindItemByExpiryDateCommandMatchingFlow.png" width="800">
+</p>
 
 3. Result display.
 
-![FindItemByExpiryDateCommandDisplayFlow](diagrams/sequence/FindItemByExpiryDateCommandDisplayFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/FindItemByExpiryDateCommandDisplayFlow.png" width="800">
+</p>
 
 Class and object diagrams:
 
-![FindItemByExpiryDateCommandClassDiagram](diagrams/class/FindItemByExpiryDateCommandClassDiagram.png)
+<p align="center">
+  <img src="diagrams/class/FindItemByExpiryDateCommandClassDiagram.png" width="850">
+</p>
 
-![FindItemByExpiryDateCommandObjectDiagram](diagrams/object/FindItemByExpiryDateCommandObjectDiagram.png)
+<p align="center">
+  <img src="diagrams/object/FindItemByExpiryDateCommandObjectDiagram.png" width="750">
+</p>
 
 #### Find By Category
 
@@ -325,21 +353,31 @@ Sequence diagrams:
 
 1. Parse and command creation.
 
-![FindItemByCategoryCommandParseFlow](diagrams/sequence/FindItemByCategoryCommandParseFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/FindItemByCategoryCommandParseFlow.png" width="800">
+</p>
 
 2. Category lookup.
 
-![FindItemByCategoryCommandMatchingFlow](diagrams/sequence/FindItemByCategoryCommandMatchingFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/FindItemByCategoryCommandMatchingFlow.png" width="800">
+</p>
 
 3. Result display.
 
-![FindItemByCategoryCommandDisplayFlow](diagrams/sequence/FindItemByCategoryCommandDisplayFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/FindItemByCategoryCommandDisplayFlow.png" width="800">
+</p>
 
 Class and object diagrams:
 
-![FindItemByCategoryCommandClassDiagram](diagrams/class/FindItemByCategoryCommandClassDiagram.png)
+<p align="center">
+  <img src="diagrams/class/FindItemByCategoryCommandClassDiagram.png" width="850">
+</p>
 
-![FindItemByCategoryCommandObjectDiagram](diagrams/object/FindItemByCategoryCommandObjectDiagram.png)
+<p align="center">
+  <img src="diagrams/object/FindItemByCategoryCommandObjectDiagram.png" width="750">
+</p>
 
 #### Find By Bin
 
@@ -351,21 +389,31 @@ Sequence diagrams:
 
 1. Parse and command creation.
 
-![FindItemByBinCommandParseFlow](diagrams/sequence/FindItemByBinCommandParseFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/FindItemByBinCommandParseFlow.png" width="800">
+</p>
 
 2. Inventory scan and bin matching.
 
-![FindItemByBinCommandMatchingFlow](diagrams/sequence/FindItemByBinCommandMatchingFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/FindItemByBinCommandMatchingFlow.png" width="800">
+</p>
 
 3. Result display.
 
-![FindItemByBinCommandDisplayFlow](diagrams/sequence/FindItemByBinCommandDisplayFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/FindItemByBinCommandDisplayFlow.png" width="800">
+</p>
 
 Class and object diagrams:
 
-![FindItemByBinCommandClassDiagram](diagrams/class/FindItemByBinCommandClassDiagram.png)
+<p align="center">
+  <img src="diagrams/class/FindItemByBinCommandClassDiagram.png" width="850">
+</p>
 
-![FindItemByBinCommandObjectDiagram](diagrams/object/FindItemByBinCommandObjectDiagram.png)
+<p align="center">
+  <img src="diagrams/object/FindItemByBinCommandObjectDiagram.png" width="750">
+</p>
 
 #### Find By Quantity
 
@@ -377,21 +425,31 @@ Sequence diagrams:
 
 1. Parse and command creation.
 
-![FindItemByQtyCommandParseFlow](diagrams/sequence/FindItemByQtyCommandParseFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/FindItemByQtyCommandParseFlow.png" width="800">
+</p>
 
 2. Inventory scan and quantity matching.
 
-![FindItemByQtyCommandMatchingFlow](diagrams/sequence/FindItemByQtyCommandMatchingFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/FindItemByQtyCommandMatchingFlow.png" width="800">
+</p>
 
 3. Result display.
 
-![FindItemByQtyCommandDisplayFlow](diagrams/sequence/FindItemByQtyCommandDisplayFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/FindItemByQtyCommandDisplayFlow.png" width="800">
+</p>
 
 Class and object diagrams:
 
-![FindItemByQtyCommandClassDiagram](diagrams/class/FindItemByQtyCommandClassDiagram.png)
+<p align="center">
+  <img src="diagrams/class/FindItemByQtyCommandClassDiagram.png" width="850">
+</p>
 
-![FindItemByQtyCommandObjectDiagram](diagrams/object/FindItemByQtyCommandObjectDiagram.png)
+<p align="center">
+  <img src="diagrams/object/FindItemByQtyCommandObjectDiagram.png" width="750">
+</p>
 
 #### Find By Keyword
 
@@ -403,21 +461,31 @@ Sequence diagrams:
 
 1. Parse and command creation.
 
-![FindItemByKeywordCommandParseFlow](diagrams/sequence/FindItemByKeywordCommandParseFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/FindItemByKeywordCommandParseFlow.png" width="800">
+</p>
 
 2. Inventory scan and keyword matching.
 
-![FindItemByKeywordCommandMatchingFlow](diagrams/sequence/FindItemByKeywordCommandMatchingFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/FindItemByKeywordCommandMatchingFlow.png" width="800">
+</p>
 
 3. Result display.
 
-![FindItemByKeywordCommandDisplayFlow](diagrams/sequence/FindItemByKeywordCommandDisplayFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/FindItemByKeywordCommandDisplayFlow.png" width="800">
+</p>
 
 Class and object diagrams:
 
-![FindItemByKeywordCommandClassDiagram](diagrams/class/FindItemByKeywordCommandClassDiagram.png)
+<p align="center">
+  <img src="diagrams/class/FindItemByKeywordCommandClassDiagram.png" width="850">
+</p>
 
-![FindItemByKeywordCommandObjectDiagram](diagrams/object/FindItemByKeywordCommandObjectDiagram.png)
+<p align="center">
+  <img src="diagrams/object/FindItemByKeywordCommandObjectDiagram.png" width="750">
+</p>
 
 ### Update Item Feature
 
@@ -450,23 +518,33 @@ The update feature is described by three focused sequence diagrams:
 
 Parsing and command construction:
 
-![UpdateItemCommandParseFlow](diagrams/sequence/UpdateItemCommandParseFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/UpdateItemCommandParseFlow.png" width="800">
+</p>
 
 Applying updates to the item:
 
-![UpdateItemCommandApplyUpdatesFlow](diagrams/sequence/UpdateItemCommandApplyUpdatesFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/UpdateItemCommandApplyUpdatesFlow.png" width="800">
+</p>
 
 Duplicate check and result reporting:
 
-![UpdateItemCommandDuplicateCheckFlow](diagrams/sequence/UpdateItemCommandDuplicateCheckFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/UpdateItemCommandDuplicateCheckFlow.png" width="800">
+</p>
 
 The main structural relationships for this feature are shown below.
 
-![UpdateItemCommandClassDiagram](diagrams/class/UpdateItemCommandClassDiagram.png)
+<p align="center">
+  <img src="diagrams/class/UpdateItemCommandClassDiagram.png" width="850">
+</p>
 
 A representative object snapshot for this feature is shown below.
 
-![UpdateItemCommandObjectDiagram](diagrams/object/UpdateItemCommandObjectDiagram.png)
+<p align="center">
+  <img src="diagrams/object/UpdateItemCommandObjectDiagram.png" width="750">
+</p>
 
 #### Component roles
 
@@ -588,15 +666,21 @@ recognising the command word. The command object acts mainly as a bridge between
 
 The main structural relationships for this feature are shown below.
 
-![ListCommandClassDiagram](diagrams/class/ListCommandClassDiagram.png)
+<p align="center">
+  <img src="diagrams/class/ListCommandClassDiagram.png" width="850">
+</p>
 
 A representative object snapshot for this feature is shown below.
 
-![ListCommandObjectDiagram](diagrams/object/ListCommandObjectDiagram.png)
+<p align="center">
+  <img src="diagrams/object/ListCommandObjectDiagram.png" width="750">
+</p>
 
 The main interaction for this flow is illustrated below.
 
-![ListCommandMainFlow](diagrams/sequence/ListCommandMainFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/ListCommandMainFlow.png" width="800">
+</p>
 
 #### Component-level implementation
 
@@ -711,7 +795,9 @@ the command, the command prepares the sorted result and the UI remains responsib
 
 The main structural relationships for this feature are shown below.
 
-![SortingClassDiagram](diagrams/class/SortingClassDiagram.png)
+<p align="center">
+  <img src="diagrams/class/SortingClassDiagram.png" width="850">
+</p>
 
 #### Command execution flow
 
@@ -734,19 +820,27 @@ and displaying the sorted inventory.
 
 The parsing and command creation flow is shown below.
 
-![SortCommandParseFlow](diagrams/sequence/SortCommandParseFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/SortCommandParseFlow.png" width="800">
+</p>
 
 The sorting preparation flow is shown below.
 
-![SortCommandSortingFlow](diagrams/sequence/SortCommandSortingFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/SortCommandSortingFlow.png" width="800">
+</p>
 
 The sorted inventory display flow is shown below.
 
-![SortCommandDisplayFlow](diagrams/sequence/SortCommandDisplayFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/SortCommandDisplayFlow.png" width="800">
+</p>
 
 A representative object snapshot for this feature is shown below.
 
-![SortingObjectDiagram](diagrams/object/SortingObjectDiagram.png)
+<p align="center">
+  <img src="diagrams/object/SortingObjectDiagram.png" width="750">
+</p>
 
 #### Sorting logic
 
@@ -820,7 +914,9 @@ At a high level, this feature fits into the same command based architecture used
 
 The main structural relationships for the storage feature are shown below.
 
-![SummaryClassDiagram](diagrams/class/SummaryClassDiagram.png)
+<p align="center">
+  <img src="diagrams/class/SummaryClassDiagram.png" width="850">
+</p>
 
 #### Implementation details
 
@@ -854,7 +950,9 @@ When the user enters a summary command, the implementation performs the followin
 
 The main interaction for this flow is illustrated below.
 
-![SummaryCommandMainFlow](diagrams/sequence/SummaryCommandMainFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/SummaryCommandMainFlow.png" width="800">
+</p>
 
 ### Storage feature
 
@@ -876,7 +974,9 @@ together with the reason the line was skipped.
 
 The main structural relationships for the storage feature are shown below.
 
-![StorageClassDiagram](diagrams/class/StorageClassDiagram.png)
+<p align="center">
+  <img src="diagrams/class/StorageClassDiagram.png" width="850">
+</p>
 
 #### Saving execution flow
 
@@ -888,7 +988,9 @@ When the application saves, `Storage` performs the following sequence:
 
 The main interaction for this flow is illustrated below.
 
-![StorageSavingMainFlow](diagrams/sequence/StorageSavingMainFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/StorageSavingMainFlow.png" width="800">
+</p>
 
 #### Loading execution flow
 
@@ -901,7 +1003,9 @@ When the application loads data from file, `Storage` performs the following sequ
 
 The main interaction for this flow is illustrated below.
 
-![StorageLoadingMainFlow](diagrams/sequence/StorageLoadingMainFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/StorageLoadingMainFlow.png" width="800">
+</p>
 
 #### Why the storage component is implemented this way
 
@@ -917,14 +1021,22 @@ Validation is layered: `DeleteCommandParser` rejects missing fields, non-integer
 
 Sequence Diagram:
 
-![DeleteItemCommandParseFlow](diagrams/sequence/DeleteItemCommandParseFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/DeleteItemCommandParseFlow.png" width="800">
+</p>
 
-![DeleteItemCommandExecutionFlow](diagrams/sequence/DeleteItemCommandExecutionFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/DeleteItemCommandExecutionFlow.png" width="800">
+</p>
 
 Class and object diagrams:
 
-![DeleteItemCommandClassDiagram](diagrams/class/DeleteItemCommandClassDiagram.png)
-![DeleteItemCommandObjectDiagram](diagrams/object/DeleteItemCommandObjectDiagram.png)
+<p align="center">
+  <img src="diagrams/class/DeleteItemCommandClassDiagram.png" width="850">
+</p>
+<p align="center">
+  <img src="diagrams/object/DeleteItemCommandObjectDiagram.png" width="750">
+</p>
 
 ### Clear Category Feature
 
@@ -957,14 +1069,22 @@ ui.showCategoryCleared(categoryName);
 
 Sequence Diagram:
 
-![ClearCategoryCommandParseFlow](diagrams/sequence/ClearCategoryCommandParseFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/ClearCategoryCommandParseFlow.png" width="800">
+</p>
 
-![ClearCategoryCommandExecutionFlow](diagrams/sequence/ClearCategoryCommandExecutionFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/ClearCategoryCommandExecutionFlow.png" width="800">
+</p>
 
 Class and object diagrams:
 
-![ClearCategoryCommandClassDiagram](diagrams/class/ClearCategoryCommandClassDiagram.png)
-![ClearCategoryCommandObjectDiagram](diagrams/object/ClearCategoryCommandObjectDiagram.png)
+<p align="center">
+  <img src="diagrams/class/ClearCategoryCommandClassDiagram.png" width="850">
+</p>
+<p align="center">
+  <img src="diagrams/object/ClearCategoryCommandObjectDiagram.png" width="750">
+</p>
 
 #### Design decisions
 - **Index-based deletion** was chosen over name-based deletion because multiple items can share the same name.
@@ -981,12 +1101,18 @@ This design keeps help output concise and avoids duplicating detailed usage that
 
 Sequence diagram:
 
-![HelpCommandMainFlow](diagrams/sequence/HelpCommandMainFlow.png)
+<p align="center">
+  <img src="diagrams/sequence/HelpCommandMainFlow.png" width="800">
+</p>
 
 Class and object diagrams:
 
-![HelpCommandClassDiagram](diagrams/class/HelpCommandClassDiagram.png)
-![HelpCommandObjectDiagram](diagrams/object/HelpCommandObjectDiagram.png)
+<p align="center">
+  <img src="diagrams/class/HelpCommandClassDiagram.png" width="850">
+</p>
+<p align="center">
+  <img src="diagrams/object/HelpCommandObjectDiagram.png" width="750">
+</p>
 
 A possible future improvement is supporting `help COMMAND` to show detailed usage for a specific command.
 
