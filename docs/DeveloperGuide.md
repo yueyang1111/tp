@@ -1109,7 +1109,8 @@ After setting up the application, proceed to the individual test cases below.
 5. Verify that `apple` appears under the `fruits` category with the entered values.
 6. Run `add category/unknown item/apple bin/A-1 qty/10 expiryDate/2026-4-01 isRipe/true`.
 7. Verify that the application shows a `Invalid input` error for the invalid category.
-8. Run an add command with a missing required field, for example `add category/fruits bin/A-1 qty/10 expiryDate/2026-4-01 isRipe/true`.
+8. Run an add command with a missing required field, for example 
+`add category/fruits bin/A-1 qty/10 expiryDate/2026-4-01 isRipe/true`.
 9. Verify that the application shows a `Missing input` error for the missing field.
 10. Run `add category/fruits item/apple bin/B-9 qty/99 expiryDate/2026-4-01 isRipe/true`.
 11. Verify that the application rejects it with a `Conflict` error for a duplicate logical batch.
