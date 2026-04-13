@@ -97,13 +97,13 @@ Parser and input exceptions:
 Inventory lookup exceptions:
 
 <p align="center">
-  <img src="diagrams/class/ExceptionHierarchyInventoryClassDiagram.png" width="850">
+  <img src="diagrams/class/ExceptionHierarchyInventoryClassDiagram.png" width="350">
 </p>
 
 Storage exceptions:
 
 <p align="center">
-  <img src="diagrams/class/ExceptionHierarchyStorageClassDiagram.png" width="850">
+  <img src="diagrams/class/ExceptionHierarchyStorageClassDiagram.png" width="275">
 </p>
 
 ### Add Item Feature
@@ -322,13 +322,13 @@ Sequence diagrams:
 2. Date parsing and matching.
 
 <p align="center">
-  <img src="diagrams/sequence/FindItemByExpiryDateCommandMatchingFlow.png" width="800">
+  <img src="diagrams/sequence/FindItemByExpiryDateCommandMatchingFlow.png" width="450">
 </p>
 
 3. Result display.
 
 <p align="center">
-  <img src="diagrams/sequence/FindItemByExpiryDateCommandDisplayFlow.png" width="800">
+  <img src="diagrams/sequence/FindItemByExpiryDateCommandDisplayFlow.png" width="450">
 </p>
 
 Class and object diagrams:
@@ -358,13 +358,13 @@ Sequence diagrams:
 2. Category lookup.
 
 <p align="center">
-  <img src="diagrams/sequence/FindItemByCategoryCommandMatchingFlow.png" width="800">
+  <img src="diagrams/sequence/FindItemByCategoryCommandMatchingFlow.png" width="450">
 </p>
 
 3. Result display.
 
 <p align="center">
-  <img src="diagrams/sequence/FindItemByCategoryCommandDisplayFlow.png" width="800">
+  <img src="diagrams/sequence/FindItemByCategoryCommandDisplayFlow.png" width="450">
 </p>
 
 Class and object diagrams:
@@ -394,13 +394,13 @@ Sequence diagrams:
 2. Inventory scan and bin matching.
 
 <p align="center">
-  <img src="diagrams/sequence/FindItemByBinCommandMatchingFlow.png" width="800">
+  <img src="diagrams/sequence/FindItemByBinCommandMatchingFlow.png" width="450">
 </p>
 
 3. Result display.
 
 <p align="center">
-  <img src="diagrams/sequence/FindItemByBinCommandDisplayFlow.png" width="800">
+  <img src="diagrams/sequence/FindItemByBinCommandDisplayFlow.png" width="450">
 </p>
 
 Class and object diagrams:
@@ -430,13 +430,13 @@ Sequence diagrams:
 2. Inventory scan and quantity matching.
 
 <p align="center">
-  <img src="diagrams/sequence/FindItemByQtyCommandMatchingFlow.png" width="800">
+  <img src="diagrams/sequence/FindItemByQtyCommandMatchingFlow.png" width="450">
 </p>
 
 3. Result display.
 
 <p align="center">
-  <img src="diagrams/sequence/FindItemByQtyCommandDisplayFlow.png" width="800">
+  <img src="diagrams/sequence/FindItemByQtyCommandDisplayFlow.png" width="450">
 </p>
 
 Class and object diagrams:
@@ -460,19 +460,19 @@ Sequence diagrams:
 1. Parse and command creation.
 
 <p align="center">
-  <img src="diagrams/sequence/FindItemByKeywordCommandParseFlow.png" width="800">
+  <img src="diagrams/sequence/FindItemByKeywordCommandParseFlow.png" width="450">
 </p>
 
 2. Inventory scan and keyword matching.
 
 <p align="center">
-  <img src="diagrams/sequence/FindItemByKeywordCommandMatchingFlow.png" width="800">
+  <img src="diagrams/sequence/FindItemByKeywordCommandMatchingFlow.png" width="450">
 </p>
 
 3. Result display.
 
 <p align="center">
-  <img src="diagrams/sequence/FindItemByKeywordCommandDisplayFlow.png" width="800">
+  <img src="diagrams/sequence/FindItemByKeywordCommandDisplayFlow.png" width="250">
 </p>
 
 Class and object diagrams:
@@ -808,7 +808,7 @@ The parsing and command creation flow is shown below.
 The sorting preparation flow is shown below.
 
 <p align="center">
-  <img src="diagrams/sequence/SortCommandSortingFlow.png" width="800">
+  <img src="diagrams/sequence/SortCommandSortingFlow.png" width="350">
 </p>
 
 The sorted inventory display flow is shown below.
@@ -970,7 +970,7 @@ When the application saves, `Storage` performs the following sequence:
 The main interaction for this flow is illustrated in below.
 
 <p align="center">
-  <img src="diagrams/sequence/StorageSavingMainFlow.png" width="800">
+  <img src="diagrams/sequence/StorageSavingMainFlow.png" width="400">
 </p>
 
 #### Loading execution flow
@@ -985,7 +985,7 @@ When the application loads data from file, `Storage` performs the following sequ
 The main interaction for this flow is illustrated in below.
 
 <p align="center">
-  <img src="diagrams/sequence/StorageLoadingMainFlow.png" width="800">
+  <img src="diagrams/sequence/StorageLoadingMainFlow.png" width="650">
 </p>
 
 #### Why the storage component is implemented this way
@@ -1003,20 +1003,20 @@ Validation is layered: `DeleteCommandParser` rejects missing fields, non-integer
 Sequence Diagram:
 
 <p align="center">
-  <img src="diagrams/sequence/DeleteItemCommandParseFlow.png" width="800">
+  <img src="diagrams/sequence/DeleteItemCommandParseFlow.png" width="400">
 </p>
 
 <p align="center">
-  <img src="diagrams/sequence/DeleteItemCommandExecutionFlow.png" width="800">
+  <img src="diagrams/sequence/DeleteItemCommandExecutionFlow.png" width="400">
 </p>
 
 Class and object diagrams:
 
 <p align="center">
-  <img src="diagrams/class/DeleteItemCommandClassDiagram.png" width="850">
+  <img src="diagrams/class/DeleteItemCommandClassDiagram.png" width="400">
 </p>
 <p align="center">
-  <img src="diagrams/object/DeleteItemCommandObjectDiagram.png" width="750">
+  <img src="diagrams/object/DeleteItemCommandObjectDiagram.png" width="400">
 </p>
 
 ### Clear Category Feature
@@ -1055,7 +1055,7 @@ Sequence Diagram:
 </p>
 
 <p align="center">
-  <img src="diagrams/sequence/ClearCategoryCommandExecutionFlow.png" width="800">
+  <img src="diagrams/sequence/ClearCategoryCommandExecutionFlow.png" width="400">
 </p>
 
 Class and object diagrams:
@@ -1092,7 +1092,7 @@ Class and object diagrams:
   <img src="diagrams/class/HelpCommandClassDiagram.png" width="850">
 </p>
 <p align="center">
-  <img src="diagrams/object/HelpCommandObjectDiagram.png" width="750">
+  <img src="diagrams/object/HelpCommandObjectDiagram.png" width="200">
 </p>
 
 A possible future improvement is supporting `help COMMAND` to show detailed usage for a specific command.

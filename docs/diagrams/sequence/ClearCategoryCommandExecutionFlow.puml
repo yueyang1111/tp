@@ -1,6 +1,8 @@
 @startuml
 title ClearCategoryCommand Execution Flow
 
+hide footbox
+
 actor User
 participant ClearCategoryCommand
 participant Inventory

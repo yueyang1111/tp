@@ -1,6 +1,8 @@
 @startuml
 title DeleteItemCommand Parse Flow
 
+hide footbox
+
 actor User
 participant Parser
 participant DeleteCommandParser

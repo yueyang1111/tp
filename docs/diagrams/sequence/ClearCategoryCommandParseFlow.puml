@@ -1,6 +1,8 @@
 @startuml
 title ClearCategoryCommand Parse Flow
 
+hide footbox
+
 actor User
 participant Parser
 participant ClearCommandParser
