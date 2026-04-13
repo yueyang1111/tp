@@ -8,7 +8,6 @@ import seedu.inventorydock.model.Category;
 import seedu.inventorydock.model.Inventory;
 import seedu.inventorydock.model.Item;
 import seedu.inventorydock.ui.UI;
-import seedu.inventorydock.exception.MissingArgumentException;
 
 import java.util.ArrayList;
 import java.util.List;
