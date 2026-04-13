@@ -921,7 +921,7 @@ together with the reason the line was skipped.
 
 The main structural relationships for the storage feature are shown below.
 
-![StorageClassDiagram](diagrams/class/StorageClass.png)
+![StorageClassDiagram](diagrams/class/StorageClassDiagram.png)
 
 #### Saving execution flow
 
