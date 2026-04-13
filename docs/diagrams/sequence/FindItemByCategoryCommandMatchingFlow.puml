@@ -8,6 +8,7 @@ participant ":FindItemByCategoryCommand" as FindItemByCategoryCommand
 participant ":Inventory" as Inventory
 participant ":Category" as Category
 
+activate FindItemByCategoryCommand
 FindItemByCategoryCommand -> Inventory: findCategoryByName(categoryInput)
 activate Inventory
 loop for each category in inventory
@@ -23,5 +24,6 @@ FindItemByCategoryCommand -> Category: getItems(), getName()
 activate Category
 Category --> FindItemByCategoryCommand: items, categoryName
 deactivate Category
+deactivate FindItemByCategoryCommand
 @enduml
 

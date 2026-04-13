@@ -9,6 +9,7 @@ participant ":Inventory" as Inventory
 participant ":Category" as Category
 participant ":Item" as Item
 
+activate FindItemByQtyCommand
 FindItemByQtyCommand -> Inventory: getCategories()
 activate Inventory
 Inventory --> FindItemByQtyCommand: categories
@@ -26,11 +27,13 @@ loop for each category in categories
         Item --> FindItemByQtyCommand: quantity
         deactivate Item
 
-        FindItemByQtyCommand -> FindItemByQtyCommand: quantity <= qtyInput
-        activate FindItemByQtyCommand
-        FindItemByQtyCommand --> FindItemByQtyCommand
-        deactivate FindItemByQtyCommand
+        opt quantity <= qtyInput
+            FindItemByQtyCommand -> FindItemByQtyCommand: add formatted match
+            activate FindItemByQtyCommand
+            FindItemByQtyCommand --> FindItemByQtyCommand
+            deactivate FindItemByQtyCommand
+        end
     end
 end
+deactivate FindItemByQtyCommand
 @enduml
-

@@ -9,6 +9,7 @@ participant ":Inventory" as Inventory
 participant ":Category" as Category
 participant ":Item" as Item
 
+activate FindItemByBinCommand
 FindItemByBinCommand -> Inventory: getCategories()
 activate Inventory
 Inventory --> FindItemByBinCommand: categories
@@ -32,5 +33,6 @@ loop for each category
         deactivate FindItemByBinCommand
     end
 end
+deactivate FindItemByBinCommand
 @enduml
 

@@ -8,6 +8,7 @@ actor User
 participant ":FindItemByQtyCommand" as FindItemByQtyCommand
 participant ":UI" as UI
 
+activate FindItemByQtyCommand
 alt no matches found
     FindItemByQtyCommand -> UI: formatNoItemsFoundMessage("with quantity: " + qtyInput)
     activate UI

@@ -8,12 +8,13 @@ actor User
 participant ":FindItemByCategoryCommand" as FindItemByCategoryCommand
 participant ":UI" as UI
 
+activate FindItemByCategoryCommand
 alt category not found
     FindItemByCategoryCommand -> UI: showCategoryNotFound(categoryInput)
     activate UI
     UI --> User: display error
     deactivate UI
-else else
+else category found but no items
     FindItemByCategoryCommand -> UI: showMessage("No items found ...")
     activate UI
     UI --> User: display no-match message
