@@ -15,7 +15,7 @@ object "<u>fruits:Category</u>" as fruits {
 object "<u>apple:Fruit</u>" as apple {
   name = "apple"
   quantity = 10
-  binLocation = "A1"
+  binLocation = "A-1"
 }
 object "<u>:UI</u>" as ui
 object "<u>dataFile:File</u>" as dataFile
@@ -40,3 +40,4 @@ storage --> dataFile : reads from >
 inventory --> fruits : contains >
 fruits --> apple : contains >
 @enduml
+

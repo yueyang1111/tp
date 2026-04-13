@@ -48,7 +48,7 @@ class Item {
   - binLocation: String
 }
 
-class InventoryDockException
+class DuplicateItemException
 
 class UI {
   + showItemAdded(...)
@@ -69,7 +69,7 @@ AddItemCommandParser ..> AddItemCommand : creates
 AddItemCommand --> Inventory : looks up category
 AddItemCommand --> Category : duplicate check + add
 AddItemCommand ..> DuplicateIdentityParser : builds duplicate key
-AddItemCommand ..> InventoryDockException : throws on duplicate
+AddItemCommand ..> DuplicateItemException : throws on duplicate
 AddItemCommand --> UI : success/error display
 Inventory "1" o-- "*" Category
 Category "1" o-- "*" Item

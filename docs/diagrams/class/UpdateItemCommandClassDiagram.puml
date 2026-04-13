@@ -47,8 +47,15 @@ class CommonFieldParser {
   + validateExpiryDate(expiryDate: String)
 }
 
+class DuplicateIdentityParser {
+  + buildBatchIdentityKey(category: String, target: Item): String
+}
+
+class DuplicateItemException
+
 class UI {
   + showItemUpdated(...)
+  + showError(message: String)
 }
 
 note as N1
@@ -65,6 +72,8 @@ UpdateItemCommand --> Inventory : queries through
 UpdateItemCommand --> Category : retrieves item from
 UpdateItemCommand --> Item : updates
 UpdateItemCommand ..> CommonFieldParser : validates with
+UpdateItemCommand ..> DuplicateIdentityParser : builds duplicate key
+UpdateItemCommand ..> DuplicateItemException : throws on duplicate
 UpdateItemCommand --> UI : shows result via
 Inventory "1" o-- "*" Category
 Category "1" o-- "*" Item

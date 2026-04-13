@@ -21,21 +21,21 @@ object "snacks : Category" as snacks {
 object "apple : Item" as apple {
   name = "Apple"
   quantity = 3
-  binLocation = "A1"
+  binLocation = "A-1"
   expiryDate = "2026-04-10"
 }
 
 object "banana : Item" as banana {
   name = "Banana"
   quantity = 8
-  binLocation = "A2"
+  binLocation = "A-2"
   expiryDate = "2026-04-08"
 }
 
 object "chips : Item" as chips {
   name = "Chips"
   quantity = 5
-  binLocation = "B1"
+  binLocation = "B-1"
   expiryDate = "2026-06-01"
 }
 
@@ -65,4 +65,5 @@ note as N1
 end note
 
 @enduml
+
 

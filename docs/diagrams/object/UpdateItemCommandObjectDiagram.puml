@@ -19,13 +19,13 @@ object "<u>snacks:Category</u>" as snacks {
 object "<u>apple:Item</u>" as apple {
   name = "apple"
   quantity = 20
-  binLocation = "A1"
+  binLocation = "A-1"
   expiryDate = "2026-4-15"
 }
 object "<u>chips:Item</u>" as chips {
   name = "chips"
   quantity = 8
-  binLocation = "B2"
+  binLocation = "B-2"
   expiryDate = "2026-5-01"
 }
 object "<u>fieldParser:CommonFieldParser</u>" as fieldParser
@@ -49,3 +49,4 @@ inventory --> snacks : contains >
 fruits --> apple : contains >
 snacks --> chips : contains >
 @enduml
+

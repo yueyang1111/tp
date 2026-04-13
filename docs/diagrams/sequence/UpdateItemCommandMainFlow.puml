@@ -13,6 +13,7 @@ participant ":Inventory" as Inventory
 participant ":Category" as Category
 participant ":Item" as Item
 participant ":CommonFieldParser" as CommonFieldParser
+participant ":DuplicateIdentityParser" as DuplicateIdentityParser
 
 User -> UI: enter update command
 activate UI
@@ -86,19 +87,36 @@ end
 UpdateItemCommand --> UpdateItemCommand
 deactivate UpdateItemCommand
 
-UpdateItemCommand -> Item: getName()
-activate Item
-Item --> UpdateItemCommand: updatedName
-deactivate Item
+loop for each existing item in category
+    UpdateItemCommand -> DuplicateIdentityParser: buildBatchIdentityKey(categoryName, candidate)
+    activate DuplicateIdentityParser
+    DuplicateIdentityParser --> UpdateItemCommand: candidateIdentity
+    deactivate DuplicateIdentityParser
 
-UpdateItemCommand -> UI: showItemUpdated(originalName, updatedName, categoryName)
-activate UI
-UI --> User: display confirmation
-deactivate UI
+    UpdateItemCommand -> DuplicateIdentityParser: buildBatchIdentityKey(categoryName, existing)
+    activate DuplicateIdentityParser
+    DuplicateIdentityParser --> UpdateItemCommand: existingIdentity
+    deactivate DuplicateIdentityParser
+end
 
-deactivate UpdateItemCommand
+alt duplicate found
+    UpdateItemCommand --> InventoryDock: throw DuplicateItemException("Duplicate item found...")
+    deactivate UpdateItemCommand
+    InventoryDock -> UI: showError("Duplicate item found...")
+    UI --> User: display error
+else else
+    UpdateItemCommand -> Item: getName()
+    activate Item
+    Item --> UpdateItemCommand: updatedName
+    deactivate Item
+
+    UpdateItemCommand -> UI: showItemUpdated(originalName, updatedName, categoryName)
+    activate UI
+    UI --> User: display confirmation
+    deactivate UI
+    deactivate UpdateItemCommand
+end
+
 deactivate InventoryDock
 deactivate UI
 @enduml
-
-

@@ -1,15 +1,31 @@
 @startuml
-title Sequence Diagram for AddItemCommand (Single-Category Parsing and Command Creation)
+title Sequence Diagram for AddItemCommand (Single-Category Parsing and Command Creation, Fruit Example)
 
 autonumber
 hide footbox
 
+actor User
+participant ":InventoryDock" as InventoryDock
+participant ":Parser" as Parser
 participant ":AddCommandParser" as AddCommandParser
 participant ":AddItemCommandParser" as AddItemCommandParser
 participant ":InputValidator" as InputValidator
 participant ":CommonFieldParser" as CommonFieldParser
 participant ":BooleanFieldParser" as BooleanFieldParser
+participant ":AddItemCommand" as AddItemCommand
 
+note right of AddItemCommandParser
+This diagram uses fruits as an example.
+Other supported categories follow the same parsing pattern
+with their own category-specific boolean field.
+end note
+
+User -> InventoryDock: execute(add command)
+activate InventoryDock
+InventoryDock -> Parser: parse(input)
+activate Parser
+Parser -> AddCommandParser: parse(arguments)
+activate AddCommandParser
 AddCommandParser -> AddItemCommandParser: handleFruit(trimmedInput)
 activate AddItemCommandParser
 
@@ -28,13 +44,18 @@ activate BooleanFieldParser
 BooleanFieldParser --> AddItemCommandParser: isRipe
 deactivate BooleanFieldParser
 
-create ":AddItemCommand" as AddItemCommand
-AddItemCommandParser -> AddItemCommand: 5 AddItemCommand(categoryName, item)
+create AddItemCommand
+AddItemCommandParser -> AddItemCommand: AddItemCommand(categoryName, item)
 activate AddItemCommand
-AddItemCommand --> AddItemCommandParser: 6 command
+AddItemCommand --> AddItemCommandParser: command
 deactivate AddItemCommand
 
 AddItemCommandParser --> AddCommandParser: command
 deactivate AddItemCommandParser
+AddCommandParser --> Parser: command
+deactivate AddCommandParser
+Parser --> InventoryDock: command
+deactivate Parser
+InventoryDock --> User
+deactivate InventoryDock
 @enduml
-

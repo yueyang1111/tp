@@ -16,12 +16,12 @@ object "<u>fruits:Category</u>" as fruits {
 object "<u>existingApple:Item</u>" as existingApple {
   name = "apple"
   quantity = 10
-  binLocation = "A1"
+  binLocation = "A-1"
 }
 object "<u>incomingApple:Item</u>" as incomingApple {
   name = "apple"
   quantity = 20
-  binLocation = "B2"
+  binLocation = "B-2"
 }
 object "<u>:UI</u>" as ui
 
@@ -42,3 +42,4 @@ addCommand --> ui : reports via >
 inventory --> fruits : contains >
 fruits --> existingApple : contains >
 @enduml
+

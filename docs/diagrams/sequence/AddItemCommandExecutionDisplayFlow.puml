@@ -10,21 +10,25 @@ participant ":AddItemCommand" as AddItemCommand
 participant ":Inventory" as Inventory
 participant ":Category" as Category
 participant ":DuplicateIdentityParser" as DuplicateIdentityParser
+participant ":DateParser" as DateParser
 participant ":UI" as UI
 
+User -> InventoryDock: execute(add command)
 activate InventoryDock
 InventoryDock -> AddItemCommand: execute(inventory, ui)
 activate AddItemCommand
+
 AddItemCommand -> Inventory: findCategoryByName(categoryName)
 activate Inventory
 Inventory --> AddItemCommand: matchingCategory / null
-deactivate Inventory
+Deactivate Inventory
 
 alt category not found
-    AddItemCommand --> InventoryDock: throw CategoryNotFoundException
-    deactivate AddItemCommand
-    InventoryDock -> UI: showError("Category not found: ...")
-    UI --> User: display error
+    AddItemCommand --> InventoryDock: throw CategoryNotFoundException("Category not found: ...")
+    InventoryDock -> UI: showError(e)
+    activate UI
+    UI --> InventoryDock: display error
+    deactivate UI
 else else
     loop for each existing item in category
         AddItemCommand -> DuplicateIdentityParser: buildBatchIdentityKey(categoryName, candidate)
@@ -39,23 +43,39 @@ else else
     end
 
     alt duplicate found
-        AddItemCommand --> InventoryDock: throw InventoryDockException("Duplicate item found...")
-        deactivate AddItemCommand
-        InventoryDock -> UI: showError("Duplicate item found...")
-        UI --> User: display error
+        AddItemCommand --> InventoryDock: throw DuplicateItemException("Duplicate item found...")
+        InventoryDock -> UI: showError(e)
+        activate UI
+        UI --> InventoryDock: display error
+        deactivate UI
     else else
         AddItemCommand -> Category: addItem(item)
         activate Category
         Category --> AddItemCommand
         deactivate Category
 
-        AddItemCommand -> UI: showItemAdded(...)
+        AddItemCommand -> UI: showItemAdded(itemName, qty, categoryName, bin)
         activate UI
-        UI --> User: display confirmation
+        UI --> AddItemCommand: display confirmation
         deactivate UI
-        deactivate AddItemCommand
+
+        AddItemCommand -> DateParser: parseDate(item.getExpiryDate())
+        activate DateParser
+        DateParser --> AddItemCommand: expiryDate
+        deactivate DateParser
+
+        opt expiry date is in the past
+            AddItemCommand -> UI: showMessage("Note: expiry date is already in the past...")
+            activate UI
+            UI --> AddItemCommand: display warning
+            deactivate UI
+        end
     end
 end
 
-deactivate InventoryDock
+AddItemCommand --> InventoryDock
+Deactivate AddItemCommand
+InventoryDock --> User
+Deactivate InventoryDock
 @enduml
+

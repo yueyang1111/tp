@@ -5,7 +5,6 @@ autonumber
 hide footbox
 
 actor User
-participant ":UI" as UI
 participant ":InventoryDock" as InventoryDock
 participant ":Parser" as Parser
 participant ":AddCommandParser" as AddCommandParser
@@ -18,9 +17,7 @@ snacks, drinks, meat,
 accessories.
 end note
 
-User -> UI: enter add command
-activate UI
-UI -> InventoryDock: input
+User -> InventoryDock: execute(add command)
 activate InventoryDock
 InventoryDock -> Parser: parse(input)
 activate Parser
@@ -28,14 +25,15 @@ activate Parser
 Parser -> AddCommandParser: parse(arguments)
 activate AddCommandParser
 AddCommandParser -> AddCommandParser: validateRequiredFields(trimmedInput)
+activate AddCommandParser
+AddCommandParser --> AddCommandParser
+deactivate AddCommandParser
 AddCommandParser -> AddCommandParser: extractCategory(trimmedInput)
+activate AddCommandParser
+AddCommandParser --> AddCommandParser: category
+Deactivate AddCommandParser
 
-alt category == fruits
-    AddCommandParser -> AddItemCommandParser: handleFruit(trimmedInput)
-    activate AddItemCommandParser
-    AddItemCommandParser --> AddCommandParser: command
-    deactivate AddItemCommandParser
-else else
+alt valid category
     AddCommandParser -> AddItemCommandParser: handleCategory(trimmedInput)
     activate AddItemCommandParser
     AddItemCommandParser --> AddCommandParser: command
@@ -48,8 +46,6 @@ AddCommandParser --> Parser: command
 deactivate AddCommandParser
 Parser --> InventoryDock: command
 deactivate Parser
+InventoryDock --> User
 deactivate InventoryDock
-deactivate UI
 @enduml
-
-

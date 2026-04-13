@@ -11,7 +11,7 @@ object "<u>fruits:Category</u>" as fruits {
 object "<u>apple:Fruit</u>" as apple {
   name = "apple"
   quantity = 10
-  binLocation = "A1"
+  binLocation = "A-1"
 }
 object "<u>snacks:Category</u>" as snacks {
   name = "snacks"
@@ -19,7 +19,7 @@ object "<u>snacks:Category</u>" as snacks {
 object "<u>chips:Snack</u>" as chips {
   name = "chips"
   quantity = 8
-  binLocation = "B2"
+  binLocation = "B-2"
 }
 object "<u>dataFile:File</u>" as dataFile
 
@@ -43,3 +43,4 @@ snacks --> chips : contains >
 storage ..> apple : formats >
 storage ..> chips : formats >
 @enduml
+
