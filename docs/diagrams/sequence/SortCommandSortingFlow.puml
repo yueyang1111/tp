@@ -7,7 +7,6 @@ hide footbox
 participant ":SortCommand" as SortCommand
 participant ":Inventory" as Inventory
 participant ":Category" as Category
-participant ":DateParser" as DateParser
 
 SortCommand -> SortCommand: getSortedItemsByCategory(inventory)
 activate SortCommand
@@ -25,50 +24,25 @@ loop for each category
 
     SortCommand -> SortCommand: create copied item list
     activate SortCommand
-    SortCommand --> SortCommand: copied list created
+    SortCommand --> SortCommand: copied list
     deactivate SortCommand
 
-    SortCommand -> SortCommand: getComparator()
+    SortCommand -> SortCommand: get comparator for sort type
     activate SortCommand
-    alt sortType is "name"
-        SortCommand --> SortCommand: Comparator<Item> by name
-    else else
-        SortCommand --> SortCommand: Comparator<Item> by quantity (descending)
-    else else
-        SortCommand --> SortCommand: Comparator<Item> by expiry date
-    end
+    SortCommand --> SortCommand: comparator
     deactivate SortCommand
 
-    SortCommand -> SortCommand: sortedItems.sort(comparator)
+    SortCommand -> SortCommand: sort copied list
     activate SortCommand
-
-    opt sortType is "expirydate"
-        loop comparator evaluates item expiry dates
-            SortCommand -> SortCommand: parseExpiryDate(item.getExpiryDate())
-            activate SortCommand
-            SortCommand -> DateParser: parseDate(expiryDate)
-            activate DateParser
-            alt date is valid
-                DateParser --> SortCommand: LocalDate
-            else else
-                DateParser --> SortCommand: InvalidDateException
-                SortCommand -> SortCommand: return LocalDate.MAX
-            end
-            deactivate DateParser
-            deactivate SortCommand
-        end
-    end
-
-    SortCommand --> SortCommand: items sorted
+    SortCommand --> SortCommand: sorted items
     deactivate SortCommand
 
-    SortCommand -> SortCommand: add sortedItems to sortedItemsByCategory
+    SortCommand -> SortCommand: add sorted items to result
     activate SortCommand
-    SortCommand --> SortCommand: list updated
+    SortCommand --> SortCommand: result updated
     deactivate SortCommand
 end
 
 SortCommand --> SortCommand: sortedItemsByCategory
 deactivate SortCommand
 @enduml
-
