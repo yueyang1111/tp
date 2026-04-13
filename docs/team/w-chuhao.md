@@ -16,6 +16,7 @@ Given below are my contributions to the project.
   - What it does: Allows users to use the `list` command to view the complete inventory after adding, updating, deleting, or loading items from storage.
   - Justification: This is a foundational read operation that gives users a quick snapshot of current stock and supports many other workflows, such as checking inventory state before update or delete operations.
   - Highlights: I added `ListCommand`, integrated it into the parser flow, added tests to verify expected listing behaviour, and ensured it cooperates with the application's exception-based error-handling flow.
+  - Representative PR: [#34](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/34)
 
 - **New Feature**: Added the ability to find items by category.
   - What it does: Allows users to retrieve all items stored in a specified category using `find category/CATEGORY`.
@@ -95,20 +96,25 @@ Diagram files I contributed:
 - [AddItemCommandParseRoutingFlow](../diagrams/sequence/AddItemCommandParseRoutingFlow.png)
 - [AddItemCommandSingleCategoryParsingFlow](../diagrams/sequence/AddItemCommandSingleCategoryParsingFlow.png)
 - [AddItemCommandExecutionDisplayFlow](../diagrams/sequence/AddItemCommandExecutionDisplayFlow.png)
-- [ListCommandParseFlow](../diagrams/sequence/ListCommandParseFlow.png)
-- [ListCommandTraversalFlow](../diagrams/sequence/ListCommandTraversalFlow.png)
-- [ListCommandDisplayFlow](../diagrams/sequence/ListCommandDisplayFlow.png)
+- [ListCommandMainFlow](../diagrams/sequence/ListCommandMainFlow.png)
 - [FindItemByCategoryCommandParseFlow](../diagrams/sequence/FindItemByCategoryCommandParseFlow.png)
 - [FindItemByCategoryCommandMatchingFlow](../diagrams/sequence/FindItemByCategoryCommandMatchingFlow.png)
 - [FindItemByCategoryCommandDisplayFlow](../diagrams/sequence/FindItemByCategoryCommandDisplayFlow.png)
-- [FindItemByBinCommandMainFlow](../diagrams/sequence/FindItemByBinCommandMainFlow.png)
+- [FindItemByBinCommandParseFlow](../diagrams/sequence/FindItemByBinCommandParseFlow.png)
+- [FindItemByBinCommandMatchingFlow](../diagrams/sequence/FindItemByBinCommandMatchingFlow.png)
+- [FindItemByBinCommandDisplayFlow](../diagrams/sequence/FindItemByBinCommandDisplayFlow.png)
+- [FindItemByQtyCommandParseFlow](../diagrams/sequence/FindItemByQtyCommandParseFlow.png)
+- [FindItemByQtyCommandMatchingFlow](../diagrams/sequence/FindItemByQtyCommandMatchingFlow.png)
+- [FindItemByQtyCommandDisplayFlow](../diagrams/sequence/FindItemByQtyCommandDisplayFlow.png)
 - Class diagrams:
 - [AddItemCommandClassDiagram](../diagrams/class/AddItemCommandClassDiagram.png)
 - [ListCommandClassDiagram](../diagrams/class/ListCommandClassDiagram.png)
 - [FindItemByCategoryCommandClassDiagram](../diagrams/class/FindItemByCategoryCommandClassDiagram.png)
 - [FindItemByBinCommandClassDiagram](../diagrams/class/FindItemByBinCommandClassDiagram.png)
+- [FindItemByQtyCommandClassDiagram](../diagrams/class/FindItemByQtyCommandClassDiagram.png)
 - Object diagrams:
 - [AddItemCommandObjectDiagram](../diagrams/object/AddItemCommandObjectDiagram.png)
 - [ListCommandObjectDiagram](../diagrams/object/ListCommandObjectDiagram.png)
 - [FindItemByCategoryCommandObjectDiagram](../diagrams/object/FindItemByCategoryCommandObjectDiagram.png)
 - [FindItemByBinCommandObjectDiagram](../diagrams/object/FindItemByBinCommandObjectDiagram.png)
+- [FindItemByQtyCommandObjectDiagram](../diagrams/object/FindItemByQtyCommandObjectDiagram.png)
