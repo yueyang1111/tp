@@ -4,11 +4,15 @@ title Sequence Diagram for FindItemByExpiryDateCommand (Date Parsing and Matchin
 autonumber
 hide footbox
 
+actor User
 participant ":FindItemByExpiryDateCommand" as FindItemByExpiryDateCommand
 participant ":DateParser" as DateParser
 participant ":Inventory" as Inventory
 participant ":Category" as Category
 participant ":Item" as Item
+
+User -> FindItemByExpiryDateCommand: execute(inventory, ui)
+activate FindItemByExpiryDateCommand
 
 FindItemByExpiryDateCommand -> DateParser: parseDate(expiryDateInput)
 activate DateParser
@@ -32,17 +36,21 @@ loop for each category
         Item --> FindItemByExpiryDateCommand: itemExpiryDate
         deactivate Item
 
-        alt itemExpiryDate != null
+
             FindItemByExpiryDateCommand -> DateParser: parseDate(itemExpiryDate)
             activate DateParser
             DateParser --> FindItemByExpiryDateCommand: itemDate
             deactivate DateParser
-            FindItemByExpiryDateCommand -> FindItemByExpiryDateCommand: add match if itemDate <= cutoffDate
+
+        opt itemDate <= cutoffDate
+            FindItemByExpiryDateCommand -> FindItemByExpiryDateCommand: add match
             activate FindItemByExpiryDateCommand
             FindItemByExpiryDateCommand --> FindItemByExpiryDateCommand
             deactivate FindItemByExpiryDateCommand
         end
     end
 end
-@enduml
 
+FindItemByExpiryDateCommand --> User
+deactivate FindItemByExpiryDateCommand
+@enduml
