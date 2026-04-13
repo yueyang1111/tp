@@ -73,8 +73,16 @@ public class CommonFieldParser {
         return new CommonFieldParser(itemName, categoryName, bin, quantity, expiryDate);
     }
 
-    // parseBinLocation
-
+    /**
+     * Parses and validates a concrete bin location in LETTER-NUMBER format.
+     *
+     * @param bin bin location to validate.
+     * @return trimmed bin location.
+     * @throws InventoryDockException if the bin location format is invalid.
+     */
+    private static String parseBinLocation(String bin) throws InventoryDockException {
+        return BinLocationParser.parseExactInput(bin);
+    }
 
     /**
      * Parses the specified quantity string as a positive integer.
@@ -110,5 +118,19 @@ public class CommonFieldParser {
         }
     }
 
+    /**
+     * Validates that the specified expiry date is present and in a valid format.
+     *
+     * @param expiryDate Expiry date string to validate.
+     * @throws InventoryDockException If the expiry date is missing or invalid.
+     */
+    public static void validateExpiryDate(String expiryDate) throws InventoryDockException {
+        if (expiryDate == null || expiryDate.trim().isEmpty()) {
+            logger.log(Level.WARNING, "Missing expiry date while parsing common fields.");
+            throw new MissingArgumentException("expiry date is required.");
+        }
+        logger.log(Level.INFO, "Validating expiry date: " + expiryDate);
+        DateParser.validateDate(expiryDate);
+    }
 
 }
