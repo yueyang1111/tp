@@ -69,7 +69,7 @@ alt supported category
 
     AddCommandParser --> Parser: command
     Parser --> InventoryDock: command
-else unsupported category
+else else
     AddCommandParser --> Parser --: throw InvalidCommandException
     Parser --> InventoryDock --: propagate exception
     InventoryDock -> UI: showError(exception)

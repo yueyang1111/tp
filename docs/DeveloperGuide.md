@@ -111,7 +111,9 @@ parsers based on the category provided by the user.
 For example, if the user enters
 `add category/fruits item/apple bin/A-1 qty/10 expiryDate/2026-4-01 isRipe/true`,
 the system validates the common and category-specific fields, constructs the correct `Item`
-subclass, and adds it into the matching category.
+subclass, and adds it into the matching category. The parsing diagram below uses the fruit
+category as the worked example; the other add-item categories follow the same overall pattern
+with a different category-specific boolean field and item subtype.
 
 #### High-level design
 
@@ -121,17 +123,17 @@ application. The feature follows this flow:
 1. The user enters an `add` command.
 2. `Parser` recognises the `add` command word and delegates the remaining input to `AddCommandParser`.
 3. `AddCommandParser` validates `category/`, extracts the category, and routes to the matching category-specific method in `AddItemCommandParser`.
-4. `AddItemCommandParser` validates the remaining fields, parses the shared fields and the category-specific boolean field, constructs the correct `Item` subtype, and creates an `AddItemCommand`.
+4. `AddItemCommandParser` validates the remaining fields, parses the shared fields and the category-specific boolean field, constructs the correct `Item` subtype, and creates an `AddItemCommand`. In the first diagram, this is illustrated using `Fruit` as the concrete example.
 5. `InventoryDock` executes the command with access to the current `Inventory` and `UI`.
 6. The command finds the target category, rejects duplicate logical batches using a normalized identity key (ignoring `qty/` and `bin/`), then inserts the item or reports the error through `UI`.
 
 Sequence diagrams:
 
-1. Parse routing, validator flow, and command creation for the fruit category. The other add-item categories follow the same overall parsing pattern. This is the first diagram.
+1. Parse routing, validator flow, and command creation for the fruit category. The other add-item categories follow the same overall parsing pattern with different boolean-field prefixes and item subtypes. This is the first diagram.
 
 ![AddItemCommandParseRoutingFlow](diagrams/sequence/AddItemCommandParseRoutingFlow.png)
 
-2. Command execution and error handling. This is the second diagram and continues after Diagram 1 returns an AddItemCommand to InventoryDock.
+2. Command execution and error handling. This is the second diagram and continues after Diagram 1 returns an `AddItemCommand` to `InventoryDock`.
 
 ![AddItemCommandExecutionDisplayFlow](diagrams/sequence/AddItemCommandExecutionDisplayFlow.png)
 
@@ -174,7 +176,7 @@ The responsibilities of these classes are as follows:
 - `Parser` identifies that the user wants to perform an add operation.
 - `AddCommandParser` validates shared required fields and chooses the correct parsing branch based on
   `category/`.
-- `AddItemCommandParser` coordinates common-field parsing and boolean-field parsing.
+- `AddItemCommandParser` coordinates common-field parsing, boolean-field parsing, and construction of the category-specific `Item` subtype.
 - `BooleanFieldParser` parses and validates the single boolean field required by each concrete `Item` subtype.
 - `AddItemCommand` performs duplicate-batch checking and insertion into the inventory.
 - `Inventory` finds the matching category by name.
@@ -1222,6 +1224,7 @@ After setting up the application, proceed to the individual test cases below.
 10. Verify that the application shows `N/A` for the corresponding summary fields.
 11. Run `summary invalidType`. 
 12. Verify that the application shows the appropriate invalid summary type error message.
+
 
 
 

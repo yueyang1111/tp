@@ -61,18 +61,19 @@ I wrote or substantially updated the User Guide sections for:
 - [Finding items by bin](../UserGuide.md#finding-items-by-bin-find-bin)
 - [Finding items by quantity](../UserGuide.md#finding-items-by-quantity-find-qty)
 
-These updates covered command formats, examples, expected outcomes, and usage notes.
+These updates covered command formats, examples, expected outcomes, usage notes, and the shared add-command structure used across categories with different boolean fields.
 
 ### Contributions to the Developer Guide
 
 I wrote or substantially updated the Developer Guide sections for Add Item, List, Find Item By Category, Find Item By Bin, and Find Item By Quantity.
 
-My contributions covered feature motivation, design, implementation details, alternatives considered, limitations, future improvements, and manual testing.
+My contributions covered feature motivation, the split between the fruit-category parse example and the continued execution flow, implementation details, alternatives considered, limitations, future improvements, and manual testing.
 
 I also added and updated UML diagrams for these features.
 
 Diagram files I contributed:
-- Sequence diagrams: [AddItemCommandParseRoutingFlow](../diagrams/sequence/AddItemCommandParseRoutingFlow.png), [AddItemCommandExecutionDisplayFlow](../diagrams/sequence/AddItemCommandExecutionDisplayFlow.png), [ListCommandMainFlow](../diagrams/sequence/ListCommandMainFlow.png), [FindItemByCategoryCommandParseFlow](../diagrams/sequence/FindItemByCategoryCommandParseFlow.png), [FindItemByCategoryCommandMatchingFlow](../diagrams/sequence/FindItemByCategoryCommandMatchingFlow.png), [FindItemByCategoryCommandDisplayFlow](../diagrams/sequence/FindItemByCategoryCommandDisplayFlow.png), [FindItemByBinCommandParseFlow](../diagrams/sequence/FindItemByBinCommandParseFlow.png), [FindItemByBinCommandMatchingFlow](../diagrams/sequence/FindItemByBinCommandMatchingFlow.png), [FindItemByBinCommandDisplayFlow](../diagrams/sequence/FindItemByBinCommandDisplayFlow.png), [FindItemByQtyCommandParseFlow](../diagrams/sequence/FindItemByQtyCommandParseFlow.png), [FindItemByQtyCommandMatchingFlow](../diagrams/sequence/FindItemByQtyCommandMatchingFlow.png), [FindItemByQtyCommandDisplayFlow](../diagrams/sequence/FindItemByQtyCommandDisplayFlow.png)
+- Sequence diagrams: [AddItemCommandParseRoutingFlow](../diagrams/sequence/AddItemCommandParseRoutingFlow.png) (fruit-category parse example), [AddItemCommandExecutionDisplayFlow](../diagrams/sequence/AddItemCommandExecutionDisplayFlow.png) (continued execution and error handling), [ListCommandMainFlow](../diagrams/sequence/ListCommandMainFlow.png), [FindItemByCategoryCommandParseFlow](../diagrams/sequence/FindItemByCategoryCommandParseFlow.png), [FindItemByCategoryCommandMatchingFlow](../diagrams/sequence/FindItemByCategoryCommandMatchingFlow.png), [FindItemByCategoryCommandDisplayFlow](../diagrams/sequence/FindItemByCategoryCommandDisplayFlow.png), [FindItemByBinCommandParseFlow](../diagrams/sequence/FindItemByBinCommandParseFlow.png), [FindItemByBinCommandMatchingFlow](../diagrams/sequence/FindItemByBinCommandMatchingFlow.png), [FindItemByBinCommandDisplayFlow](../diagrams/sequence/FindItemByBinCommandDisplayFlow.png), [FindItemByQtyCommandParseFlow](../diagrams/sequence/FindItemByQtyCommandParseFlow.png), [FindItemByQtyCommandMatchingFlow](../diagrams/sequence/FindItemByQtyCommandMatchingFlow.png), [FindItemByQtyCommandDisplayFlow](../diagrams/sequence/FindItemByQtyCommandDisplayFlow.png)
 - Class diagrams: [AddItemCommandClassDiagram](../diagrams/class/AddItemCommandClassDiagram.png), [ListCommandClassDiagram](../diagrams/class/ListCommandClassDiagram.png), [FindItemByCategoryCommandClassDiagram](../diagrams/class/FindItemByCategoryCommandClassDiagram.png), [FindItemByBinCommandClassDiagram](../diagrams/class/FindItemByBinCommandClassDiagram.png), [FindItemByQtyCommandClassDiagram](../diagrams/class/FindItemByQtyCommandClassDiagram.png)
 - Object diagrams: [AddItemCommandObjectDiagram](../diagrams/object/AddItemCommandObjectDiagram.png), [ListCommandObjectDiagram](../diagrams/object/ListCommandObjectDiagram.png), [FindItemByCategoryCommandObjectDiagram](../diagrams/object/FindItemByCategoryCommandObjectDiagram.png), [FindItemByBinCommandObjectDiagram](../diagrams/object/FindItemByBinCommandObjectDiagram.png), [FindItemByQtyCommandObjectDiagram](../diagrams/object/FindItemByQtyCommandObjectDiagram.png)
+
 

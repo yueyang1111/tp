@@ -47,7 +47,7 @@ Notes about the command format:
 * For `add`, fields must appear in the correct order.
 
 ### Adding an item: `add`
-Adds a new item to an existing category.
+Adds a new item to an existing built-in category.
 
 Format:
 
@@ -89,6 +89,7 @@ Expected result:
 
 * The item is added to the specified category.
 * The app confirms the item name, quantity, category, and bin location.
+* Each category uses the same overall add-command structure, with a different category-specific boolean field such as `isRipe/`, `isLeafy/`, or `isCarbonated/`.
 * Duplicate-batch rule for `add`:
   * Duplicate checking ignores only `qty/` and `bin/`.
   * The logical batch identity still includes `category/`, `item/`, `expiryDate/`, and the category-specific boolean field.
@@ -433,3 +434,4 @@ Error messages use a consistent format such as `[Error] Invalid input: ...`, `[E
   `delete category/CATEGORY index/INDEX`
 * Clear a category
   `clear category/CATEGORY`
+
