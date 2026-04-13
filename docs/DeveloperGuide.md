@@ -440,7 +440,7 @@ At a high level, the flow is as follows:
 * `UpdateItemCommand` locates the item, applies the updates, checks for duplicate-batch conflicts, and
   reports the result through `UI`.
 
-The main interaction for this flow is illustrated below.
+The main interaction for this flow is illustrated in [ListCommandMainFlow](diagrams/sequence/ListCommandMainFlow.png) below.
 
 ![UpdateItemCommandMainFlow](diagrams/sequence/UpdateItemCommandMainFlow.png)
 
@@ -576,7 +576,7 @@ A representative object snapshot for this feature is shown below.
 
 ![ListCommandObjectDiagram](diagrams/object/ListCommandObjectDiagram.png)
 
-The main interaction for this flow is illustrated below.
+The main interaction for this flow is illustrated in [ListCommandMainFlow](diagrams/sequence/ListCommandMainFlow.png) below.
 
 ![ListCommandMainFlow](diagrams/sequence/ListCommandMainFlow.png)
 
@@ -835,7 +835,7 @@ When the user enters a summary command, the implementation performs the followin
 5. `SummaryCommand` passes the prepared summary data to `UI`.
 6. `UI` formats and displays the summary view.
 
-The main interaction for this flow is illustrated below.
+The main interaction for this flow is illustrated in [ListCommandMainFlow](diagrams/sequence/ListCommandMainFlow.png) below.
 
 ![SummaryCommandMainFlow](diagrams/sequence/SummaryCommandMainFlow.png)
 
@@ -869,7 +869,7 @@ When the application saves, `Storage` performs the following sequence:
 2. Convert each item into its storage format using `toStorageString(categoryName)`. 
 3. Write the resulting lines to the storage file.
 
-The main interaction for this flow is illustrated below.
+The main interaction for this flow is illustrated in [ListCommandMainFlow](diagrams/sequence/ListCommandMainFlow.png) below.
 
 ![StorageSavingMainFlow](diagrams/sequence/StorageSavingMainFlow.png)
 
@@ -882,7 +882,7 @@ When the application loads data from file, `Storage` performs the following sequ
 3. Execute the parsed command to rebuild the inventory state in memory. 
 4. Skip malformed lines where appropriate and continue loading the remaining valid lines.
 
-The main interaction for this flow is illustrated below.
+The main interaction for this flow is illustrated in [ListCommandMainFlow](diagrams/sequence/ListCommandMainFlow.png) below.
 
 ![StorageLoadingMainFlow](diagrams/sequence/StorageLoadingMainFlow.png)
 
@@ -1224,6 +1224,7 @@ After setting up the application, proceed to the individual test cases below.
 10. Verify that the application shows `N/A` for the corresponding summary fields.
 11. Run `summary invalidType`. 
 12. Verify that the application shows the appropriate invalid summary type error message.
+
 
 
 
