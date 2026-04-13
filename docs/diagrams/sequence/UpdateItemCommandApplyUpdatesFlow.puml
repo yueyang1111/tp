@@ -1,0 +1,55 @@
+@startuml
+title Sequence Diagram for UpdateItemCommand (Applying Updates)
+
+autonumber
+hide footbox
+
+participant ":UpdateItemCommand" as UpdateItemCommand
+participant ":Item" as Item
+participant ":CommonFieldParser" as CommonFieldParser
+
+UpdateItemCommand -> UpdateItemCommand: applyUpdates(item)
+activate UpdateItemCommand
+
+loop for each update entry
+    alt field is "newItem"
+        UpdateItemCommand -> Item: setName(value)
+        activate Item
+        Item --> UpdateItemCommand
+        deactivate Item
+    else field is "bin"
+        UpdateItemCommand -> Item: setBinLocation(value)
+        activate Item
+        Item --> UpdateItemCommand
+        deactivate Item
+    else field is "qty"
+        UpdateItemCommand -> CommonFieldParser: parseQuantity(value)
+        activate CommonFieldParser
+        CommonFieldParser --> UpdateItemCommand: quantity
+        deactivate CommonFieldParser
+
+        UpdateItemCommand -> Item: setQuantity(quantity)
+        activate Item
+        Item --> UpdateItemCommand
+        deactivate Item
+    else field is "expiryDate"
+        UpdateItemCommand -> CommonFieldParser: validateExpiryDate(value)
+        activate CommonFieldParser
+        CommonFieldParser --> UpdateItemCommand
+        deactivate CommonFieldParser
+
+        UpdateItemCommand -> Item: setExpiryDate(value)
+        activate Item
+        Item --> UpdateItemCommand
+        deactivate Item
+    else category-specific field
+        UpdateItemCommand -> UpdateItemCommand: updateCategorySpecificField(item, field, value)
+        activate UpdateItemCommand
+        UpdateItemCommand --> UpdateItemCommand
+        deactivate UpdateItemCommand
+    end
+end
+
+UpdateItemCommand --> UpdateItemCommand
+deactivate UpdateItemCommand
+@enduml

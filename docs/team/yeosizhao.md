@@ -53,7 +53,7 @@ InventoryDock is a CLI based inventory management application that helps users m
 - Drew the following PlantUML diagrams:
 - Class diagrams: `UpdateItemCommandClassDiagram`, `FindItemByExpiryDateCommandClassDiagram`, `ExceptionHierarchyParserClassDiagram`, `ExceptionHierarchyStorageClassDiagram`, and `ExceptionHierarchyInventoryClassDiagram`.
 - Object diagrams: `UpdateItemCommandObjectDiagram` and `FindItemByExpiryDateCommandObjectDiagram`.
-- Sequence diagrams: `UpdateItemCommandMainFlow`, `FindItemByExpiryDateCommandMatchingFlow`, `FindItemByExpiryDateCommandParseFlow`, and `FindItemByExpiryDateCommandDisplayFlow`.
+- Sequence diagrams: `UpdateItemCommandParseFlow`, `UpdateItemCommandApplyUpdatesFlow`, `UpdateItemCommandDuplicateCheckFlow`, `FindItemByExpiryDateCommandMatchingFlow`, `FindItemByExpiryDateCommandParseFlow`, and `FindItemByExpiryDateCommandDisplayFlow`.
 
 ### Contributions to team-based tasks
 

@@ -441,9 +441,24 @@ At a high level, the flow is as follows:
 * `UpdateItemCommand` locates the item, applies the updates, checks for duplicate-batch conflicts, and
   reports the result through `UI`.
 
-The main interaction for this flow is illustrated below.
+The update feature is described by three focused sequence diagrams:
 
-![UpdateItemCommandMainFlow](diagrams/sequence/UpdateItemCommandMainFlow.png)
+1. `UpdateItemCommandParseFlow`: parsing the command and building the `UpdateItemCommand`.
+2. `UpdateItemCommandApplyUpdatesFlow`: applying requested field updates to the target item.
+3. `UpdateItemCommandDuplicateCheckFlow`: validating duplicates, rolling back invalid updates, and
+   showing the final result.
+
+Parsing and command construction:
+
+![UpdateItemCommandParseFlow](diagrams/sequence/UpdateItemCommandParseFlow.png)
+
+Applying updates to the item:
+
+![UpdateItemCommandApplyUpdatesFlow](diagrams/sequence/UpdateItemCommandApplyUpdatesFlow.png)
+
+Duplicate check and result reporting:
+
+![UpdateItemCommandDuplicateCheckFlow](diagrams/sequence/UpdateItemCommandDuplicateCheckFlow.png)
 
 The main structural relationships for this feature are shown below.
 

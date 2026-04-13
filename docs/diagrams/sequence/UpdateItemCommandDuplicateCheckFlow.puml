@@ -1,0 +1,46 @@
+@startuml
+title Sequence Diagram for UpdateItemCommand (Duplicate Check and Result Display)
+
+autonumber
+hide footbox
+
+actor User
+participant ":UpdateItemCommand" as UpdateItemCommand
+participant ":Item" as Item
+participant ":Category" as Category
+participant ":UI" as UI
+
+User -> UpdateItemCommand: continue after applyUpdates(item)
+activate UpdateItemCommand
+
+UpdateItemCommand -> UpdateItemCommand: findDuplicateItem(category, item)
+activate UpdateItemCommand
+UpdateItemCommand --> UpdateItemCommand: duplicate / null
+deactivate UpdateItemCommand
+
+alt duplicate exists and duplicate != item
+    UpdateItemCommand -> UpdateItemCommand: restoreFromSnapshot(item, snapshot)
+    activate UpdateItemCommand
+    UpdateItemCommand --> UpdateItemCommand
+    deactivate UpdateItemCommand
+
+    UpdateItemCommand --> User: throw DuplicateItemException
+else else
+    UpdateItemCommand -> Item: getName()
+    activate Item
+    Item --> UpdateItemCommand: updatedName
+    deactivate Item
+
+    UpdateItemCommand -> Category: getName()
+    activate Category
+    Category --> UpdateItemCommand: categoryName
+    deactivate Category
+
+    UpdateItemCommand -> UI: showItemUpdated(originalName, updatedName, categoryName)
+    activate UI
+    UI --> User: display confirmation
+    deactivate UI
+end
+
+deactivate UpdateItemCommand
+@enduml

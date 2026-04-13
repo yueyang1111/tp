@@ -1,0 +1,37 @@
+@startuml
+title Sequence Diagram for UpdateItemCommand (Parse and Command Creation)
+
+autonumber
+hide footbox
+
+actor User
+participant ":UI" as UI
+participant ":InventoryDock" as InventoryDock
+participant ":Parser" as Parser
+participant ":UpdateCommandParser" as UpdateCommandParser
+
+User -> UI: enter update command
+activate UI
+UI -> InventoryDock: input
+activate InventoryDock
+InventoryDock -> Parser: parse(input)
+activate Parser
+
+Parser -> UpdateCommandParser: parse(arguments)
+activate UpdateCommandParser
+
+create ":UpdateItemCommand" as UpdateItemCommand
+UpdateCommandParser -> UpdateItemCommand: UpdateItemCommand(categoryName, itemIndex, fields)
+activate UpdateItemCommand
+UpdateItemCommand --> UpdateCommandParser: command
+deactivate UpdateItemCommand
+
+UpdateCommandParser --> Parser: command
+deactivate UpdateCommandParser
+Parser --> InventoryDock: command
+deactivate Parser
+InventoryDock --> UI: command ready
+deactivate InventoryDock
+UI --> User: proceed to execution
+deactivate UI
+@enduml
