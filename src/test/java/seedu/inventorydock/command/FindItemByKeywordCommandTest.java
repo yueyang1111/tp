@@ -31,7 +31,7 @@ public class FindItemByKeywordCommandTest {
         fruitsCategory.addItem(new Fruit("apple", 40, "A-10", "2026-10-03", true));
         fruitsCategory.addItem(new Fruit("pineapple", 10, "A-11", "2026-10-03", false));
         fruitsCategory.addItem(new Fruit("banana", 30, "B-10", "2026-10-03", true));
-        snacksCategory.addItem(new Snack("chips", 50, "D-05", "2026-10-03", true));
+        snacksCategory.addItem(new Snack("potato chips", 50, "D-05", "2026-10-03", true));
         drinksCategory.addItem(new Drinks("apple_juice", 24, "F-01", "2026-10-03", true));
 
         inventory.addCategory(fruitsCategory);
@@ -64,7 +64,7 @@ public class FindItemByKeywordCommandTest {
 
         assertEquals(2, ui.dividerCount);
         assertTrue(ui.messages.stream().anyMatch(message -> message.contains("snacks: "
-                + "[Snack] Name: chips")));
+                + "[Snack] Name: potato chips")));
     }
 
     @Test
@@ -80,6 +80,18 @@ public class FindItemByKeywordCommandTest {
                 + "[Fruit] Name: pineapple")));
         assertTrue(ui.messages.stream().anyMatch(message -> message.contains("drinks: "
                 + "[Drinks] Name: apple_juice")));
+    }
+
+    @Test
+    public void execute_phraseKeyword_showsMatchingItems() {
+        FindItemByKeywordCommand command = new FindItemByKeywordCommand("potato chips");
+        TestUI ui = new TestUI();
+
+        command.execute(inventory, ui);
+
+        assertEquals(2, ui.dividerCount);
+        assertTrue(ui.messages.stream().anyMatch(message -> message.contains("snacks: "
+                + "[Snack] Name: potato chips")));
     }
 
     @Test

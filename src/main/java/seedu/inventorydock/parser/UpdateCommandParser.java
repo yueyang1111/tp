@@ -9,6 +9,8 @@ import seedu.inventorydock.exception.MissingArgumentException;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Parses user input for the update command into an executable command object.
@@ -16,6 +18,8 @@ import java.util.Map;
  * and update fields before creating an update command.
  */
 public class UpdateCommandParser {
+    private static final Pattern FIELD_PATTERN = Pattern.compile("(\\S+)/");
+
     /**
      * Parses the specified update command arguments into an update command.
      * The input must contain <code>category/</code>, <code>index/</code>, and at least
@@ -33,21 +37,39 @@ public class UpdateCommandParser {
                     + "[newItem/NAME] [bin/BIN] [qty/QTY] [expiryDate/DATE] ...");
         }
 
-        String[] tokens = input.trim().split("\\s+");
         Map<String, String> fields = new HashMap<>();
+        Matcher matcher = FIELD_PATTERN.matcher(input.trim());
+        String invalidToken = null;
 
-        for (String token : tokens) {
-            int separatorIndex = token.indexOf('/');
-            if (separatorIndex <= 0 || separatorIndex == token.length() - 1) {
-                throw new InvalidCommandException("Update token '" + token + "' is invalid.");
+        while (matcher.find()) {
+            String key = matcher.group(1);
+            int valueStart = matcher.end();
+            int valueEnd = input.length();
+
+            if (matcher.find()) {
+                valueEnd = matcher.start();
+                matcher.region(matcher.start(), input.length());
             }
 
-            String key = token.substring(0, separatorIndex);
-            String value = token.substring(separatorIndex + 1);
+            String value = input.substring(valueStart, valueEnd).trim();
+            if (value.isEmpty()) {
+                invalidToken = key + "/";
+                break;
+            }
+
             if (fields.containsKey(key)) {
                 throw new InvalidCommandException("Duplicate update field: " + key + "/.");
             }
             fields.put(key, value);
+        }
+
+        if (fields.isEmpty()) {
+            String[] tokens = input.trim().split("\\s+");
+            invalidToken = tokens[0];
+        }
+
+        if (invalidToken != null) {
+            throw new InvalidCommandException("Update token '" + invalidToken + "' is invalid.");
         }
 
         String categoryName = fields.remove("category");

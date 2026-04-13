@@ -395,7 +395,7 @@ Class and object diagrams:
 
 #### Find By Keyword
 
-Command format: `find keyword/KEYWORD`
+Command format: `find keyword/KEYWORD_OR_PHRASE`
 
 Contributed by: KOIiiii07.
 
@@ -456,7 +456,7 @@ A representative object snapshot for this feature is shown below.
 #### Component roles
 
 * `Parser` detects the update command word and delegates to `UpdateCommandParser`.
-* `UpdateCommandParser` tokenises the input, validates `category/`, `index/`, and `bin/`, stores the
+* `UpdateCommandParser` scans field markers, validates `category/`, `index/`, and `bin/`, stores the
   requested changes in a `Map<String, String>`, and constructs an `UpdateItemCommand`.
 * `UpdateItemCommand` locates the item, applies the requested changes, rolls back on validation
   failure, and rejects duplicate-batch collisions.
@@ -506,7 +506,9 @@ ui.showItemUpdated(originalName, item.getName(), category.getName());
 #### Design notes
 
 The parser stores updates in a `Map<String, String>` so one command can handle any valid combination of
-updated fields. This keeps the parsing logic simple and avoids separate command classes for different
+updated fields. The parser reads values between field markers instead of splitting purely on whitespace,
+so `newItem/` can support multi-word item names while still preserving the structured `field/value`
+format. This keeps the parsing logic simple and avoids separate command classes for different
 update cases.
 
 The feature also reuses existing validation helpers such as `CommonFieldParser.parseQuantity(...)`,
@@ -1125,9 +1127,9 @@ After setting up the application, proceed to the individual test cases below.
 
 ### Testing update feature
 
-1. Run `update category/fruits index/1 newItem/green_apple bin/A-2 expiryDate/2026-5-01`
+1. Run `update category/fruits index/1 newItem/green apple bin/A-2 expiryDate/2026-5-01`
 2. Verify that:
-  * The item name is updated to green_apple  
+  * The item name is updated to green apple  
   * The bin location is updated to A-2  
   * The expiry date is updated to 2026-5-01  
 3. Run `list`.
@@ -1156,6 +1158,8 @@ After setting up the application, proceed to the individual test cases below.
 26. Verify that the application shows `Unsupported update field: brand/.`
 27. Run `update category/fruits index/1 isFrozen/true`
 28. Verify that the application shows `isFrozen/ can only be updated for meat.`
+29. Run `update category/fruits index/1 newItem/red apple`
+30. Verify that the application accepts the spaced item name and shows the updated name correctly.
 
 ### Testing Sort Command
 1. Add several items into at least one category with different names, expiry dates, and quantities.
@@ -1216,8 +1220,10 @@ After setting up the application, proceed to the individual test cases below.
 5. Verify that the search is case-insensitive and returns the same results.
 6. Run `find keyword/chip`.
 7. Verify that partial matches such as `chips` are returned.
-8. Run `find keyword/mango`.
-9. Verify that the application shows `No items found matching keyword: mango.` when there are no
+8. Run `find keyword/potato chips`.
+9. Verify that the application accepts the multi-word phrase and returns matching items.
+10. Run `find keyword/mango`.
+11. Verify that the application shows `No items found matching keyword: mango.` when there are no
    matches.
 
 ### Testing Summary Command

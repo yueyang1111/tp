@@ -21,6 +21,7 @@ Notes about command syntax:
 * Category matching is case-insensitive. For example, `fruits` and `FRUITS` refer to the same category.
 * Field names are case-sensitive. Type them exactly as shown, such as `category/`, `item/`, `qty/`, and `expiryDate/`.
 * For `add`, fields must be entered in the correct order for the selected category.
+* Item names can contain spaces. For example, `item/potato chips` and `newItem/sour cream chips` are valid.
 * Boolean fields only accept `true` or `false`.
 * Quantities must be positive integers.
 * Dates must use `yyyy-M-d`, for example `2026-3-9` or `2026-12-31`.
@@ -104,21 +105,23 @@ Example (`fruits`: `isRipe/`):
   * `add category/fruits item/apple bin/B-20 qty/99 expiryDate/2026-6-6 isRipe/true`
 
 ### Find items by keyword: `find keyword/...`
-Finds items whose names contain the given keyword.
+Finds items whose names contain the given keyword or phrase.
 
 Format:
 
-`find keyword/KEYWORD`
+`find keyword/KEYWORD_OR_PHRASE`
 
 Notes:
 
 * Matching is case-insensitive.
 * Partial matches work. For example, `apple` matches `apple`, `pineapple`, and `apple_juice`.
+* Multi-word phrases are supported. For example, `potato chips` matches `potato chips`.
 
 Examples:
 
 * `find keyword/apple`
 * `find keyword/chip`
+* `find keyword/potato chips`
 
 Expected result:
 
@@ -291,12 +294,14 @@ Notes:
 * `INDEX` is the item number within that category, using 1-based indexing.
 * You must provide at least one field to update.
 * Category-specific boolean fields such as `isRipe/`, `isCarbonated/`, or `isFrozen/` can also be updated, but only for items in the matching category.
+* `newItem/` supports names with spaces, for example `newItem/sour cream chips`.
 * `bin/` must use the exact `LETTER-NUMBER` format, for example `A-2`.
 * `update` uses the same duplicate-batch rule as `add`: only `qty/` and `bin/` are ignored when checking for duplicates.
 Examples:
 
 * `update category/fruits index/1 qty/25`
 * `update category/fruits index/1 newItem/green_apple bin/A-2 expiryDate/2026-4-1`
+* `update category/snacks index/1 newItem/salted chips`
 
 Expected result:
 
@@ -392,6 +397,10 @@ Error messages use a consistent format such as `[Error] Invalid input: ...`, `[E
 
 **A:** Yes. You can update the category-specific boolean field that belongs to the item's category, in addition to `newItem/`, `bin/`, `qty/`, and `expiryDate/`.
 
+**Q:** Can item names contain spaces?
+
+**A:** Yes. Item names can contain spaces in both `add` and `update`, and `find keyword/...` also supports multi-word phrases.
+
 **Q:** What date format should I use?
 
 **A:** Use `yyyy-M-d`, for example `2026-3-21`.
@@ -412,7 +421,7 @@ Error messages use a consistent format such as `[Error] Invalid input: ...`, `[E
 * Sort items:
   `sort SORT_TYPE`
 * Find items by keyword:
-  `find keyword/KEYWORD`
+  `find keyword/KEYWORD_OR_PHRASE`
 * Find items by category:
   `find category/CATEGORY`
 * Find items by expiry date:

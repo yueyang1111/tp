@@ -82,4 +82,12 @@ public class UpdateCommandParserTest {
                 () -> parser.parse("category/vegetables index/1 bin/A10"));
         assertEquals("Bin location must be LETTER-NUMBER (e.g. A-10).", exception.getMessage());
     }
+
+    @Test
+    public void parse_newItemWithSpaces_returnsUpdateItemCommand() throws Exception {
+        UpdateCommandParser parser = new UpdateCommandParser();
+
+        assertInstanceOf(UpdateItemCommand.class, parser.parse(
+                "category/snacks index/1 newItem/salted chips"));
+    }
 }
