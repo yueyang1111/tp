@@ -85,10 +85,12 @@ public class FindItemByQtyCommand extends Command {
             String noItemsMessage = ui.formatNoItemsFoundMessage("with quantity: " + qtyInput);
             logger.log(Level.INFO, noItemsMessage);
             ui.showMessage(noItemsMessage);
+            ui.showDivider();
             return;
         }
 
-        logger.log(Level.INFO, ui.formatFoundItemsMessage(matches.size(), "with quantity '" + qtyInput + "'"));
+        logger.log(Level.INFO, ui.formatFoundItemsMessage(matches.size(), "with quantity '"
+                + qtyInput + "'"));
 
         ui.showDivider();
         ui.showMessage(ui.formatFindResultsHeader("with quantity: " + qtyInput));

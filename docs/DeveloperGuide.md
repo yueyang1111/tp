@@ -37,6 +37,7 @@
    - [Sort Command](#testing-sort-command)
    - [Storage Feature](#testing-storage)
    - [Clear Category](#testing-clear-category)
+   - [Delete Item](#testing-delete-item)
    - [Find by Keyword](#testing-find-by-keyword)
    - [Summary](#testing-summary-command)
 
@@ -1350,6 +1351,31 @@ After setting up the application, proceed to the individual test cases below.
 12. Add items back to `fruits`, then run `clear category/fruits`.
 13. Type `no` and press enter.
 14. Verify that the category is not cleared.
+
+### Testing delete item
+
+1. Ensure the inventory contains a non-empty category such as `fruits` with at least two items.
+2. Run `list` and note the item at index 1 in `fruits`.
+3. Run `delete category/fruits index/1`.
+4. Verify that the application shows a confirmation message with the deleted item's name and category.
+5. Run `list`.
+6. Verify that the item is removed and the remaining items are re-indexed.
+7. Run `delete category/unknown index/1`.
+8. Verify that the application shows the category-not-found error.
+9. Run `delete category/fruits index/999`.
+10. Verify that the application shows an out-of-range error indicating the valid range for `fruits`.
+11. Run `delete category/fruits index/0`.
+12. Verify that the application shows "Item index must be a positive integer."
+13. Run `delete category/fruits index/-1`.
+14. Verify that the application shows "Item index must be a positive integer."
+15. Run `delete category/fruits index/abc`.
+16. Verify that the application shows "Item index must be an integer."
+17. Run `delete index/1`.
+18. Verify that the application shows an error indicating that category is required.
+19. Run `delete category/fruits`.
+20. Verify that the application shows an error indicating that index is required.
+21. Run `delete`.
+22. Verify that the application shows an error indicating what to specify.
 
 ### Testing find by keyword
 

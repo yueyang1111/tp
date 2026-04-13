@@ -83,7 +83,7 @@ public class FindItemByBinCommandTest {
 
         assertEquals(1, ui.messages.size());
         assertEquals("No items found in bin location: Z.", ui.messages.get(0));
-        assertEquals(0, ui.dividerCount);
+        assertEquals(1, ui.dividerCount);
     }
 
     @Test

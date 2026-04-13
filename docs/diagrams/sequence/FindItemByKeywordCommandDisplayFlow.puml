@@ -1,27 +1,8 @@
 @startuml
 title FindItemByKeywordCommand Display Flow
 
-actor User
-participant FindItemByKeywordCommand
-participant UI
-
-User -> FindItemByKeywordCommand : execute()
-activate FindItemByKeywordCommand
-
-alt matches empty
-    FindItemByKeywordCommand -> UI : showNoItemsFound()
-    activate UI
-    UI --> FindItemByKeywordCommand
-    deactivate UI
-
-else else
-    FindItemByKeywordCommand -> UI : showDivider()
-    activate UI
-    UI --> FindItemByKeywordCommand
-    deactivate UI
-
-@startuml
-title FindItemByKeywordCommand Display Flow
+autonumber
+hide footbox
 
 actor User
 participant FindItemByKeywordCommand

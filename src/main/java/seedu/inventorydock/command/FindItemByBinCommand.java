@@ -54,6 +54,7 @@ public class FindItemByBinCommand extends Command {
             String noItemsMessage = ui.formatNoItemsFoundMessage("in bin location: " + binInput.toUpperCase());
             logger.log(Level.INFO, noItemsMessage);
             ui.showMessage(noItemsMessage);
+            ui.showDivider();
             return;
         }
 

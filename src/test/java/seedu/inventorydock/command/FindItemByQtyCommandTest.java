@@ -77,7 +77,7 @@ public class FindItemByQtyCommandTest {
 
         assertEquals(1, ui.messages.size());
         assertEquals("No items found with quantity: 5.", ui.messages.get(0));
-        assertEquals(0, ui.dividerCount);
+        assertEquals(1, ui.dividerCount);
     }
 
     @Test

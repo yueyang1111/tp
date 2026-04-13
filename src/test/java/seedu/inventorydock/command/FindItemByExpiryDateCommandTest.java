@@ -66,6 +66,7 @@ public class FindItemByExpiryDateCommandTest {
 
         assertEquals(1, ui.messages.size());
         assertEquals("No items found expiring by 2026-3-18.", ui.messages.get(0));
+        assertEquals(1, ui.dividerCount);
     }
 
     @Test

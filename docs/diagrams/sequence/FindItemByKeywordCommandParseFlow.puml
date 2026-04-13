@@ -1,22 +1,8 @@
 @startuml
 title FindItemByKeywordCommand Parse Flow
 
-actor User
-participant Parser
-participant FindItemParser
-participant FindItemByKeywordCommand
-
-User -> Parser : input
-activate Parser
-
-Parser -> FindItemParser : parse(input)
-activate FindItemParser
-
-alt invalid / missing input
-    FindItemParser --> Parser : exception
-
-@startuml
-title FindItemByKeywordCommand Parse Flow
+autonumber
+hide footbox
 
 actor User
 participant Parser

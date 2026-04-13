@@ -53,10 +53,21 @@ public class UI {
         System.out.println("Hello from\n" + LOGO);
         System.out.println("Hello! Welcome to InventoryDock!");
         System.out.println("What can I do for you?");
+        System.out.println();
+        System.out.println("Quick start:");
+        System.out.println("  Type 'help' to see all"
+                + " available commands.");
+        System.out.println("  Type 'list' to view your"
+                + " current inventory.");
+        System.out.println("  Type 'bye' to exit.");
         showDivider();
     }
 
     public void showGoodbye() {
+        showDivider();
+        System.out.println("Thank you for using InventoryDock!");
+        System.out.println("Your inventory has been saved to data/inventory.txt.");
+        System.out.println();
         System.out.println("Goodbye! See you next time!");
         showDivider();
     }
@@ -66,9 +77,7 @@ public class UI {
     }
 
     public void showMessage(String message) {
-        showDivider();
         System.out.println(message);
-        showDivider();
     }
 
     public String formatFoundItemsMessage(int matchCount, String searchDescription) {
@@ -274,9 +283,52 @@ public class UI {
 
     public void showHelp() {
         showDivider();
-        System.out.println("Available commands: " + "add, delete, clear, update, find, sort, summary, list, help, bye");
+        System.out.println("Available commands:");
         System.out.println();
-        System.out.println("For detailed usage and examples, " + "refer to our User Guide:");
+        System.out.println("  add        Add an item to a category");
+        System.out.println("             Format: add category/CATEGORY item/ITEM bin/BIN qty/QUANTITY "
+                + "expiryDate/DATE BOOLEAN_FIELD/VALUE");
+        System.out.println("             Example: add category/fruits item/apple bin/A-10 qty/40 "
+                + "expiryDate/2026-10-3 isRipe/true");
+        System.out.println();
+        System.out.println("  delete     Delete an item by category and index");
+        System.out.println("             Format: delete category/CATEGORY index/INDEX");
+        System.out.println("             Example: delete category/fruits index/2");
+        System.out.println();
+        System.out.println("  clear      Clear all items in a category");
+        System.out.println("             Format: clear category/CATEGORY");
+        System.out.println("             Example: clear category/fruits");
+        System.out.println();
+        System.out.println("  update     Update an existing item's fields");
+        System.out.println("             Format: update category/CATEGORY index/INDEX [newItem/NAME] "
+                + "[bin/BIN] [qty/QTY] [expiryDate/DATE]");
+        System.out.println("             Example: update category/fruits index/1 qty/25");
+        System.out.println();
+        System.out.println("  find       Search for items by keyword, category, expiry date, bin, or quantity");
+        System.out.println("             Formats: find keyword/KEYWORD");
+        System.out.println("                      find category/CATEGORY");
+        System.out.println("                      find expiryDate/DATE");
+        System.out.println("                      find bin/BIN");
+        System.out.println("                      find qty/QUANTITY");
+        System.out.println("             Example: find keyword/apple");
+        System.out.println();
+        System.out.println("  sort       Sort items within each category");
+        System.out.println("             Format: sort SORT_TYPE");
+        System.out.println("             Valid types: name, expirydate, qty");
+        System.out.println();
+        System.out.println("  summary    View inventory summary");
+        System.out.println("             Formats: summary | summary stock | summary expirydate");
+        System.out.println();
+        System.out.println("  list       List entire inventory grouped by category");
+        System.out.println("             Format: list");
+        System.out.println();
+        System.out.println("  help       Show this help message");
+        System.out.println("             Format: help");
+        System.out.println();
+        System.out.println("  bye        Exit the application");
+        System.out.println("             Format: bye");
+        System.out.println();
+        System.out.println("For detailed usage and examples, refer to our User Guide:");
         System.out.println("https://ay2526s2-cs2113-w09-2.github.io/tp/UserGuide.html");
         showDivider();
     }

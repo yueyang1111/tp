@@ -173,7 +173,10 @@ public class UITest {
     public void showGoodbye_printsMessage() {
         UI ui = createUIWithInput("");
         ui.showGoodbye();
-        assertTrue(output.toString().contains("Goodbye"));
+        String out = output.toString();
+        assertTrue(out.contains("Thank you for using InventoryDock!"));
+        assertTrue(out.contains("saved to data/inventory.txt"));
+        assertTrue(out.contains("Goodbye! See you next time!"));
     }
 
     @Test
@@ -194,7 +197,54 @@ public class UITest {
     public void showHelp_printsUserGuideLink() {
         UI ui = createUIWithInput("");
         ui.showHelp();
-        assertTrue(output.toString().contains("User Guide"));
+        String out = output.toString();
+        assertTrue(out.contains("User Guide"));
+        assertTrue(out.contains("https://ay2526s2-cs2113-w09-2.github.io/tp/UserGuide.html"));
+    }
+
+    @Test
+    public void showHelp_printsAllCommandFormats() {
+        UI ui = createUIWithInput("");
+        ui.showHelp();
+        String out = output.toString();
+        assertTrue(out.contains("add"));
+        assertTrue(out.contains("category/CATEGORY item/ITEM"));
+        assertTrue(out.contains("delete"));
+        assertTrue(out.contains("category/CATEGORY index/INDEX"));
+        assertTrue(out.contains("clear"));
+        assertTrue(out.contains("clear category/CATEGORY"));
+        assertTrue(out.contains("update"));
+        assertTrue(out.contains("find"));
+        assertTrue(out.contains("find keyword/KEYWORD"));
+        assertTrue(out.contains("sort"));
+        assertTrue(out.contains("sort SORT_TYPE"));
+        assertTrue(out.contains("summary"));
+        assertTrue(out.contains("list"));
+        assertTrue(out.contains("help"));
+        assertTrue(out.contains("bye"));
+    }
+
+    @Test
+    public void showHelp_printsExamples() {
+        UI ui = createUIWithInput("");
+        ui.showHelp();
+        String out = output.toString();
+        assertTrue(out.contains("add category/fruits item/apple"));
+        assertTrue(out.contains("delete category/fruits index/2"));
+        assertTrue(out.contains("clear category/fruits"));
+        assertTrue(out.contains("update category/fruits index/1 qty/25"));
+        assertTrue(out.contains("find keyword/apple"));
+    }
+
+    @Test
+    public void showWelcome_printsQuickStartTips() {
+        UI ui = createUIWithInput("");
+        ui.showWelcome();
+        String out = output.toString();
+        assertTrue(out.contains("Welcome to InventoryDock"));
+        assertTrue(out.contains("Type 'help'"));
+        assertTrue(out.contains("Type 'list'"));
+        assertTrue(out.contains("Type 'bye'"));
     }
 
     @Test

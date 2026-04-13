@@ -77,6 +77,7 @@ public class FindItemByCategoryCommand extends Command {
             String noItemsMessage = ui.formatNoItemsFoundMessage("in category: " + matched.getName());
             logger.log(Level.INFO, noItemsMessage);
             ui.showMessage(noItemsMessage);
+            ui.showDivider();
             return;
         }
 

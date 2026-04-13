@@ -70,6 +70,7 @@ public class FindItemByExpiryDateCommand extends Command {
             String noItemsMessage = ui.formatNoItemsFoundMessage("expiring by " + expiryDateInput);
             logger.log(Level.INFO, noItemsMessage);
             ui.showMessage(noItemsMessage);
+            ui.showDivider();
             return;
         }
 

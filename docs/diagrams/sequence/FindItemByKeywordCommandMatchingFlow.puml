@@ -1,6 +1,9 @@
 @startuml
 title FindItemByKeywordCommand Matching Flow
 
+autonumber
+hide footbox
+
 actor User
 participant FindItemByKeywordCommand
 participant Inventory
