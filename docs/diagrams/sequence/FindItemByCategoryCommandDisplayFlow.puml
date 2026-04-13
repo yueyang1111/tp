@@ -12,21 +12,27 @@ activate FindItemByCategoryCommand
 alt category not found
     FindItemByCategoryCommand -> UI: showCategoryNotFound(categoryInput)
     activate UI
-    UI --> User: display error
+    UI --> FindItemByCategoryCommand: error displayed
     deactivate UI
+    FindItemByCategoryCommand --> User: category-not-found message shown
+
 else category found but no items
     FindItemByCategoryCommand -> UI: showMessage("No items found ...")
     activate UI
-    UI --> User: display no-match message
+    UI --> FindItemByCategoryCommand: no-match message displayed
     deactivate UI
+    FindItemByCategoryCommand --> User: no-match message shown
+
 else else
     FindItemByCategoryCommand -> UI: showDivider()
     activate UI
     FindItemByCategoryCommand -> UI: showMessage("Items in category ...")
     FindItemByCategoryCommand -> UI: showNumberedList(items)
     FindItemByCategoryCommand -> UI: showDivider()
-    UI --> User: display matching items
+    UI --> FindItemByCategoryCommand: matching items displayed
     deactivate UI
+    FindItemByCategoryCommand --> User: matching items shown
 end
-@enduml
 
+deactivate FindItemByCategoryCommand
+@enduml

@@ -9,20 +9,21 @@ participant ":FindItemByExpiryDateCommand" as FindItemByExpiryDateCommand
 participant ":UI" as UI
 
 activate FindItemByExpiryDateCommand
-alt matches is empty
+alt no matching items found
     FindItemByExpiryDateCommand -> UI: showMessage("No items found ...")
     activate UI
-    UI --> User: display no-match message
+    UI --> FindItemByExpiryDateCommand: message displayed
     deactivate UI
+    FindItemByExpiryDateCommand --> User: no-match message shown
 else else
     FindItemByExpiryDateCommand -> UI: showDivider()
     activate UI
     FindItemByExpiryDateCommand -> UI: showMessage("Items expiring by ...")
     FindItemByExpiryDateCommand -> UI: showNumberedList(matches)
     FindItemByExpiryDateCommand -> UI: showDivider()
-    UI --> User: display matching items
+    UI --> FindItemByExpiryDateCommand: results displayed
     deactivate UI
+    FindItemByExpiryDateCommand --> User: matching items shown
 end
 deactivate FindItemByExpiryDateCommand
 @enduml
-

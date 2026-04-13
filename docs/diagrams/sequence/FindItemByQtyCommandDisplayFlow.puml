@@ -14,9 +14,10 @@ alt no matches found
     activate UI
     UI --> FindItemByQtyCommand: noItemsMessage
     FindItemByQtyCommand -> UI: showMessage(noItemsMessage)
-    UI --> User: display no-match message
+    UI --> FindItemByQtyCommand: no-match message displayed
     deactivate UI
-else else
+    FindItemByQtyCommand --> User: no-match message shown
+else matches found
     FindItemByQtyCommand -> UI: formatFoundItemsMessage(matches.size(), "with quantity '" + qtyInput + "'")
     activate UI
     UI --> FindItemByQtyCommand: foundItemsMessage
@@ -26,8 +27,11 @@ else else
     FindItemByQtyCommand -> UI: showMessage(resultsHeader)
     FindItemByQtyCommand -> UI: showNumberedList(matches)
     FindItemByQtyCommand -> UI: showDivider()
-    UI --> User: display matching items
+    UI --> FindItemByQtyCommand: matching items displayed
     deactivate UI
+    FindItemByQtyCommand --> User: matching items shown
 end
+deactivate FindItemByQtyCommand
 @enduml
+
 
