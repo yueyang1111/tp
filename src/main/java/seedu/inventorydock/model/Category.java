@@ -1,4 +1,32 @@
+package seedu.inventorydock.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Represents a category containing inventory items.
+ * A <code>Category</code> object stores a category name and its associated items.
+ */
+public class Category {
+    private static final Logger logger = Logger.getLogger(Category.class.getName());
+    private String name;
+    private final List<Item> items;
+
+    /**
+     * Creates a category with the specified name.
+     *
+     * @param name Name of the category.
+     */
+    public Category(String name) {
+        this.name = name;
+        this.items = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -24,6 +52,7 @@
     public boolean isEmpty() {
         return items.isEmpty();
     }
+
 
     /**
      * Removes the item at the specified zero-based index.
