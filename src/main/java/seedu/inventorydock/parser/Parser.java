@@ -27,6 +27,8 @@ public class Parser {
             return new AddCommandParser().parse(arguments);
         case "delete":
             return new DeleteCommandParser().parse(arguments);
+        case "clear":
+            return new ClearCommandParser().parse(arguments);
         case "update":
             return new UpdateCommandParser().parse(arguments);
         case "find":

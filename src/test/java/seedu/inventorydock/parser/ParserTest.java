@@ -2,6 +2,8 @@ package seedu.inventorydock.parser;
 
 import org.junit.jupiter.api.Test;
 import seedu.inventorydock.command.AddItemCommand;
+import seedu.inventorydock.command.ClearCategoryCommand;
+import seedu.inventorydock.command.DeleteItemCommand;
 import seedu.inventorydock.command.ExitCommand;
 import seedu.inventorydock.command.FindItemByCategoryCommand;
 import seedu.inventorydock.command.HelpCommand;
@@ -40,6 +42,22 @@ public class ParserTest {
         assertInstanceOf(AddItemCommand.class,
                 parser.parse("add category/fruits item/apple bin/A-10 qty/3 expiryDate/2026-03-20 " +
                         "isRipe/true"));
+    }
+
+    @Test
+    public void parse_delete_returnsDeleteItemCommand() throws InventoryDockException {
+        Parser parser = new Parser();
+
+        assertInstanceOf(DeleteItemCommand.class,
+                parser.parse("delete category/fruits index/1"));
+    }
+
+    @Test
+    public void parse_clear_returnsClearCategoryCommand() throws InventoryDockException {
+        Parser parser = new Parser();
+
+        assertInstanceOf(ClearCategoryCommand.class,
+                parser.parse("clear category/fruits"));
     }
 
     @Test
@@ -92,6 +110,3 @@ public class ParserTest {
         assertInstanceOf(SummaryCommand.class, parser.parse("summary"));
     }
 }
-
-
-

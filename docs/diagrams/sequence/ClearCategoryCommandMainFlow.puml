@@ -1,0 +1,60 @@
+@startuml
+title Sequence Diagram for ClearCategoryCommand
+actor User
+participant ":UI" as UI
+participant ":InventoryDock" as InventoryDock
+participant ":Parser" as Parser
+participant ":ClearCommandParser" as ClearCommandParser
+participant ":Inventory" as Inventory
+participant ":Category" as Category
+
+User -> UI : 1 enter clear category command
+UI -> InventoryDock : 2 input
+activate InventoryDock
+InventoryDock -> Parser : 3 parse(input)
+Parser -> ClearCommandParser : 4 parse(arguments)
+create ":ClearCategoryCommand" as ClearCategoryCommand
+ClearCommandParser -> ClearCategoryCommand : 5 ClearCategoryCommand(categoryName)
+ClearCommandParser <-- ClearCategoryCommand : 6 command
+Parser <-- ClearCommandParser : 7 command
+InventoryDock <-- Parser : 8 command
+InventoryDock -> ClearCategoryCommand : 9 execute(inventory, ui)
+ClearCategoryCommand -> Inventory : 10 findCategoryByName(categoryName)
+ClearCategoryCommand <-- Inventory : 11 category
+
+alt [category is null]
+    ClearCategoryCommand -> UI : 12 showCategoryNotFound(categoryName)
+    UI --> User : 13 display error
+
+else else
+    alt [category is not empty]
+        ClearCategoryCommand -> Category : 14 getItemCount()
+        ClearCategoryCommand <-- Category : 15 itemCount
+        ClearCategoryCommand -> UI : 16 showClearCategoryConfirmation(categoryName, itemCount)
+        UI --> User : 17 display confirmation prompt
+        ClearCategoryCommand -> UI : 18 readCommand()
+        ClearCategoryCommand <-- UI : 19 response
+
+        alt [response is not "yes"]
+            ClearCategoryCommand -> UI : 20 showClearCategoryCancelled(categoryName)
+            UI --> User : 21 display cancellation
+
+        else else
+            ClearCategoryCommand -> Category : 22 getItems().clear()
+            ClearCategoryCommand <-- Category : 23
+            ClearCategoryCommand -> UI : 24 showCategoryItemsCleared(categoryName)
+            UI --> User : 25 display items cleared
+            ClearCategoryCommand -> UI : 26 showCategoryCleared(categoryName)
+            UI --> User : 27 display confirmation
+        end
+
+    else else
+        ClearCategoryCommand -> UI : 28 showCategoryAlreadyEmpty(categoryName)
+        UI --> User : 29 display already empty
+    end
+end
+
+InventoryDock -> UI : 30 display information
+deactivate InventoryDock
+
+@enduml

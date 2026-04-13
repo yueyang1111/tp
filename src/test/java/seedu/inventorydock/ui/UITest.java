@@ -132,10 +132,10 @@ public class UITest {
     }
 
     @Test
-    public void showDeleteCategoryConfirmation_singleItem_usesSingularGrammar() {
+    public void showClearCategoryConfirmation_singleItem_usesSingularGrammar() {
         UI ui = createUIWithInput("");
 
-        ui.showDeleteCategoryConfirmation("fruits", 1);
+        ui.showClearCategoryConfirmation("fruits", 1);
 
         assertTrue(output.toString().contains("Category 'fruits' still has 1 item."));
     }

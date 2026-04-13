@@ -2,47 +2,41 @@ package seedu.inventorydock.parser;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import seedu.inventorydock.command.ClearCategoryCommand;
 import seedu.inventorydock.command.Command;
-import seedu.inventorydock.command.DeleteItemCommand;
 import seedu.inventorydock.exception.InventoryDockException;
 
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DeleteCommandParserTest {
+public class ClearCommandParserTest {
 
-    private DeleteCommandParser parser;
+    private ClearCommandParser parser;
 
     @BeforeEach
     public void setUp() {
-        parser = new DeleteCommandParser();
+        parser = new ClearCommandParser();
     }
 
     @Test
-    public void parse_categoryAndIndex_returnsDeleteItemCommand() throws InventoryDockException {
-        Command result = parser.parse("category/fruits index/2");
-        assertInstanceOf(DeleteItemCommand.class, result);
-    }
-
-    @Test
-    public void parse_categoryOnly_throwsInventoryDockException() {
-        InventoryDockException exception = assertThrows(InventoryDockException.class,
-                () -> parser.parse("category/fruits"));
-        assertTrue(exception.getMessage().contains("index is required"));
+    public void parse_validCategory_returnsClearCategoryCommand() throws InventoryDockException {
+        Command result = parser.parse("category/fruits");
+        assertInstanceOf(ClearCategoryCommand.class, result);
     }
 
     @Test
     public void parse_emptyInput_throwsInventoryDockException() {
         InventoryDockException exception = assertThrows(InventoryDockException.class,
                 () -> parser.parse(""));
-        assertTrue(exception.getMessage().contains("specify what to delete"));
+        assertTrue(exception.getMessage().contains("specify what to clear"));
     }
 
     @Test
     public void parse_missingCategory_throwsInventoryDockException() {
-        assertThrows(InventoryDockException.class,
+        InventoryDockException exception = assertThrows(InventoryDockException.class,
                 () -> parser.parse("index/1"));
+        assertTrue(exception.getMessage().contains("is not supported"));
     }
 
     @Test
@@ -56,5 +50,11 @@ public class DeleteCommandParserTest {
     public void parse_tokenWithoutSlash_throwsInventoryDockException() {
         assertThrows(InventoryDockException.class,
                 () -> parser.parse("fruits"));
+    }
+
+    @Test
+    public void parse_categoryWithEmptyValue_throwsInventoryDockException() {
+        assertThrows(InventoryDockException.class,
+                () -> parser.parse("category/"));
     }
 }

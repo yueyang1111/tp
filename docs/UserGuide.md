@@ -325,13 +325,13 @@ Expected result:
 * The selected item is removed from the category.
 * The app confirms the deleted item name and category.
 
-### Clear a category: `delete category/...`
+### Clear a category: `clear category/...`
 
 Clears all items in a category.
 
 Format:
 
-`delete category/CATEGORY`
+`clear category/CATEGORY`
 
 Important:
 
@@ -342,13 +342,13 @@ Important:
 
 Example:
 
-`delete category/fruits`
+`clear category/fruits`
 
 Expected result:
 
 * If confirmed, all items in the category are cleared.
 * The predefined category remains available for future items.
-* The app reports the action using its existing delete-category messages, even though the category object itself is preserved.
+* The app confirms the category was cleared. The category object itself is preserved.
 * If cancelled, no items are removed.
 
 ## Error Handling
@@ -396,9 +396,9 @@ Error messages use a consistent format such as `[Error] Invalid input: ...`, `[E
 
 **A:** Use `yyyy-M-d`, for example `2026-3-21`.
 
-**Q:** What happens if I delete a category?
+**Q:** What happens if I clear a category?
 
-**A**: The category is cleared, but the category itself remains in the inventory.
+**A**: All items are removed, but the category itself remains in the inventory.
 
 ## Command Summary
 * View help:
@@ -432,4 +432,4 @@ Error messages use a consistent format such as `[Error] Invalid input: ...`, `[E
 * Delete an item
   `delete category/CATEGORY index/INDEX`
 * Clear a category
-  `delete category/CATEGORY`
+  `clear category/CATEGORY`

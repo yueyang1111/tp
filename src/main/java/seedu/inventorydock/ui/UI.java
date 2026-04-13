@@ -17,15 +17,15 @@ public class UI {
 
     private static final String DIVIDER =
             "_________________________________________"
-            + "________________________________"
-            + "________________________________";
+                    + "________________________________"
+                    + "________________________________";
     private static final String LOGO =
             " _____       _____\n"
-            + "|_   _|     |  __ \\\n"
-            + "  | |       | |  | |\n"
-            + "  | |       | |  | |\n"
-            + "  | |   _   | |__| |\n"
-            + "|_____||_|  |_____/\n";
+                    + "|_   _|     |  __ \\\n"
+                    + "  | |       | |  | |\n"
+                    + "  | |       | |  | |\n"
+                    + "  | |   _   | |__| |\n"
+                    + "|_____||_|  |_____/\n";
 
     private final Scanner scanner;
 
@@ -134,23 +134,30 @@ public class UI {
         showDivider();
     }
 
-    public void showCategoryDeleted(String categoryName) {
+    public void showCategoryCleared(String categoryName) {
         showDivider();
-        System.out.println("Deleted category: " + categoryName);
+        System.out.println("Cleared category: " + categoryName);
         showDivider();
     }
 
-    public void showDeleteCategoryConfirmation(
+    public void showClearCategoryConfirmation(
             String categoryName, int itemCount) {
         showDivider();
         System.out.println("Category '" + categoryName + "' still has " + formatItemCount(itemCount) + ".");
-        System.out.println("Are you sure you want to delete " + "all items and remove this category?");
+        System.out.println("Are you sure you want to clear all items from this category?");
         System.out.print("Type 'yes' to confirm: ");
     }
 
-    public void showDeleteCategoryCancelled(
+    public void showClearCategoryCancelled(
             String categoryName) {
-        System.out.println("Cancelled. Category '" + categoryName + "' was not deleted.");
+        System.out.println("Cancelled. Category '" + categoryName + "' was not cleared.");
+        showDivider();
+    }
+
+    public void showCategoryAlreadyEmpty(String categoryName) {
+        showDivider();
+        System.out.println("Category '" + categoryName + "' is already empty. Nothing to clear.");
+        showDivider();
     }
 
     public void showCategoryItemsCleared(String categoryName) {

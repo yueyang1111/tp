@@ -9,9 +9,10 @@ import seedu.inventorydock.ui.UI;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DeleteCategoryCommandTest {
+public class ClearCategoryCommandTest {
 
     private Inventory inventory;
     private Category fruitsCategory;
@@ -33,7 +34,7 @@ public class DeleteCategoryCommandTest {
 
     @Test
     public void execute_confirmYes_itemsClearedCategoryKept() {
-        DeleteCategoryCommand command = new DeleteCategoryCommand("fruits");
+        ClearCategoryCommand command = new ClearCategoryCommand("fruits");
         TestUI ui = new TestUI("yes");
 
         command.execute(inventory, ui);
@@ -48,7 +49,7 @@ public class DeleteCategoryCommandTest {
 
     @Test
     public void execute_confirmNo_nothingCleared() {
-        DeleteCategoryCommand command = new DeleteCategoryCommand("fruits");
+        ClearCategoryCommand command = new ClearCategoryCommand("fruits");
         TestUI ui = new TestUI("no");
 
         command.execute(inventory, ui);
@@ -60,7 +61,7 @@ public class DeleteCategoryCommandTest {
 
     @Test
     public void execute_confirmNull_nothingCleared() {
-        DeleteCategoryCommand command = new DeleteCategoryCommand("fruits");
+        ClearCategoryCommand command = new ClearCategoryCommand("fruits");
         TestUI ui = new TestUI(null);
 
         command.execute(inventory, ui);
@@ -71,7 +72,7 @@ public class DeleteCategoryCommandTest {
 
     @Test
     public void execute_nonExistingCategory_showsCategoryNotFound() {
-        DeleteCategoryCommand command = new DeleteCategoryCommand("snacks");
+        ClearCategoryCommand command = new ClearCategoryCommand("snacks");
         TestUI ui = new TestUI("yes");
 
         command.execute(inventory, ui);
@@ -82,7 +83,7 @@ public class DeleteCategoryCommandTest {
 
     @Test
     public void execute_caseInsensitiveName_categoryCleared() {
-        DeleteCategoryCommand command = new DeleteCategoryCommand("FRUITS");
+        ClearCategoryCommand command = new ClearCategoryCommand("FRUITS");
         TestUI ui = new TestUI("yes");
 
         command.execute(inventory, ui);
@@ -93,7 +94,7 @@ public class DeleteCategoryCommandTest {
 
     @Test
     public void execute_clearOneCategory_otherCategoryUnaffected() {
-        DeleteCategoryCommand command = new DeleteCategoryCommand("fruits");
+        ClearCategoryCommand command = new ClearCategoryCommand("fruits");
         TestUI ui = new TestUI("yes");
 
         command.execute(inventory, ui);
@@ -105,7 +106,7 @@ public class DeleteCategoryCommandTest {
 
     @Test
     public void execute_clearThenAddBack_categoryReusable() {
-        DeleteCategoryCommand command = new DeleteCategoryCommand("fruits");
+        ClearCategoryCommand command = new ClearCategoryCommand("fruits");
         TestUI ui = new TestUI("yes");
 
         command.execute(inventory, ui);
@@ -119,7 +120,7 @@ public class DeleteCategoryCommandTest {
 
     @Test
     public void execute_confirmYesMixedCase_itemsCleared() {
-        DeleteCategoryCommand command = new DeleteCategoryCommand("fruits");
+        ClearCategoryCommand command = new ClearCategoryCommand("fruits");
         TestUI ui = new TestUI("YeS");
 
         command.execute(inventory, ui);
@@ -130,13 +131,28 @@ public class DeleteCategoryCommandTest {
 
     @Test
     public void execute_showsCorrectItemCountInConfirmation() {
-        DeleteCategoryCommand command = new DeleteCategoryCommand("fruits");
+        ClearCategoryCommand command = new ClearCategoryCommand("fruits");
         TestUI ui = new TestUI("yes");
 
         command.execute(inventory, ui);
 
         assertEquals("fruits", ui.confirmCategoryName);
         assertEquals(2, ui.confirmItemCount);
+    }
+
+    @Test
+    public void execute_emptyCategory_showsAlreadyEmpty() {
+        Category emptyCategory = new Category("snacks");
+        inventory.addCategory(emptyCategory);
+
+        ClearCategoryCommand command = new ClearCategoryCommand("snacks");
+        TestUI ui = new TestUI("yes");
+
+        command.execute(inventory, ui);
+
+        assertEquals("snacks", ui.alreadyEmptyCategoryName);
+        // should NOT show "Cleared category"
+        assertNull(ui.categoryCleared);
     }
 
     /**
@@ -150,8 +166,9 @@ public class DeleteCategoryCommandTest {
         private String cancelledCategoryName;
         private String notFoundCategoryName;
         private String confirmCategoryName;
+        private String alreadyEmptyCategoryName;
+        private String categoryCleared;
         private int confirmItemCount;
-        private boolean alreadyEmptyShown;
 
         public TestUI(String confirmationResponse) {
             this.confirmationResponse = confirmationResponse;
@@ -168,7 +185,7 @@ public class DeleteCategoryCommandTest {
         }
 
         @Override
-        public void showDeleteCategoryCancelled(String categoryName) {
+        public void showClearCategoryCancelled(String categoryName) {
             this.cancelledCategoryName = categoryName;
         }
 
@@ -178,16 +195,19 @@ public class DeleteCategoryCommandTest {
         }
 
         @Override
-        public void showDeleteCategoryConfirmation(String categoryName, int itemCount) {
+        public void showClearCategoryConfirmation(String categoryName, int itemCount) {
             this.confirmCategoryName = categoryName;
             this.confirmItemCount = itemCount;
         }
 
         @Override
-        public void showMessage(String message) {
-            if (message.contains("already empty")) {
-                this.alreadyEmptyShown = true;
-            }
+        public void showCategoryAlreadyEmpty(String categoryName) {
+            this.alreadyEmptyCategoryName = categoryName;
+        }
+
+        @Override
+        public void showCategoryCleared(String categoryName) {
+            this.categoryCleared = categoryName;
         }
 
         @Override

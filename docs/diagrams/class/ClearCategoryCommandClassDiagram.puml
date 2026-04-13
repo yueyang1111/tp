@@ -1,5 +1,5 @@
 @startuml
-title Class Diagram for DeleteCategoryCommand Feature
+title Class Diagram for ClearCategoryCommand Feature
 skinparam classAttributeIconSize 0
 hide circle
 left to right direction
@@ -8,11 +8,11 @@ class "{abstract}\nCommand" as Command {
   + execute(inventory: Inventory, ui: UI)
 }
 
-class DeleteCommandParser {
+class ClearCommandParser {
   + parse(input: String)
 }
 
-class DeleteCategoryCommand {
+class ClearCategoryCommand {
   - categoryName: String
   + execute(inventory: Inventory, ui: UI)
 }
@@ -34,19 +34,20 @@ class Item {
 }
 
 class UI {
-  + showDeleteCategoryConfirmation(...)
-  + showDeleteCategoryCancelled(...)
+  + showClearCategoryConfirmation(...)
+  + showClearCategoryCancelled(...)
   + showCategoryItemsCleared(...)
-  + showCategoryDeleted(...)
+  + showCategoryCleared(...)
+  + showCategoryAlreadyEmpty(...)
   + showCategoryNotFound(...)
   + readCommand()
 }
 
-Command <|-- DeleteCategoryCommand
-DeleteCommandParser ..> DeleteCategoryCommand : creates
-DeleteCategoryCommand --> Inventory : queries
-DeleteCategoryCommand --> Category : clears
-DeleteCategoryCommand --> UI : displays through
+Command <|-- ClearCategoryCommand
+ClearCommandParser ..> ClearCategoryCommand : creates
+ClearCategoryCommand --> Inventory : queries
+ClearCategoryCommand --> Category : clears
+ClearCategoryCommand --> UI : displays through
 Inventory "1" o-- "*" Category
 Category "1" o-- "*" Item
 @enduml

@@ -18,8 +18,7 @@
    - [Summary Feature](#summary-feature)
    - [Storage Feature](#storage-feature)
    - [Delete Feature](#delete-feature)
-     - [Delete Item Feature](#delete-item)
-     - [Delete Category Feature](#delete-category)
+   - [Clear Feature](#clear-category-feature)
    - [Help Feature](#help-feature)
 3. [Product Scope](#product-scope)
    - [Target User Profile](#target-user-profile)
@@ -37,7 +36,7 @@
    - [Update Item](#testing-update-feature)
    - [Sort Command](#testing-sort-command)
    - [Storage Feature](#testing-storage)
-   - [Delete Category](#testing-delete-category)
+   - [Clear Category](#testing-clear-category)
    - [Find by Keyword](#testing-find-by-keyword)
    - [Summary](#testing-summary-command)
 
@@ -958,89 +957,71 @@ logic and helps keep storage behaviour consistent with normal command handling.
 
 ### Delete Feature
 
-The product provides two `delete` commands that share a common parser flow:
-
-1. `Parser` recognises the `delete` command word and delegates to `DeleteCommandParser`.
-2. `DeleteCommandParser` extracts the `category/` field and checks for an `index/` field.
-3. If `index/` is present, a `DeleteItemCommand` is created. Otherwise, a `DeleteCategoryCommand` is created.
-4. The command executes against `Inventory` and displays results through `UI`.
-
-This section covers both subfeatures and highlights their unique behaviour.
-
-#### Delete Item
-
 Command format: `delete category/CATEGORY index/INDEX`
-
 Removes a single item at the given 1-based index from the specified category. The command looks up the category via `inventory.findCategoryByName(...)`, validates the index range, retrieves the item with `category.getItem(itemIndex - 1)`, removes it with `category.removeItem(...)`, and shows a confirmation message.
-
 Validation is layered: `DeleteCommandParser` rejects missing fields, non-integer indices, and non-positive integers at parse time. `DeleteItemCommand` catches non-existent categories and out-of-range indices at execution time.
 
 Sequence diagram:
-
 ![DeleteItemCommandMainFlow](diagrams/sequence/DeleteItemCommandMainFlow.png)
 
 Class and object diagrams:
-
 ![DeleteItemCommandClassDiagram](diagrams/class/DeleteItemCommandClassDiagram.png)
-
 ![DeleteItemCommandObjectDiagram](diagrams/object/DeleteItemCommandObjectDiagram.png)
 
-#### Delete Category
+### Clear Category Feature
 
-Command format: `delete category/CATEGORY`
+Command format: `clear category/CATEGORY`
+Clears all items within the specified category. Because this is a higher-risk operation, the command prompts the user for confirmation (must type `yes`, case-insensitive) before proceeding. If the category is already empty, a message is shown and the command returns early without prompting.
+The `clear` command uses a separate parser flow from `delete`:
+1. `Parser` recognises the `clear` command word and delegates to `ClearCommandParser`.
+2. `ClearCommandParser` extracts the `category/` field and creates a `ClearCategoryCommand`.
+3. The command executes against `Inventory` and displays results through `UI`.
 
-Clears all items within the specified category. Because this is a higher-risk operation, the command prompts the user for confirmation (must type `yes`, case-insensitive) before proceeding. If the category is already empty, the prompt is skipped.
-
-The core confirmation logic:
-
+The core execution logic:
 ```java
-if (!category.isEmpty()) {
-    ui.showDeleteCategoryConfirmation(categoryName, category.getItemCount());
-    String response = ui.readCommand();
-
-    if (response == null || !response.trim().equalsIgnoreCase("yes")) {
-        ui.showDeleteCategoryCancelled(categoryName);
-        return;
-    }
-
-    category.getItems().clear();
-    ui.showCategoryItemsCleared(categoryName);
+if (category.isEmpty()) {
+    ui.showCategoryAlreadyEmpty(categoryName);
+    return;
 }
+
+ui.showClearCategoryConfirmation(categoryName, category.getItemCount());
+String response = ui.readCommand();
+
+if (response == null || !response.trim().equalsIgnoreCase("yes")) {
+    ui.showClearCategoryCancelled(categoryName);
+    return;
+}
+
+category.getItems().clear();
+ui.showCategoryItemsCleared(categoryName);
+ui.showCategoryCleared(categoryName);
 ```
 
 Sequence diagram:
-
-![DeleteCategoryCommandMainFlow](diagrams/sequence/DeleteCategoryCommandMainFlow.png)
+![ClearCategoryCommandMainFlow](diagrams/sequence/ClearCategoryCommandMainFlow.png)
 
 Class and object diagrams:
-
-![DeleteCategoryCommandClassDiagram](diagrams/class/DeleteCategoryCommandClassDiagram.png)
-
-![DeleteCategoryCommandObjectDiagram](diagrams/object/DeleteCategoryCommandObjectDiagram.png)
+![ClearCategoryCommandClassDiagram](diagrams/class/ClearCategoryCommandClassDiagram.png)
+![ClearCategoryCommandObjectDiagram](diagrams/object/ClearCategoryCommandObjectDiagram.png)
 
 #### Design decisions
-
 - **Index-based deletion** was chosen over name-based deletion because multiple items can share the same name.
 - **Confirmation prompt** is used only for category clearing (high-risk), not for single-item deletion (low-risk, easily reversible).
 - **Category clearing** removes items but preserves the category object, since categories are predefined.
-- The `delete` command word is reused for both operations; the parser distinguishes them by the presence of `index/`.
+- **Early return for empty categories** avoids a misleading "Cleared category" message when nothing was actually changed.
+- The `clear` command word is used for category clearing, keeping it distinct from `delete` which is reserved for single-item removal by index.
 
 ### Help Feature
 
 Command format: `help`
-
 Displays a summary of available commands and a link to the User Guide. The command is intentionally minimal: `HelpCommand.execute()` delegates entirely to `ui.showHelp()`, which prints the command list and URL.
-
 This design keeps help output concise and avoids duplicating detailed usage that already exists in the User Guide. The command summary is currently hard-coded in `UI.showHelp()`.
 
 Sequence diagram:
-
 ![HelpCommandMainFlow](diagrams/sequence/HelpCommandMainFlow.png)
 
 Class and object diagrams:
-
 ![HelpCommandClassDiagram](diagrams/class/HelpCommandClassDiagram.png)
-
 ![HelpCommandObjectDiagram](diagrams/object/HelpCommandObjectDiagram.png)
 
 A possible future improvement is supporting `help COMMAND` to show detailed usage for a specific command.
@@ -1256,21 +1237,22 @@ After setting up the application, proceed to the individual test cases below.
 13. Delete the storage file before launching the application.
 14. Verify that the application recreates the file automatically and starts without crashing.
 
-### Testing delete category
+### Testing clear category
 
 1. Ensure the inventory contains a non-empty category such as `fruits`.
-2. Run `delete category/fruits`.
+2. Run `clear category/fruits`.
 3. Verify that the application shows a confirmation prompt with the item count.
 4. Type `yes` and press enter.
 5. Verify that the application shows a confirmation message indicating the category was cleared.
 6. Run `list`.
 7. Verify that the `fruits` category is now empty.
-8. Run `delete category/unknown`.
-9. Verify that the application shows the category-not-found error.
-10. Add items back to `fruits`, then run `delete category/fruits`.
-11. Type 
-o` and press enter.
-12. Verify that the category is not cleared.
+8. Run `clear category/fruits` again on the now-empty category.
+9. Verify that the application shows "Category 'fruits' is already empty. Nothing to clear." without prompting for confirmation.
+10. Run `clear category/unknown`.
+11. Verify that the application shows the category-not-found error.
+12. Add items back to `fruits`, then run `clear category/fruits`.
+13. Type `no` and press enter.
+14. Verify that the category is not cleared.
 
 ### Testing find by keyword
 

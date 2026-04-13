@@ -11,9 +11,8 @@ InventoryDock is a CLI inventory management application for store managers to tr
 I implemented and maintained the central `UI` class. This class handles welcome and goodbye messages, dividers, error formatting, inventory display, and confirmation prompts.
 Key aspects of the implementation:
 - Designed `UI` to encapsulate all `System.out` and `Scanner` operations, keeping the rest of the codebase free from direct I/O calls.
-- Provided dedicated methods for common display patterns such as `showItemDeleted`, `showItemAdded`, `showCategoryDeleted`, `showDeleteCategoryConfirmation`, `showInventory`, and `showHelp`, so that command classes can call semantically named methods rather than formatting output themselves.
+- Provided dedicated methods for common display patterns such as `showItemDeleted`, `showItemAdded`, `showCategoryCleared`, `showClearCategoryConfirmation`, `showInventory`, and `showHelp`, so that command classes can call semantically named methods rather than formatting output themselves.
 - Ensured consistency in output formatting (dividers, error prefixes, numbered lists) across all features.
-This contribution is significant because every feature in the application depends on `UI` for its output.
 
 #### 2. Delete item command
 I implemented the `delete` command for removing a single item from the inventory by category and index. This work included the command execution logic, the parser pipeline in `DeleteCommandParser`, and comprehensive JUnit tests.
@@ -22,15 +21,13 @@ Key aspects of the implementation:
 - Extended `DeleteCommandParser` to tokenise the input, extract `category/` and `index/` fields, and validate that the index is a positive integer before constructing the command.
 - Implemented layered validation: syntactic checks (missing fields, non-integer index) at parse time and semantic checks (non-existent category, out-of-range index) at execution time.
 - Added JUnit tests covering valid deletions, out-of-range indices, non-existent categories, and sequential deletions.
-This contribution is significant because delete is one of the core write operations.
 
-#### 3. Delete category command
-I implemented the `delete category/CATEGORY` command, which clears all items within a specified category after a user confirmation prompt.
+#### 3. Clear category command
+I implemented the `clear category/CATEGORY` command, which clears all items within a specified category after a user confirmation prompt.
 Key aspects of the implementation:
-- Added `DeleteCategoryCommand` to prompt the user for confirmation before clearing items.
-- Integrated the confirmation flow with `UI` methods (`showDeleteCategoryConfirmation`, `showDeleteCategoryCancelled`, `showCategoryItemsCleared`).
+- Added `ClearCategoryCommand` to prompt the user for confirmation before clearing items.
+- Integrated the confirmation flow with `UI` methods (`showClearCategoryConfirmation`, `showClearCategoryCancelled`, `showCategoryItemsCleared`).
 - Added JUnit tests covering confirmation acceptance, rejection, case-insensitive matching, and the check that other categories remain unaffected.
-This feature is important because bulk deletion is a high-risk operation. The confirmation prompt prevents accidental data loss while still keeping the workflow fast for users who know what they want.
 
 #### 4. Find item by keyword
 I implemented the `find keyword/KEYWORD` feature, which searches all categories for items whose names contain the given keyword. The search is case-insensitive and supports partial matches.
@@ -38,36 +35,35 @@ Key aspects of the implementation:
 - Added `FindItemByKeywordCommand` to iterate through all categories and items, collecting matches based on a case-insensitive substring check.
 - Extended `FindItemParser` to dispatch keyword-based searches correctly.
 - Added JUnit tests for exact matches, partial matches, case-insensitive matches, no-match scenarios, and verification that the search does not mutate the inventory.
-This feature is useful because users often remember part of an item name but not its exact category or full name.
 
 #### 5. Help command
 I implemented the `help` command and the `showHelp()` method in `UI`, which displays a summary of available commands and a link to the full User Guide.
 
-### Contributions to the User Guide
+#### 6. FieldParser utility
+I implemented the `FieldParser` utility class, which provides a reusable `extractField` method for extracting values between markers in a command string. This utility is used across multiple parsers including `CommonFieldParser` and the category-specific parsers. I also added comprehensive JUnit tests covering all branches: valid extraction with start and end markers, missing markers, null end keys, empty values, trimming behaviour, and multi-word values.
 
+### Contributions to the User Guide
 I contributed the user-facing documentation for the features I implemented. In particular, I wrote or substantially updated the sections covering:
 
 - Deleting an item
-- Deleting a category
+- Clearing a category
 - Finding items by keyword
 - Help command
+- Field parser
 
 These updates included command formats, examples, expected outcomes, and notes on edge cases so that end users can use the features without inspecting the code.
 
 ### Contributions to the Developer Guide
-
 I contributed the technical documentation for the features I implemented. Specifically, I wrote or substantially updated the Developer Guide sections for:
-
 - Delete Item feature — covering feature motivation, high-level design, component-level implementation, command execution flow, error handling and validation, alternatives considered, and manual testing instructions.
-- Delete Category feature — covering feature motivation, high-level design, component-level implementation, command execution flow with confirmation prompt logic, error handling and validation, alternatives considered, and manual testing instructions.
+- Clear Category feature — covering feature motivation, high-level design, component-level implementation, command execution flow with confirmation prompt logic, error handling and validation, alternatives considered, and manual testing instructions.
 - Find Item By Keyword feature — covering feature motivation, high-level design, component-level implementation, command execution flow with case-insensitive substring matching, error handling and validation, alternatives considered, and manual testing instructions.
 - Help feature — covering feature motivation, high-level design, component-level implementation, command execution flow, alternatives considered, and current limitations.
 
 I also added the following UML diagrams:
-
 Sequence diagrams:
 - [DeleteItemCommandMainFlow.puml](../diagrams/sequence/DeleteItemCommandMainFlow.puml)
-- [DeleteCategoryCommandMainFlow.puml](../diagrams/sequence/DeleteCategoryCommandMainFlow.puml)
+- [ClearCategoryCommandMainFlow.puml](../diagrams/sequence/ClearCategoryCommandMainFlow.puml)
 - [FindItemByKeywordCommandParseFlow.puml](../diagrams/sequence/FindItemByKeywordCommandParseFlow.puml)
 - [FindItemByKeywordCommandMatchingFlow.puml](../diagrams/sequence/FindItemByKeywordCommandMatchingFlow.puml)
 - [FindItemByKeywordCommandDisplayFlow.puml](../diagrams/sequence/FindItemByKeywordCommandDisplayFlow.puml)
@@ -75,13 +71,13 @@ Sequence diagrams:
 
 Class diagrams:
 - [DeleteItemCommandClassDiagram.puml](../diagrams/class/DeleteItemCommandClassDiagram.puml)
-- [DeleteCategoryCommandClassDiagram.puml](../diagrams/class/DeleteCategoryCommandClassDiagram.puml)
+- [ClearCategoryCommandClassDiagram.puml](../diagrams/class/ClearCategoryCommandClassDiagram.puml)
 - [FindItemByKeywordCommandClassDiagram.puml](../diagrams/class/FindItemByKeywordCommandClassDiagram.puml)
 - [HelpCommandClassDiagram.puml](../diagrams/class/HelpCommandClassDiagram.puml)
 
 Object diagrams:
 - [DeleteItemCommandObjectDiagram.puml](../diagrams/object/DeleteItemCommandObjectDiagram.puml)
-- [DeleteCategoryCommandObjectDiagram.puml](../diagrams/object/DeleteCategoryCommandObjectDiagram.puml)
+- [ClearCategoryCommandObjectDiagram.puml](../diagrams/object/ClearCategoryCommandObjectDiagram.puml)
 - [FindItemByKeywordCommandObjectDiagram.puml](../diagrams/object/FindItemByKeywordCommandObjectDiagram.puml)
 - [HelpCommandObjectDiagram.puml](../diagrams/object/HelpCommandObjectDiagram.puml)
 

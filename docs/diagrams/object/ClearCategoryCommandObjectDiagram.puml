@@ -1,10 +1,10 @@
 @startuml
-title Object Diagram for DeleteCategoryCommand Feature
+title Object Diagram for ClearCategoryCommand Feature
 hide circle
 left to right direction
 
-object "<u>deleteParser:DeleteCommandParser</u>" as parser
-object "<u>cmd:DeleteCategoryCommand</u>" as command {
+object "<u>clearParser:ClearCommandParser</u>" as parser
+object "<u>cmd:ClearCategoryCommand</u>" as command {
   categoryName = "fruits"
 }
 object "<u>inventory:Inventory</u>" as inventory
