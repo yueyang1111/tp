@@ -66,7 +66,9 @@ public class UI {
     }
 
     public void showMessage(String message) {
+        showDivider();
         System.out.println(message);
+        showDivider();
     }
 
     public String formatFoundItemsMessage(int matchCount, String searchDescription) {
@@ -276,7 +278,7 @@ public class UI {
         System.out.println("Available commands: " + "add, delete, update, find, sort, summary, list, help, bye");
         System.out.println();
         System.out.println("For detailed usage and examples, " + "refer to our User Guide:");
-        System.out.println("https://ay2425s2-cs2113-w09-2.github.io/tp/UserGuide.html");
+        System.out.println("https://ay2526s2-cs2113-w09-2.github.io/tp/UserGuide.html");
         showDivider();
     }
 

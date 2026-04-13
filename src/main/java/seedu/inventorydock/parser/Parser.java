@@ -40,7 +40,7 @@ public class Parser {
         case "summary":
             return new SummaryCommandParser().parse(arguments);
         case "help":
-            return new HelpCommand();
+            return new HelpCommand(arguments);
         case "bye":
             return new ExitCommand();
         default:
