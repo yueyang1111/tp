@@ -51,9 +51,9 @@ InventoryDock is a CLI based inventory management application that helps users m
 
 - Wrote implementation details for the `update item`, `find by expiry date`, `sort`, and exception hierarchy features.
 - Drew the following PlantUML diagrams:
-- Class diagrams: `UpdateItemCommandClassDiagram`, `FindItemByExpiryDateCommandClassDiagram`, `ExceptionHierarchyParserClassDiagram`, `ExceptionHierarchyStorageClassDiagram`, and `ExceptionHierarchyInventoryClassDiagram`.
-- Object diagrams: `UpdateItemCommandObjectDiagram` and `FindItemByExpiryDateCommandObjectDiagram`.
-- Sequence diagrams: `UpdateItemCommandParseFlow`, `UpdateItemCommandApplyUpdatesFlow`, `UpdateItemCommandDuplicateCheckFlow`, `FindItemByExpiryDateCommandMatchingFlow`, `FindItemByExpiryDateCommandParseFlow`, and `FindItemByExpiryDateCommandDisplayFlow`.
+- Class diagrams: [UpdateItemCommandClassDiagram](../diagrams/class/UpdateItemCommandClassDiagram.png), [FindItemByExpiryDateCommandClassDiagram](../diagrams/class/FindItemByExpiryDateCommandClassDiagram.png), [ExceptionHierarchyParserClassDiagram](../diagrams/class/ExceptionHierarchyParserClassDiagram.png), [ExceptionHierarchyStorageClassDiagram](../diagrams/class/ExceptionHierarchyStorageClassDiagram.png), and [ExceptionHierarchyInventoryClassDiagram](../diagrams/class/ExceptionHierarchyInventoryClassDiagram.png).
+- Object diagrams: [UpdateItemCommandObjectDiagram](../diagrams/object/UpdateItemCommandObjectDiagram.png) and [FindItemByExpiryDateCommandObjectDiagram](../diagrams/object/FindItemByExpiryDateCommandObjectDiagram.png).
+- Sequence diagrams: [UpdateItemCommandParseFlow](../diagrams/sequence/UpdateItemCommandParseFlow.png), [UpdateItemCommandApplyUpdatesFlow](../diagrams/sequence/UpdateItemCommandApplyUpdatesFlow.png), [UpdateItemCommandDuplicateCheckFlow](../diagrams/sequence/UpdateItemCommandDuplicateCheckFlow.png), [FindItemByExpiryDateCommandMatchingFlow](../diagrams/sequence/FindItemByExpiryDateCommandMatchingFlow.png), [FindItemByExpiryDateCommandParseFlow](../diagrams/sequence/FindItemByExpiryDateCommandParseFlow.png), and [FindItemByExpiryDateCommandDisplayFlow](../diagrams/sequence/FindItemByExpiryDateCommandDisplayFlow.png).
 
 ### Contributions to team-based tasks
 
