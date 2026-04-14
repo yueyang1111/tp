@@ -41,7 +41,7 @@ For the User Guide I wrote the sections for the following:
 These updates covered storage and data persistence behaviour, sorting command usage, supported sort types, summary command usage,
 expected behaviour, and invalid-input handling.
 
-### Contributions to the Developer Guide (Extract)
+## Contributions to the Developer Guide (Extracts)
 
 As for the Developer Guide, I wrote / updated sections for `Storage`, `Summary` and `Sorting`, detailing the implementation details,
 design rationale, component interaction and control flow, handling of invalid or malformed input, limitations,
