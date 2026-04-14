@@ -43,7 +43,6 @@
 
 ---
 
-<div style="page-break-before: always;"></div>
 
 ## Acknowledgements
 
@@ -106,8 +105,6 @@ Storage exceptions:
 <p align="center">
   <img src="diagrams/class/ExceptionHierarchyStorageClassDiagram.png" width="275">
 </p>
-
-<div style="page-break-before: always;"></div>
 
 ### Add Item Feature
 
@@ -290,8 +287,6 @@ and `bin/`) and throws `DuplicateItemException` with
 
 This layered approach ensures invalid input is rejected as early as possible, while still protecting
 the command layer from invalid state.
-
-<div style="page-break-before: always;"></div>
 
 ### Find Feature
 
@@ -490,8 +485,6 @@ Class and object diagrams:
   <img src="diagrams/object/FindItemByKeywordCommandObjectDiagram.png" width="750">
 </p>
 
-<div style="page-break-before: always;"></div>
-
 ### Update Item Feature
 
 Another core feature of the product is the ability to update an existing item in a category using the
@@ -629,8 +622,6 @@ from invalid runtime state.
 
 ---
 
-<div style="page-break-before: always;"></div>
-
 ### List Feature
 
 The product also supports displaying the current inventory using the `list` command.
@@ -744,8 +735,6 @@ ull`.
 
 Because the command is read-only and does not parse additional user arguments, there are fewer failure
 modes compared with commands such as `add` or `find`.
-
-<div style="page-break-before: always;"></div>
 
 ### Sort Feature
 
@@ -884,8 +873,6 @@ such as `name`, `expirydate`, and `qty`.
 At execution time, the command handles an empty inventory gracefully. The UI displays the appropriate empty inventory
 message instead of failing.
 
-<div style="page-break-before: always;"></div>
-
 ### Summary Feature
 
 The product also supports displaying a category based summary of the current inventory using the `summary` command. 
@@ -956,8 +943,6 @@ A representative object snapshot for this feature is shown below.
   <img src="diagrams/object/SummaryObjectDiagram.png" width="800">
 </p>
 
-<div style="page-break-before: always;"></div>
-
 ### Storage feature
 
 This product includes a storage component that is responsible for persisting inventory data between application 
@@ -1016,8 +1001,6 @@ The main interaction for this flow is illustrated in below.
 A simple text-based format is used because it is lightweight, easy to inspect during debugging, and does not require 
 external libraries or database setup. Reusing the existing add-item parsing flow also avoids duplicating parsing 
 logic and helps keep storage behaviour consistent with normal command handling.
-
-<div style="page-break-before: always;"></div>
 
 ### Delete Feature
 
@@ -1122,8 +1105,6 @@ Class and object diagrams:
 
 A possible future improvement is supporting `help COMMAND` to show detailed usage for a specific command.
 
-<div style="page-break-before: always;"></div>
-
 ## Product scope
 ### Target user profile
 
@@ -1138,8 +1119,6 @@ InventoryDock is a CLI-based inventory management system that allows users to ef
 with attributes such as bin location, quantity, and expiry date. It provides fast command-based operations for adding, 
 updating, deleting, and searching items, enabling users to quickly locate and manage inventory without navigating 
 complex interfaces.
-
-<div style="page-break-before: always;"></div>
 
 ## User Stories
 
@@ -1162,8 +1141,6 @@ complex interfaces.
 | v2.0    | user     | view an inventory summary | quickly identify low-stock or early-expiring items in each category |
 
 
-<div style="page-break-before: always;"></div>
-
 ## Non-Functional Requirements
 
 1. The application should run on any system with Java 17 or above installed.
@@ -1182,8 +1159,6 @@ complex interfaces.
 * *Bin* - A physical storage location identifier (e.g., A-10).
 * *Inventory* - The overall collection of categories and items managed by the system.
 * *Command* - A user input instruction that triggers an operation in the application.
-
-<div style="page-break-before: always;"></div>
 
 ## Instructions for manual testing
 
