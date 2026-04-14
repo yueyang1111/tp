@@ -91,18 +91,18 @@ Expected result:
 * The item is added to the specified category.
 * The app confirms the item name, quantity, category, and bin location after the add command has been parsed and executed successfully.
 * Each category uses the same overall add-command structure, with a different category-specific boolean field such as `isRipe/`, `isLeafy/`, or `isCarbonated/`.
-* Duplicate-batch rule for `add`:
-  * Duplicate checking ignores only `qty/` and `bin/`.
-  * The logical batch identity still includes `category/`, `item/`, `expiryDate/`, and the category-specific boolean field.
-  * If another item in the same category has the same logical batch identity, the command is rejected with `Duplicate item found for category/CATEGORY item/ITEM.`
+* Duplicate rule for `add`:
+  * Duplicate checking compares the full item case-insensitively.
+  * This includes `category/`, `item/`, `bin/`, `qty/`, `expiryDate/`, and the category-specific boolean field.
+  * If another item in the same category is fully identical, the command is rejected with `Duplicate item found for category/CATEGORY item/ITEM.`
 
 Example (`fruits`: `isRipe/`):
 * Existing add command:
   * `add category/fruits item/apple bin/A-10 qty/10 expiryDate/2026-6-5 isRipe/true`
-* This command causes the duplicate exception (only `bin/` and `qty/` changed):
-  * `add category/fruits item/apple bin/B-20 qty/99 expiryDate/2026-6-5 isRipe/true`
+* This command causes the duplicate exception (same item, different letter case only):
+  * `add category/fruits item/Apple bin/A-10 qty/10 expiryDate/2026-6-5 isRipe/true`
   Result: `Duplicate item found for category/fruits item/apple.`
-* This command is allowed as a new batch of items (`expiryDate/` changed):
+* This command is allowed because at least one stored field changed (`expiryDate/` changed):
   * `add category/fruits item/apple bin/B-20 qty/99 expiryDate/2026-6-6 isRipe/true`
 
 ### Find items by keyword: `find keyword/...`
@@ -296,7 +296,7 @@ Notes:
 * Category-specific boolean fields such as `isRipe/`, `isCarbonated/`, or `isFrozen/` can also be updated, but only for items in the matching category.
 * `newItem/` supports names with spaces, for example `newItem/sour cream chips`.
 * `bin/` must use the exact `LETTER-NUMBER` format, for example `A-2`.
-* `update` uses the same duplicate-batch rule as `add`: only `qty/` and `bin/` are ignored when checking for duplicates.
+* `update` uses the same duplicate rule as `add`: the updated item must not become fully identical to another item in the same category.
 Examples:
 
 * `update category/fruits index/1 qty/25`
@@ -367,7 +367,7 @@ Common reasons a command may fail:
 * invalid bin search format
 * invalid item index
 * unsupported update fields
-* duplicate logical batch during add or update
+* duplicate item during add or update
 * unknown categories or commands
 
 When an error occurs, the app prints an error message and waits for the next command.

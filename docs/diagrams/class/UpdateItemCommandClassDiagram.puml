@@ -18,10 +18,8 @@ class UpdateItemCommand {
   - updates: Map<String, String>
   + execute(inventory: Inventory, ui: UI)
   - applyUpdates(item: Item)
-  - validateNameUpdateDoesNotDuplicate(category: Category, item: Item)
   - updateCategorySpecificField(item: Item, field: String, value: String)
   - restoreFromSnapshot(item: Item, snapshot: ItemSnapshot)
-  - findDuplicateNameItem(category: Category, currentItem: Item, candidateName: String): Item
 }
 
 class Inventory {
@@ -68,7 +66,7 @@ note as N1
   The update map can contain one or more
   supported fields such as newItem, bin,
   qty, and expiryDate.
-  The duplicate-batch check now uses the same
+  The duplicate-item check now uses the same
   DuplicateIdentityParser.findDuplicateItem(...)
   call pattern as AddItemCommand.
 end note

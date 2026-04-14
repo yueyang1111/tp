@@ -5,7 +5,7 @@ import seedu.inventorydock.model.Item;
 
 /**
  * Builds normalized identity keys used for duplicate-item checks.
- * The key ignores qty and bin fields so only logical batch identity is compared.
+ * The key compares the full stored item identity case-insensitively.
  */
 public class DuplicateIdentityParser {
     /**
@@ -24,9 +24,6 @@ public class DuplicateIdentityParser {
 
         String[] tokens = storageString.split(" ");
         for (String token : tokens) {
-            if (token.startsWith("qty/") || token.startsWith("bin/")) {
-                continue;
-            }
             key.append(token.toLowerCase()).append(" ");
         }
 
@@ -35,7 +32,7 @@ public class DuplicateIdentityParser {
 
     /**
      * Finds an existing item in the category that has the same duplicate identity as the candidate item.
-     * The duplicate identity ignores qty and bin, and compares the remaining stored fields.
+     * The duplicate identity compares all stored fields case-insensitively.
      *
      * @param category Category to scan.
      * @param candidate Item whose duplicate match is being searched.

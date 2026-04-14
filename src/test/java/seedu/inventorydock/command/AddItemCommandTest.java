@@ -64,13 +64,13 @@ public class AddItemCommandTest {
     }
 
     @Test
-    public void execute_duplicateBatchInSameCategory_throwsException() {
+    public void execute_duplicateItemInSameCategory_throwsException() {
         Inventory inventory = new Inventory();
         Category fruits = new Category("fruits");
         inventory.addCategory(fruits);
         fruits.addItem(new Item("apple", 2, "A-01", "2026-01-01"));
 
-        AddItemCommand command = new AddItemCommand("fruits", new Item("Apple", 5, "B-02", "2026-01-01"));
+        AddItemCommand command = new AddItemCommand("fruits", new Item("Apple", 2, "A-01", "2026-01-01"));
 
         DuplicateItemException e = assertThrows(DuplicateItemException.class,
                 () -> command.execute(inventory, new TestUI()));
@@ -78,7 +78,7 @@ public class AddItemCommandTest {
     }
 
     @Test
-    public void execute_sameNameDifferentBatch_allowed() throws InventoryDockException {
+    public void execute_sameNameDifferentFields_allowed() throws InventoryDockException {
         Inventory inventory = new Inventory();
         Category fruits = new Category("fruits");
         inventory.addCategory(fruits);
