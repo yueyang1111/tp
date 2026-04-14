@@ -134,7 +134,7 @@ application. The feature follows this flow:
 3. `AddCommandParser` validates `category/`, extracts the category, and routes to the matching category-specific method in `AddItemCommandParser`.
 4. `AddItemCommandParser` validates the remaining fields, parses the shared fields and the category-specific boolean field, constructs the correct `Item` subtype, and creates an `AddItemCommand`. In the first diagram, this is illustrated using `Fruit` as the concrete example.
 5. `InventoryDock` executes the command with access to the current `Inventory` and `UI`.
-6. The command finds the target category, rejects duplicate items using a normalized identity key that includes all stored fields, then inserts the item or reports the error through `UI`.
+6. The command finds the target category, rejects duplicate logical batches using a normalized identity key (ignoring `qty/` and `bin/`), then inserts the item or reports the error through `UI`.
 
 Sequence diagrams:
 
@@ -195,7 +195,7 @@ The responsibilities of these classes are as follows:
   `category/`.
 - `AddItemCommandParser` coordinates common-field parsing, boolean-field parsing, and construction of the category-specific `Item` subtype.
 - `BooleanFieldParser` parses and validates the single boolean field required by each concrete `Item` subtype.
-- `AddItemCommand` performs duplicate-item checking and insertion into the inventory.
+- `AddItemCommand` performs duplicate-batch checking and insertion into the inventory.
 - `Inventory` finds the matching category by name.
 - `Category` stores the added item.
 - `Item` and its subclasses represent the domain object being created.
@@ -219,8 +219,8 @@ When the user enters an add command, the implementation performs the following s
 7. `InventoryDock` executes `AddItemCommand.execute(inventory, ui)`.
 8. `AddItemCommand` calls `inventory.findCategoryByName(categoryName)`.
 9. If the category exists, `AddItemCommand` calls `DuplicateIdentityParser.findDuplicateItem(category, item)`.
-10. The duplicate-item check compares all stored fields case-insensitively.
-11. If a duplicate item is found, `AddItemCommand` throws `DuplicateItemException` with
+10. The duplicate-batch check ignores `qty/` and `bin/`, and compares the remaining stored fields.
+11. If a duplicate batch is found, `AddItemCommand` throws `DuplicateItemException` with
     `Duplicate item found for category/<category> item/<item>.`.
 12. If no duplicate is found, `AddItemCommand` calls `category.addItem(item)`.
 13. `UI.showItemAdded(...)` displays the confirmation to the user.
@@ -256,7 +256,7 @@ new parser branch and item subtype rather than modifying one monolithic parsing 
 special cases.
 
 Third, it keeps command execution simple. By the time `AddItemCommand` runs, all parsing and object
-construction work has already been completed. The command only needs to find the category, validate duplicate item rules, and append
+construction work has already been completed. The command only needs to find the category, validate duplicate batch rules, and append
 the item.
 
 Another deliberate design choice is that the command adds only into an existing category rather than
@@ -280,8 +280,8 @@ fields are missing or malformed, they throw `InventoryDockException` before an `
 returns `null`, the command throws a `CategoryNotFoundException` with the message
 `Category not found: <categoryName>`. If the parsed item is unexpectedly 
 `null`, it throws a `MissingArgumentException` with the message `Item cannot be null.` It also
-checks for duplicate items in the same category using normalized identity keys across all stored
-fields and throws `DuplicateItemException` with
+checks for duplicate batches in the same category using normalized identity keys (ignoring `qty/`
+and `bin/`) and throws `DuplicateItemException` with
 `Duplicate item found for category/<category> item/<item>.` when a duplicate is detected.
 
 This layered approach ensures invalid input is rejected as early as possible, while still protecting
@@ -503,7 +503,7 @@ At a high level, the flow is as follows:
 * The user enters an `update` command.
 * `Parser` delegates the remaining input to `UpdateCommandParser`.
 * `UpdateCommandParser` extracts the category, item index, and the fields to be updated.
-* `UpdateItemCommand` locates the item, applies the updates, checks for duplicate-item conflicts, and
+* `UpdateItemCommand` locates the item, applies the updates, checks for duplicate-batch conflicts, and
   reports the result through `UI`.
 
 The main interaction for this flow is illustrated in below.
@@ -532,7 +532,7 @@ A representative object snapshot for this feature is shown below.
 * `UpdateCommandParser` scans field markers, validates `category/`, `index/`, and `bin/`, stores the
   requested changes in a `Map<String, String>`, and constructs an `UpdateItemCommand`.
 * `UpdateItemCommand` locates the item, applies the requested changes, rolls back on validation
-  failure, and rejects duplicate-item collisions.
+  failure, and rejects duplicate-batch collisions.
 * `Inventory`, `Category`, and `Item` provide category lookup, indexed item access, and field mutation.
 * `CommonFieldParser` is reused for quantity and expiry-date validation so update rules stay aligned
   with add-command validation.
@@ -1182,8 +1182,8 @@ This section provides instructions for manually testing the application.
    - `add category/fruits bin/A-1 qty/10 expiryDate/2026-4-01 isRipe/true`.
 9. Verify that the application shows a `Missing input` error for the missing field.
 10. Run `add category/fruits item/apple bin/B-9 qty/99 expiryDate/2026-4-01 isRipe/true`.
-11. Verify that the application rejects it with a `Conflict` error for a duplicate item.
-12. Verify through `list` that no second identical item was added to `fruits`.
+11. Verify that the application rejects it with a `Conflict` error for a duplicate logical batch.
+12. Verify through `list` that no second identical batch was added to `fruits`.
 13. Run `add category/fruits item/apple bin/C-1 qty/5 expiryDate/2026-4-02 isRipe/true`.
 14. Verify through `list` that this different batch is allowed and appears under `fruits`.
 
