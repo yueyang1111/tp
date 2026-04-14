@@ -44,7 +44,7 @@ public class AddItemCommand extends Command {
             throw new MissingArgumentException("Item cannot be null.");
         }
 
-        Item duplicateItem = findDuplicateItem(category, item);
+        Item duplicateItem = DuplicateIdentityParser.findDuplicateItem(category, item);
         if (duplicateItem != null) {
             logger.log(Level.WARNING, "Duplicate item detected for category '" + category.getName()
                     + "' and name '" + item.getName() + "'.");
@@ -67,25 +67,4 @@ public class AddItemCommand extends Command {
         }
     }
 
-    /**
-     * Finds an existing item in the category that has the same duplicate identity as the candidate item.
-     * The duplicate identity ignores qty and bin, and compares the remaining stored fields.
-     *
-     * @param category Category to scan.
-     * @param candidate Item being added.
-     * @return Matching duplicate item, or {@code null} if no duplicate exists.
-     */
-    private Item findDuplicateItem(Category category, Item candidate) {
-        assert category != null : "Category cannot be null while checking duplicates.";
-        assert candidate != null : "Candidate item cannot be null while checking duplicates.";
-
-        String candidateIdentity = DuplicateIdentityParser.buildBatchIdentityKey(category.getName(), candidate);
-        for (Item existing : category.getItems()) {
-            String existingIdentity = DuplicateIdentityParser.buildBatchIdentityKey(category.getName(), existing);
-            if (existingIdentity.equals(candidateIdentity)) {
-                return existing;
-            }
-        }
-        return null;
-    }
 }

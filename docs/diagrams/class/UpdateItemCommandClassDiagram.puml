@@ -17,6 +17,11 @@ class UpdateItemCommand {
   - itemIndex: int
   - updates: Map<String, String>
   + execute(inventory: Inventory, ui: UI)
+  - applyUpdates(item: Item)
+  - validateNameUpdateDoesNotDuplicate(category: Category, item: Item)
+  - updateCategorySpecificField(item: Item, field: String, value: String)
+  - restoreFromSnapshot(item: Item, snapshot: ItemSnapshot)
+  - findDuplicateNameItem(category: Category, currentItem: Item, candidateName: String): Item
 }
 
 class Inventory {
@@ -48,6 +53,7 @@ class CommonFieldParser {
 }
 
 class DuplicateIdentityParser {
+  + findDuplicateItem(category: Category, candidate: Item): Item
   + buildBatchIdentityKey(category: String, target: Item): String
 }
 
@@ -62,8 +68,9 @@ note as N1
   The update map can contain one or more
   supported fields such as newItem, bin,
   qty, and expiryDate.
-  The diagram shows the shared update path
-  rather than every exception subtype.
+  The duplicate-batch check now uses the same
+  DuplicateIdentityParser.findDuplicateItem(...)
+  call pattern as AddItemCommand.
 end note
 
 Command <|-- UpdateItemCommand
@@ -72,7 +79,7 @@ UpdateItemCommand --> Inventory : queries through
 UpdateItemCommand --> Category : retrieves item from
 UpdateItemCommand --> Item : updates
 UpdateItemCommand ..> CommonFieldParser : validates with
-UpdateItemCommand ..> DuplicateIdentityParser : builds duplicate key
+UpdateItemCommand ..> DuplicateIdentityParser : finds duplicate with
 UpdateItemCommand ..> DuplicateItemException : throws on duplicate
 UpdateItemCommand --> UI : shows result via
 Inventory "1" o-- "*" Category

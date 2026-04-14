@@ -11,6 +11,7 @@ participant ":AddItemCommand" as AddItemCommand
 participant ":Inventory" as Inventory
 participant ":Category" as Category
 participant ":DuplicateIdentityParser" as DuplicateIdentityParser
+participant ":DateParser" as DateParser
 
 activate UI
 activate InventoryDock
@@ -30,17 +31,10 @@ alt category not found
     UI --> User: display error
 
 else else
-    AddItemCommand -> DuplicateIdentityParser: buildBatchIdentityKey(categoryName, item)
+    AddItemCommand -> DuplicateIdentityParser: findDuplicateItem(category, item)
     activate DuplicateIdentityParser
-    DuplicateIdentityParser --> AddItemCommand: candidateIdentity
+    DuplicateIdentityParser --> AddItemCommand: duplicateItem / null
     deactivate DuplicateIdentityParser
-
-    loop for each existing item
-        AddItemCommand -> DuplicateIdentityParser: buildBatchIdentityKey(categoryName, existing)
-        activate DuplicateIdentityParser
-        DuplicateIdentityParser --> AddItemCommand: existingIdentity
-        deactivate DuplicateIdentityParser
-    end
 
     alt duplicate found
         AddItemCommand --> InventoryDock: throw DuplicateItemException
@@ -56,6 +50,16 @@ else else
 
         AddItemCommand -> UI: showItemAdded(...)
         UI --> User: display confirmation
+
+        AddItemCommand -> DateParser: parseDate(item.getExpiryDate())
+        activate DateParser
+        DateParser --> AddItemCommand: expiryDate
+        deactivate DateParser
+
+        alt expiryDate is before today
+            AddItemCommand -> UI: showMessage(...)
+            UI --> User: display warning
+        end
 
         AddItemCommand --> InventoryDock --: return
     end

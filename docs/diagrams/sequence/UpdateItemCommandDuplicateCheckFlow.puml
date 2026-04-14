@@ -6,6 +6,7 @@ hide footbox
 
 actor User
 participant ":UpdateItemCommand" as UpdateItemCommand
+participant ":DuplicateIdentityParser" as DuplicateIdentityParser
 participant ":Item" as Item
 participant ":Category" as Category
 participant ":UI" as UI
@@ -13,10 +14,10 @@ participant ":UI" as UI
 User -> UpdateItemCommand: continue after applyUpdates(item)
 activate UpdateItemCommand
 
-UpdateItemCommand -> UpdateItemCommand: findDuplicateItem(category, item)
-activate UpdateItemCommand
-UpdateItemCommand --> UpdateItemCommand: duplicate / null
-deactivate UpdateItemCommand
+UpdateItemCommand -> DuplicateIdentityParser: findDuplicateItem(category, item)
+activate DuplicateIdentityParser
+DuplicateIdentityParser --> UpdateItemCommand: duplicate / null
+deactivate DuplicateIdentityParser
 
 alt duplicate exists and duplicate != item
     UpdateItemCommand -> UpdateItemCommand: restoreFromSnapshot(item, snapshot)

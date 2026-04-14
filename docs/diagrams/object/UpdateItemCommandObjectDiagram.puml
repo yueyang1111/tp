@@ -29,6 +29,7 @@ object "<u>chips:Item</u>" as chips {
   expiryDate = "2026-5-01"
 }
 object "<u>fieldParser:CommonFieldParser</u>" as fieldParser
+object "<u>duplicateParser:DuplicateIdentityParser</u>" as duplicateParser
 object "<u>:UI</u>" as ui
 
 note as N1
@@ -36,6 +37,8 @@ note as N1
   first fruits item has been updated.
   The command targets item index 1 and applies
   two field changes through the shared update map.
+  During duplicate checking, command directly calls
+  duplicateParser.findDuplicateItem(fruits, apple).
 end note
 
 parser --> command : creates >
@@ -43,10 +46,10 @@ command --> inventory : queries >
 command --> fruits : targets >
 command --> apple : updates >
 command --> fieldParser : validates with >
+command --> duplicateParser : checks duplicates via >
 command --> ui : shows result via >
 inventory --> fruits : contains >
 inventory --> snacks : contains >
 fruits --> apple : contains >
 snacks --> chips : contains >
 @enduml
-

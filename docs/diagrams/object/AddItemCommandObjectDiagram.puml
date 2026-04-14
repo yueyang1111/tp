@@ -5,7 +5,9 @@ left to right direction
 
 object "<u>addParser:AddCommandParser</u>" as addParser
 object "<u>addItemParser:AddItemCommandParser</u>" as addItemParser
+object "<u>commonParser:CommonFieldParser</u>" as commonParser
 object "<u>boolParser:BooleanFieldParser</u>" as boolParser
+object "<u>duplicateParser:DuplicateIdentityParser</u>" as duplicateParser
 object "<u>cmd:AddItemCommand</u>" as addCommand {
   categoryName = "fruits"
 }
@@ -30,16 +32,19 @@ note as N1
   addItemParser has already parsed the
   common fields and the shared boolean field,
   then created the AddItemCommand.
-  existingApple is already in fruits.
+  During execution, addCommand calls
+  duplicateParser.findDuplicateItem(fruits, incomingApple)
+  before adding the item.
 end note
 
 addParser --> addItemParser : delegates to >
+addItemParser --> commonParser : uses >
 addItemParser --> boolParser : uses >
 addItemParser --> addCommand : creates >
 addCommand --> incomingApple : holds >
 addCommand --> inventory : queries >
+addCommand --> duplicateParser : checks duplicates via >
 addCommand --> ui : reports via >
 inventory --> fruits : contains >
 fruits --> existingApple : contains >
 @enduml
-

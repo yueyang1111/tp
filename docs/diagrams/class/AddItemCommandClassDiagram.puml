@@ -10,12 +10,23 @@ class "{abstract}\nCommand" as Command {
 
 class AddCommandParser {
   + parse(input: String)
+  - validateRequiredFields(input: String)
+  - extractCategory(input: String): String
+  - parseByCategory(input: String, category: String)
 }
 
 class AddItemCommandParser {
   + handleFruit(input: String)
   + handleSnack(input: String)
+  + handleToiletries(input: String)
+  + handleVegetables(input: String)
   + handleDrinks(input: String)
+  + handleMeat(input: String)
+  + handleAccessories(input: String)
+}
+
+class CommonFieldParser {
+  + parse(input: String, booleanFieldPrefix: String): CommonFieldParser
 }
 
 class BooleanFieldParser {
@@ -29,6 +40,7 @@ class AddItemCommand {
 }
 
 class DuplicateIdentityParser {
+  + findDuplicateItem(category: Category, candidate: Item): Item
   + buildBatchIdentityKey(category: String, target: Item): String
 }
 
@@ -38,7 +50,6 @@ class Inventory {
 
 class Category {
   - name: String
-  + findItemByName(itemName: String)
   + addItem(item: Item)
 }
 
@@ -56,19 +67,20 @@ class UI {
 }
 
 note as N1
-  The diagram shows a few representative
-  category-specific handlers only.
+  The diagram lists the current
+  category-specific handler methods.
   All handlers share CommonFieldParser
   plus the shared BooleanFieldParser.
 end note
 
 Command <|-- AddItemCommand
 AddCommandParser ..> AddItemCommandParser : delegates to
+AddItemCommandParser ..> CommonFieldParser : parses common fields
 AddItemCommandParser ..> BooleanFieldParser : parses boolean field
 AddItemCommandParser ..> AddItemCommand : creates
 AddItemCommand --> Inventory : looks up category
-AddItemCommand --> Category : duplicate check + add
-AddItemCommand ..> DuplicateIdentityParser : builds duplicate key
+AddItemCommand --> Category : adds into
+AddItemCommand ..> DuplicateIdentityParser : finds duplicate with
 AddItemCommand ..> DuplicateItemException : throws on duplicate
 AddItemCommand --> UI : success/error display
 Inventory "1" o-- "*" Category
