@@ -27,12 +27,12 @@ Inventory --> UI: categories
 deactivate Inventory
 
 alt inventory is empty
-    UI -> User: display "Inventory is empty."
+    UI --> User: display "Inventory is empty."
 else else
-    UI -> User: display sorted inventory header
+    UI --> User: display sorted inventory header
 
     loop for each category
-        UI -> Category: getName()
+        UI --> Category: getName()
         activate Category
         Category --> UI: category name
         deactivate Category
@@ -42,8 +42,8 @@ else else
         Category --> UI: item count
         deactivate Category
 
-        UI -> User: display category details
-        UI -> User: display corresponding sorted item list
+        UI --> User: display category details
+        UI --> User: display corresponding sorted item list
     end
 end
 
