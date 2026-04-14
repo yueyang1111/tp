@@ -4,65 +4,86 @@ InventoryDock is a CLI inventory management application for store managers to tr
 
 ## Summary of Contributions
 ### Code Contributed
-- [Code contribution dashboard](https://nus-cs2113-ay2526-s2.github.io/tp-dashboard/?search=&sort=groupTitle&sortWithin=title&timeframe=commit&mergegroup=&groupSelect=groupByRepos&breakdown=true&checkedFileTypes=docs~functional-code~test-code~other&since=2026-02-20T00%3A00%3A00&filteredFileName=&tabOpen=true&tabType=authorship&tabAuthor=KOIiiii07&tabRepo=AY2526S2-CS2113-W09-2%2Ftp%5Bmaster%5D&authorshipIsMergeGroup=false&authorshipFileTypes=docs~functional-code~test-code&authorshipIsBinaryFileTypeChecked=false&authorshipIsIgnoredFilesChecked=false)
+- [Code Contribution](https://nus-cs2113-ay2526-s2.github.io/tp-dashboard/?search=&sort=groupTitle&sortWithin=title&timeframe=commit&mergegroup=&groupSelect=groupByRepos&breakdown=true&checkedFileTypes=docs~functional-code~test-code~other&since=2026-02-20T00%3A00%3A00&filteredFileName=&tabOpen=true&tabType=authorship&tabAuthor=KOIiiii07&tabRepo=AY2526S2-CS2113-W09-2%2Ftp%5Bmaster%5D&authorshipIsMergeGroup=false&authorshipFileTypes=docs~functional-code~test-code&authorshipIsBinaryFileTypeChecked=false&authorshipIsIgnoredFilesChecked=false)
 
 ### Enhancements Implemented
-#### 1. UI class (`UI.java`)
-I implemented and maintained the central `UI` class. This class handles welcome and goodbye messages, dividers, error formatting, inventory display, and confirmation prompts.
-Key aspects of the implementation:
-- Designed `UI` to encapsulate all `System.out` and `Scanner` operations, keeping the rest of the codebase free from direct I/O calls.
-- Provided dedicated methods for common display patterns such as `showItemDeleted`, `showItemAdded`, `showCategoryCleared`, `showClearCategoryConfirmation`, `showInventory`, and `showHelp`, so that command classes can call semantically named methods rather than formatting output themselves.
-- Ensured consistency in output formatting (dividers, error prefixes, numbered lists) across all features.
-
-#### 2. Delete item command
-I implemented the `delete` command for removing a single item from the inventory by category and index. This work included the command execution logic, the parser pipeline in `DeleteCommandParser`, and comprehensive JUnit tests.
-Key aspects of the implementation:
-- Added `DeleteItemCommand` to look up the target category, validate the index, remove the item, and display a confirmation message.
-- Extended `DeleteCommandParser` to tokenise the input, extract `category/` and `index/` fields, and validate that the index is a positive integer before constructing the command.
-- Implemented layered validation: syntactic checks (missing fields, non-integer index) at parse time and semantic checks (non-existent category, out-of-range index) at execution time.
-- Added JUnit tests covering valid deletions, out-of-range indices, non-existent categories, and sequential deletions.
-
-#### 3. Clear category command
-I implemented the `clear category/CATEGORY` command, which clears all items within a specified category after a user confirmation prompt.
-Key aspects of the implementation:
-- Added `ClearCategoryCommand` to prompt the user for confirmation before clearing items.
-- Integrated the confirmation flow with `UI` methods (`showClearCategoryConfirmation`, `showClearCategoryCancelled`, `showCategoryItemsCleared`).
-- Added JUnit tests covering confirmation acceptance, rejection, case-insensitive matching, and the check that other categories remain unaffected.
-
-#### 4. Find item by keyword
-I implemented the `find keyword/KEYWORD` feature, which searches all categories for items whose names contain the given keyword. The search is case-insensitive and supports partial matches.
-Key aspects of the implementation:
-- Added `FindItemByKeywordCommand` to iterate through all categories and items, collecting matches based on a case-insensitive substring check.
-- Extended `FindItemParser` to dispatch keyword-based searches correctly.
-- Added JUnit tests for exact matches, partial matches, case-insensitive matches, no-match scenarios, and verification that the search does not mutate the inventory.
-
-#### 5. Help command
-I implemented the `help` command and the `showHelp()` method in `UI`, which displays a summary of available commands and a link to the full User Guide.
-
-#### 6. FieldParser utility
-I implemented the `FieldParser` utility class, which provides a reusable `extractField` method for extracting values between markers in a command string. This utility is used across multiple parsers including `CommonFieldParser` and the category-specific parsers. I also added comprehensive JUnit tests covering all branches: valid extraction with start and end markers, missing markers, null end keys, empty values, trimming behaviour, and multi-word values.
+1. **UI class (`UI.java`)** — Implemented and maintained the central `UI` class, encapsulating all `System.out` and `Scanner` operations. Provided semantically named methods (e.g. `showItemDeleted`, `showClearCategoryConfirmation`, `showInventory`, `showHelp`) so command classes stay free from direct I/O formatting.
+2. **Delete item command** — Implemented `DeleteItemCommand` and `DeleteCommandParser` with layered validation: syntactic checks (missing fields, non-integer index) at parse time and semantic checks (non-existent category, out-of-range index) at execution time. Added comprehensive JUnit tests.
+3. **Clear category command** — Implemented `ClearCategoryCommand` with a user confirmation prompt before clearing all items in a category. Integrated confirmation flow with `UI` methods and added JUnit tests covering acceptance, rejection, and case-insensitive matching.
+4. **Find item by keyword** — Implemented `FindItemByKeywordCommand` for case-insensitive partial-match searching across all categories. Extended `FindItemParser` for dispatch and added JUnit tests for various match scenarios.
+5. **Help command** — Implemented the `help` command and `showHelp()` in `UI`, displaying a command summary and User Guide link.
+6. **FieldParser utility** — Implemented a reusable `extractField` method used across multiple parsers, with comprehensive JUnit tests covering all branches.
 
 ### Contributions to the User Guide
-I contributed the user-facing documentation for the features I implemented. In particular, I wrote or substantially updated the sections covering:
-
-- Deleting an item
-- Clearing a category
-- Finding items by keyword
-- Help command
-- Field parser
-
-These updates included command formats, examples, expected outcomes, and notes on edge cases so that end users can use the features without inspecting the code.
+Wrote or substantially updated the UG sections for: deleting an item, clearing a category, finding items by keyword, help command, and field parser — including command formats, examples, expected outcomes, and edge-case notes.
 
 ### Contributions to the Developer Guide
-I contributed the technical documentation for the features I implemented. Specifically, I wrote or substantially updated the Developer Guide sections for:
-- Delete Item feature — covering feature motivation, high-level design, component-level implementation, command execution flow, error handling and validation with layered parse-time and execution-time checks, alternatives considered, and manual testing instructions.
-- Clear Category feature — covering feature motivation, high-level design, component-level implementation, command execution flow with confirmation prompt logic and early return for empty categories, error handling and validation, alternatives considered, and manual testing instructions.
-- Find Item By Keyword feature — covering feature motivation, high-level design, component-level implementation, command execution flow with case-insensitive substring matching and category-grouped result display, single-keyword validation, error handling and validation, alternatives considered, and manual testing instructions.
-- Help feature — covering feature motivation, high-level design, component-level implementation, command execution flow with argument rejection, alternatives considered, and current limitations.
+Wrote or substantially updated the DG sections for: Delete Item, Clear Category, Find Item By Keyword, and Help — each covering feature motivation, design, implementation, execution flow, error handling, alternatives considered, and manual testing. Also updated the table of contents and manual testing instructions. Added 20 UML diagrams: 8 sequence, 4 class, 4 object diagrams across all four features.
 
-I also contributed to the non-feature sections of the Developer Guide, including writing manual testing instructions for the delete, clear, find-by-keyword, and help features, and updating the table of contents to reflect the new sections.
+### Contributions to Team-Based Tasks
+- Maintained the `UI` class as a shared component, updating it when teammates needed new output methods.
+- Helped fix Checkstyle and code style issues during integration.
+- Helped merge teammates' PRs after reviewing them.
 
-I also added the following UML diagrams:
+### Review and Mentoring Contributions
+- [PR #101 review comment](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/101#issuecomment-4174049960)
+- [PR #103 review comment](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/103#issuecomment-4174048971)
+
+### Contributions beyond the Project Team
+- Reported 10 bugs during the PE Dry Run for another team's product ([Issues #1–#10](https://github.com/NUS-CS2113-AY2526-S2/ped-KOIiiii07/issues))
+
+## Contributions to the User Guide (Extracts)
+
+### Delete an item: `delete category/... index/...`
+
+Deletes one item from a category by its item index.
+
+Format:
+`delete category/CATEGORY index/INDEX`
+
+Notes:
+* `INDEX` is the item number within that category, using 1-based indexing.
+
+Example:
+`delete category/fruits index/2`
+
+Expected result:
+* The selected item is removed from the category.
+* The app confirms the deleted item name and category.
+
+### Clear a category: `clear category/...`
+Clears all items in a category.
+
+Format:
+`clear category/CATEGORY`
+
+Important:
+* This command does not remove the category itself from InventoryDock.
+* If the category is not empty, the app asks for confirmation.
+* Type `yes` to continue.
+
+### Find items by keyword: `find keyword/...`
+Finds items whose names contain the given keyword or phrase.
+
+Format:
+`find keyword/KEYWORD_OR_PHRASE`
+
+Notes:
+* Matching is case-insensitive.
+* Partial matches work. For example, `apple` matches `apple`, `pineapple`, and `apple_juice`.
+* Multi-word phrases are supported. For example, `potato chips` matches `potato chips`.
+
+Examples:
+* `find keyword/apple`
+* `find keyword/chip`
+* `find keyword/potato chips`
+
+Expected result:
+* Matching items are listed together with their category names.
+* If nothing matches, the app shows `No items found matching keyword: KEYWORD.`
+
+## Contributions to the Developer Guide (Extracts)
+I added the following UML diagrams:
 
 Sequence diagrams:
 - [FindItemByKeywordCommandParseFlow.puml](../diagrams/sequence/FindItemByKeywordCommandParseFlow.puml) — shows how `FindItemParser` dispatches a keyword search and constructs the command.
@@ -85,17 +106,3 @@ Object diagrams:
 - [ClearCategoryCommandObjectDiagram.puml](../diagrams/object/ClearCategoryCommandObjectDiagram.puml) — shows a representative runtime snapshot with a specific category name.
 - [FindItemByKeywordCommandObjectDiagram.puml](../diagrams/object/FindItemByKeywordCommandObjectDiagram.puml) — shows a representative runtime snapshot with a specific keyword input.
 - [HelpCommandObjectDiagram.puml](../diagrams/object/HelpCommandObjectDiagram.puml) — shows a representative runtime snapshot with an empty arguments field.
-
-### Contributions to Team-Based 
-
-- Maintained the `UI` class as a shared component, updating it when teammates needed new output methods for their features.
-- Helped fix Checkstyle and code style issues during integration.
-- Helped merge teammates' PRs after reviewing them.
-- Helped teammate with PR settings.
-
-### Review and Mentoring Contributions
-
-- [PR #101 review comment](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/101#issuecomment-4174049960)
-- [PR #103 review comment](https://github.com/AY2526S2-CS2113-W09-2/tp/pull/103#issuecomment-4174048971)
-
-
