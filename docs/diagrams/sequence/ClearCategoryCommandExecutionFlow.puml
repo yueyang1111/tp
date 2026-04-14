@@ -53,6 +53,7 @@ else else
     end
 end
 
+ClearCategoryCommand --> User
 deactivate ClearCategoryCommand
 
 @enduml

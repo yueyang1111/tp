@@ -41,6 +41,8 @@ end
 
 HelpCommand --> InventoryDock
 deactivate HelpCommand
+InventoryDock --> UI
 deactivate InventoryDock
+UI --> User
 deactivate UI
 @enduml

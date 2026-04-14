@@ -55,34 +55,36 @@ These updates included command formats, examples, expected outcomes, and notes o
 
 ### Contributions to the Developer Guide
 I contributed the technical documentation for the features I implemented. Specifically, I wrote or substantially updated the Developer Guide sections for:
-- Delete Item feature — covering feature motivation, high-level design, component-level implementation, command execution flow, error handling and validation, alternatives considered, and manual testing instructions.
-- Clear Category feature — covering feature motivation, high-level design, component-level implementation, command execution flow with confirmation prompt logic, error handling and validation, alternatives considered, and manual testing instructions.
-- Find Item By Keyword feature — covering feature motivation, high-level design, component-level implementation, command execution flow with case-insensitive substring matching, error handling and validation, alternatives considered, and manual testing instructions.
-- Help feature — covering feature motivation, high-level design, component-level implementation, command execution flow, alternatives considered, and current limitations.
+- Delete Item feature — covering feature motivation, high-level design, component-level implementation, command execution flow, error handling and validation with layered parse-time and execution-time checks, alternatives considered, and manual testing instructions.
+- Clear Category feature — covering feature motivation, high-level design, component-level implementation, command execution flow with confirmation prompt logic and early return for empty categories, error handling and validation, alternatives considered, and manual testing instructions.
+- Find Item By Keyword feature — covering feature motivation, high-level design, component-level implementation, command execution flow with case-insensitive substring matching and category-grouped result display, single-keyword validation, error handling and validation, alternatives considered, and manual testing instructions.
+- Help feature — covering feature motivation, high-level design, component-level implementation, command execution flow with argument rejection, alternatives considered, and current limitations.
+
+I also contributed to the non-feature sections of the Developer Guide, including writing manual testing instructions for the delete, clear, find-by-keyword, and help features, and updating the table of contents to reflect the new sections.
 
 I also added the following UML diagrams:
-Sequence diagrams:
 
-- [FindItemByKeywordCommandParseFlow.puml](../diagrams/sequence/FindItemByKeywordCommandParseFlow.puml)
-- [FindItemByKeywordCommandMatchingFlow.puml](../diagrams/sequence/FindItemByKeywordCommandMatchingFlow.puml)
-- [FindItemByKeywordCommandDisplayFlow.puml](../diagrams/sequence/FindItemByKeywordCommandDisplayFlow.puml)
-- [HelpCommandMainFlow.puml](../diagrams/sequence/HelpCommandMainFlow.puml)
-- [ClearCategoryCommandParseFlow](../diagrams/sequence/ClearCategoryCommandParseFlow.puml)
-- [ClearCategoryCommandExecutionFlow](../diagrams/sequence/ClearCategoryCommandExecutionFlow.puml)
-- [DeleteItemCommandParseFlow](../diagrams/sequence/DeleteItemCommandParseFlow.puml)
-- [DeleteItemCommandExecutionFlow](../diagrams/sequence/DeleteItemCommandExecutionFlow.puml)
+Sequence diagrams:
+- [FindItemByKeywordCommandParseFlow.puml](../diagrams/sequence/FindItemByKeywordCommandParseFlow.puml) — shows how `FindItemParser` dispatches a keyword search and constructs the command.
+- [FindItemByKeywordCommandMatchingFlow.puml](../diagrams/sequence/FindItemByKeywordCommandMatchingFlow.puml) — shows the inventory scan and case-insensitive substring matching logic across all categories.
+- [FindItemByKeywordCommandDisplayFlow.puml](../diagrams/sequence/FindItemByKeywordCommandDisplayFlow.puml) — shows the category-grouped result display and the no-match output path.
+- [HelpCommandMainFlow.puml](../diagrams/sequence/HelpCommandMainFlow.puml) — shows the parse-to-execution flow including the argument validation branch.
+- [ClearCategoryCommandParseFlow.puml](../diagrams/sequence/ClearCategoryCommandParseFlow.puml) — shows how `ClearCommandParser` extracts and validates the category field.
+- [ClearCategoryCommandExecutionFlow.puml](../diagrams/sequence/ClearCategoryCommandExecutionFlow.puml) — shows the confirmation prompt logic, the early return for empty categories, and the clear operation.
+- [DeleteItemCommandParseFlow.puml](../diagrams/sequence/DeleteItemCommandParseFlow.puml) — shows how `DeleteCommandParser` tokenises input, extracts `category/` and `index/`, and validates the index.
+- [DeleteItemCommandExecutionFlow.puml](../diagrams/sequence/DeleteItemCommandExecutionFlow.puml) — shows the category lookup, index validation, item removal, and confirmation display.
 
 Class diagrams:
-- [DeleteItemCommandClassDiagram.puml](../diagrams/class/DeleteItemCommandClassDiagram.puml)
-- [ClearCategoryCommandClassDiagram.puml](../diagrams/class/ClearCategoryCommandClassDiagram.puml)
-- [FindItemByKeywordCommandClassDiagram.puml](../diagrams/class/FindItemByKeywordCommandClassDiagram.puml)
-- [HelpCommandClassDiagram.puml](../diagrams/class/HelpCommandClassDiagram.puml)
+- [DeleteItemCommandClassDiagram.puml](../diagrams/class/DeleteItemCommandClassDiagram.puml) — shows relationships between `DeleteCommandParser`, `DeleteItemCommand`, `Inventory`, `Category`, `Item`, and `UI`.
+- [ClearCategoryCommandClassDiagram.puml](../diagrams/class/ClearCategoryCommandClassDiagram.puml) — shows relationships between `ClearCommandParser`, `ClearCategoryCommand`, `Inventory`, `Category`, `Item`, and `UI` including the confirmation-related UI methods.
+- [FindItemByKeywordCommandClassDiagram.puml](../diagrams/class/FindItemByKeywordCommandClassDiagram.puml) — shows relationships between `FindItemParser`, `FindItemByKeywordCommand`, `Inventory`, `Category`, `Item`, and `UI` including the format helper methods.
+- [HelpCommandClassDiagram.puml](../diagrams/class/HelpCommandClassDiagram.puml) — shows the relationship between `Parser`, `HelpCommand`, and `UI` including the `showHelp()` and `showError()` delegation paths.
 
 Object diagrams:
-- [DeleteItemCommandObjectDiagram.puml](../diagrams/object/DeleteItemCommandObjectDiagram.puml)
-- [ClearCategoryCommandObjectDiagram.puml](../diagrams/object/ClearCategoryCommandObjectDiagram.puml)
-- [FindItemByKeywordCommandObjectDiagram.puml](../diagrams/object/FindItemByKeywordCommandObjectDiagram.puml)
-- [HelpCommandObjectDiagram.puml](../diagrams/object/HelpCommandObjectDiagram.puml)
+- [DeleteItemCommandObjectDiagram.puml](../diagrams/object/DeleteItemCommandObjectDiagram.puml) — shows a representative runtime snapshot with a specific category name and item index.
+- [ClearCategoryCommandObjectDiagram.puml](../diagrams/object/ClearCategoryCommandObjectDiagram.puml) — shows a representative runtime snapshot with a specific category name.
+- [FindItemByKeywordCommandObjectDiagram.puml](../diagrams/object/FindItemByKeywordCommandObjectDiagram.puml) — shows a representative runtime snapshot with a specific keyword input.
+- [HelpCommandObjectDiagram.puml](../diagrams/object/HelpCommandObjectDiagram.puml) — shows a representative runtime snapshot with an empty arguments field.
 
 ### Contributions to Team-Based 
 

@@ -25,6 +25,7 @@ else else
     deactivate ClearCategoryCommand
 
     ClearCommandParser --> Parser : command
+    deactivate ClearCommandParser
 end
 
 deactivate ClearCommandParser

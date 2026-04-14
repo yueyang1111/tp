@@ -22,11 +22,9 @@ else else
     activate DeleteItemCommand
     DeleteItemCommand --> DeleteCommandParser
     deactivate DeleteItemCommand
-
     DeleteCommandParser --> Parser : command
+    deactivate DeleteCommandParser
 end
-
-deactivate DeleteCommandParser
 Parser --> User
 deactivate Parser
 
