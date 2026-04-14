@@ -80,6 +80,7 @@ public class UpdateItemCommand extends Command {
         Item item = category.getItem(itemIndex - 1);
         String originalName = item.getName();
         ItemSnapshot snapshot = ItemSnapshot.from(item);
+        validateNameUpdateDoesNotDuplicate(category, item);
 
         try {
             applyUpdates(item);
@@ -88,7 +89,7 @@ public class UpdateItemCommand extends Command {
             throw e;
         }
 
-        Item duplicate = findDuplicateItem(category, item);
+        Item duplicate = DuplicateIdentityParser.findDuplicateItem(category, item);
         if (duplicate != null && duplicate != item) {
             String attemptedName = item.getName();
             restoreFromSnapshot(item, snapshot);
@@ -130,6 +131,22 @@ public class UpdateItemCommand extends Command {
         }
     }
 
+    private void validateNameUpdateDoesNotDuplicate(Category category, Item item) throws InventoryDockException {
+        if (!updates.containsKey("newItem")) {
+            return;
+        }
+
+        String updatedName = updates.get("newItem");
+        validateNonEmpty(updatedName, "New item name cannot be empty.");
+        Item duplicateNameItem = findDuplicateNameItem(category, item, updatedName.trim());
+        if (duplicateNameItem != null) {
+            logger.log(Level.WARNING, "Duplicate item name detected while updating category '"
+                    + category.getName() + "' to '" + updatedName.trim() + "'.");
+            throw new DuplicateItemException("Duplicate item found for category/" + category.getName()
+                    + " item/" + updatedName.trim() + ".");
+        }
+    }
+
     private void updateCategorySpecificField(Item item, String field,
                                              String value) throws InventoryDockException {
         CategoryFieldHandler fieldHandler = findHandlerByField(field);
@@ -155,14 +172,14 @@ public class UpdateItemCommand extends Command {
         }
     }
 
-    private Item findDuplicateItem(Category category, Item candidate) {
-        assert category != null : "Category cannot be null while checking duplicates.";
-        assert candidate != null : "Candidate item cannot be null while checking duplicates.";
+    private Item findDuplicateNameItem(Category category, Item currentItem, String candidateName) {
+        assert category != null : "Category cannot be null while checking duplicate names.";
+        assert currentItem != null : "Current item cannot be null while checking duplicate names.";
+        assert candidateName != null : "Candidate name cannot be null while checking duplicate names.";
 
-        String candidateIdentity = DuplicateIdentityParser.buildBatchIdentityKey(category.getName(), candidate);
         return category.getItems().stream()
-                .filter(e -> DuplicateIdentityParser.buildBatchIdentityKey(category.getName(), e)
-                        .equals(candidateIdentity))
+                .filter(existing -> existing != currentItem)
+                .filter(existing -> existing.getName().equalsIgnoreCase(candidateName))
                 .findFirst()
                 .orElse(null);
     }

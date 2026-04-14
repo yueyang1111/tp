@@ -71,6 +71,24 @@ public class UpdateItemCommandTest {
     }
 
     @Test
+    public void execute_updateCreatesDuplicateName_throwsExceptionWithoutUpdatingItem() {
+        fruitsCategory.addItem(new Fruit("pear", 8, "A-08",
+                "2026-05-01", true));
+
+        Map<String, String> updates = new LinkedHashMap<>();
+        updates.put("newItem", "apple");
+
+        UpdateItemCommand command = new UpdateItemCommand("fruits", 2, updates);
+
+        DuplicateItemException exception = assertThrows(DuplicateItemException.class,
+                () -> command.execute(inventory, new UI()));
+        assertEquals("Duplicate item found for category/fruits item/apple.", exception.getMessage());
+
+        Fruit secondItem = (Fruit) fruitsCategory.getItem(1);
+        assertEquals("pear", secondItem.getName());
+    }
+
+    @Test
     public void execute_invalidNonCommonField_throwsException() {
         Map<String, String> updates = new LinkedHashMap<>();
         updates.put("brand", "acme");
