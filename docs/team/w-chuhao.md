@@ -65,7 +65,7 @@ These updates covered command formats, examples, expected outcomes, usage notes,
 
 ### Contributions to the Developer Guide
 
-I wrote or substantially updated the Developer Guide sections for Add Item, [List Command](../diagrams/sequence/ListCommandMainFlow.png), Find Item By Category, Find Item By Bin, and Find Item By Quantity.
+I wrote or substantially updated the Developer Guide sections for Add Item, List Command, Find Item By Category, Find Item By Bin, and Find Item By Quantity.
 
 My contributions covered feature motivation, the split between the fruit-category parse example and the continued execution flow, implementation details, alternatives considered, limitations, future improvements, and manual testing.
 
