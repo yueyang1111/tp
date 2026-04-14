@@ -211,7 +211,7 @@ Expected result:
 * If nothing matches, the app shows `No items found with quantity: QUANTITY.`
 
 ### Viewing inventory summary: `summary`
-Displays a category-based summary of the inventory.
+Displays a category based summary of the inventory.
 
 Format:
 * `summary`
@@ -219,7 +219,7 @@ Format:
 * `summary expirydate`
 
 Expected result:
-* `summary` shows each category with its item count, tied lowest stock items, and tied earliest-expiry items.
+* `summary` shows each category with its item count, tied lowest stock items, and tied earliest expiry items.
 * `summary stock` shows each category with its item count and tied lowest stock items only.
 * `summary expirydate` shows each category with its item count and tied earliest expiry items only.
 * Item indices shown are category local indices, matching the numbering used in `list`.

@@ -998,7 +998,7 @@ The main interaction for this flow is illustrated in below.
 #### Why the storage component is implemented this way
 
 A simple text-based format is used because it is lightweight, easy to inspect during debugging, and does not require 
-external libraries or database setup. Reusing the existing add-item parsing flow also avoids duplicating parsing 
+external libraries or database setup. Reusing the existing add item parsing flow also avoids duplicating parsing 
 logic and helps keep storage behaviour consistent with normal command handling.
 
 ### Delete Feature
