@@ -617,8 +617,7 @@ Validation is split across the parser layer and the command layer.
 * invalid quantities  
 * invalid expiry-date values  
 
-This layered design ensures invalid input is rejected early, while still protecting the command layer  
-from invalid runtime state.
+This layered design ensures invalid input is rejected early, while still protecting the command layer from invalid runtime state.
 
 ---
 
