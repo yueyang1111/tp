@@ -86,23 +86,23 @@ Expected result:
 I added the following UML diagrams:
 
 Sequence diagrams:
-- [FindItemByKeywordCommandParseFlow.puml](../diagrams/sequence/FindItemByKeywordCommandParseFlow.puml) — shows how `FindItemParser` dispatches a keyword search and constructs the command.
-- [FindItemByKeywordCommandMatchingFlow.puml](../diagrams/sequence/FindItemByKeywordCommandMatchingFlow.puml) — shows the inventory scan and case-insensitive substring matching logic across all categories.
-- [FindItemByKeywordCommandDisplayFlow.puml](../diagrams/sequence/FindItemByKeywordCommandDisplayFlow.puml) — shows the category-grouped result display and the no-match output path.
-- [HelpCommandMainFlow.puml](../diagrams/sequence/HelpCommandMainFlow.puml) — shows the parse-to-execution flow including the argument validation branch.
-- [ClearCategoryCommandParseFlow.puml](../diagrams/sequence/ClearCategoryCommandParseFlow.puml) — shows how `ClearCommandParser` extracts and validates the category field.
-- [ClearCategoryCommandExecutionFlow.puml](../diagrams/sequence/ClearCategoryCommandExecutionFlow.puml) — shows the confirmation prompt logic, the early return for empty categories, and the clear operation.
-- [DeleteItemCommandParseFlow.puml](../diagrams/sequence/DeleteItemCommandParseFlow.puml) — shows how `DeleteCommandParser` tokenises input, extracts `category/` and `index/`, and validates the index.
-- [DeleteItemCommandExecutionFlow.puml](../diagrams/sequence/DeleteItemCommandExecutionFlow.puml) — shows the category lookup, index validation, item removal, and confirmation display.
+- [FindItemByKeywordCommandParseFlow](../diagrams/sequence/FindItemByKeywordCommandParseFlow.png) — shows how `FindItemParser` dispatches a keyword search and constructs the command.
+- [FindItemByKeywordCommandMatchingFlow](../diagrams/sequence/FindItemByKeywordCommandMatchingFlow.png) — shows the inventory scan and case-insensitive substring matching logic across all categories.
+- [FindItemByKeywordCommandDisplayFlow](../diagrams/sequence/FindItemByKeywordCommandDisplayFlow.png) — shows the category-grouped result display and the no-match output path.
+- [HelpCommandMainFlow](../diagrams/sequence/HelpCommandMainFlow.png) — shows the parse-to-execution flow including the argument validation branch.
+- [ClearCategoryCommandParseFlow](../diagrams/sequence/ClearCategoryCommandParseFlow.png) — shows how `ClearCommandParser` extracts and validates the category field.
+- [ClearCategoryCommandExecutionFlow](../diagrams/sequence/ClearCategoryCommandExecutionFlow.png) — shows the confirmation prompt logic, the early return for empty categories, and the clear operation.
+- [DeleteItemCommandParseFlow](../diagrams/sequence/DeleteItemCommandParseFlow.png) — shows how `DeleteCommandParser` tokenises input, extracts `category/` and `index/`, and validates the index.
+- [DeleteItemCommandExecutionFlow](../diagrams/sequence/DeleteItemCommandExecutionFlow.png) — shows the category lookup, index validation, item removal, and confirmation display.
 
 Class diagrams:
-- [DeleteItemCommandClassDiagram.puml](../diagrams/class/DeleteItemCommandClassDiagram.puml) — shows relationships between `DeleteCommandParser`, `DeleteItemCommand`, `Inventory`, `Category`, `Item`, and `UI`.
-- [ClearCategoryCommandClassDiagram.puml](../diagrams/class/ClearCategoryCommandClassDiagram.puml) — shows relationships between `ClearCommandParser`, `ClearCategoryCommand`, `Inventory`, `Category`, `Item`, and `UI` including the confirmation-related UI methods.
-- [FindItemByKeywordCommandClassDiagram.puml](../diagrams/class/FindItemByKeywordCommandClassDiagram.puml) — shows relationships between `FindItemParser`, `FindItemByKeywordCommand`, `Inventory`, `Category`, `Item`, and `UI` including the format helper methods.
-- [HelpCommandClassDiagram.puml](../diagrams/class/HelpCommandClassDiagram.puml) — shows the relationship between `Parser`, `HelpCommand`, and `UI` including the `showHelp()` and `showError()` delegation paths.
+- [DeleteItemCommandClassDiagram](../diagrams/class/DeleteItemCommandClassDiagram.png) — shows relationships between `DeleteCommandParser`, `DeleteItemCommand`, `Inventory`, `Category`, `Item`, and `UI`.
+- [ClearCategoryCommandClassDiagram](../diagrams/class/ClearCategoryCommandClassDiagram.png) — shows relationships between `ClearCommandParser`, `ClearCategoryCommand`, `Inventory`, `Category`, `Item`, and `UI` including the confirmation-related UI methods.
+- [FindItemByKeywordCommandClassDiagram](../diagrams/class/FindItemByKeywordCommandClassDiagram.png) — shows relationships between `FindItemParser`, `FindItemByKeywordCommand`, `Inventory`, `Category`, `Item`, and `UI` including the format helper methods.
+- [HelpCommandClassDiagram](../diagrams/class/HelpCommandClassDiagram.png) — shows the relationship between `Parser`, `HelpCommand`, and `UI` including the `showHelp()` and `showError()` delegation paths.
 
 Object diagrams:
-- [DeleteItemCommandObjectDiagram.puml](../diagrams/object/DeleteItemCommandObjectDiagram.puml) — shows a representative runtime snapshot with a specific category name and item index.
-- [ClearCategoryCommandObjectDiagram.puml](../diagrams/object/ClearCategoryCommandObjectDiagram.puml) — shows a representative runtime snapshot with a specific category name.
-- [FindItemByKeywordCommandObjectDiagram.puml](../diagrams/object/FindItemByKeywordCommandObjectDiagram.puml) — shows a representative runtime snapshot with a specific keyword input.
-- [HelpCommandObjectDiagram.puml](../diagrams/object/HelpCommandObjectDiagram.puml) — shows a representative runtime snapshot with an empty arguments field.
+- [DeleteItemCommandObjectDiagram](../diagrams/object/DeleteItemCommandObjectDiagram.png) — shows a representative runtime snapshot with a specific category name and item index.
+- [ClearCategoryCommandObjectDiagram](../diagrams/object/ClearCategoryCommandObjectDiagram.png) — shows a representative runtime snapshot with a specific category name.
+- [FindItemByKeywordCommandObjectDiagram](../diagrams/object/FindItemByKeywordCommandObjectDiagram.png) — shows a representative runtime snapshot with a specific keyword input.
+- [HelpCommandObjectDiagram](../diagrams/object/HelpCommandObjectDiagram.png) — shows a representative runtime snapshot with an empty arguments field.
