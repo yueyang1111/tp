@@ -47,6 +47,8 @@ InventoryDock is a CLI based inventory management application that helps users m
 - Documented the `sort` feature.
 - Documented exception-related features.
 
+These updates covered command formats, examples, expected outcomes, usage notes, and error cases for the features I implemented.
+
 ### Contributions to the DG
 
 - Wrote implementation details for the `update item`, `find by expiry date`, `sort`, and exception hierarchy features.

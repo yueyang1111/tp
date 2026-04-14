@@ -26,7 +26,7 @@
 4. [User Stories](#user-stories)
 5. [Non-Functional Requirements](#non-functional-requirements)
 6. [Glossary](#glossary)
-7. [Instruction for Manual Testing](#instructions-for-manual-testing)
+7. [Instructions for Manual Testing](#instructions-for-manual-testing)
    - [Add Item](#testing-add-item)
    - [List Item](#testing-list-command)
    - [Find by Bin](#testing-find-by-bin)
@@ -46,7 +46,7 @@
 
 ## Acknowledgements
 
-This project is developed based on the concepts taught in CS2113. The overall architecture were inspired by
+This project is developed based on the concepts taught in CS2113. The overall architecture was inspired by
 the [SE EDU AddressBook Level 3 project](https://se-education.org/addressbook-level3/).
 
 ## Design & implementation
@@ -515,7 +515,7 @@ Duplicate check and result reporting:
   <img src="diagrams/sequence/UpdateItemCommandDuplicateCheckFlow.png" width="500">
 </p>
 
-The main structural relationships for this feature are shown below.
+The main structural relationship for this feature are shown below.
 
 <p align="center">
   <img src="diagrams/class/UpdateItemCommandClassDiagram.png" width="850">
@@ -789,7 +789,7 @@ When `SortCommand.execute()` is called the implementation performs the following
 1. Assert that `inventory`, `ui` and `sortType` are not 
 ull`.
 2. Retrieve all categories from the `Inventory`.
-3. For each category, make a copy of items item list.
+3. For each category, make a copy of items in item list.
 4. Sort the copied list using the comparator that matches the requested sort type.
 5. Store the sorted lists in the same category order as the original inventory.
 6. Call `ui.showSortedInventory(inventory, sortedItemsByCategory, sortLabel)`.
@@ -931,7 +931,7 @@ When the user enters a summary command, the implementation performs the followin
 5. `SummaryCommand` passes the prepared summary data to `UI`.
 6. `UI` formats and displays the summary view.
 
-The main interaction for this flow is illustrated in below.
+The main interaction for this flow is illustrated below.
 
 <p align="center">
   <img src="diagrams/sequence/SummaryCommandMainFlow.png" width="800">
