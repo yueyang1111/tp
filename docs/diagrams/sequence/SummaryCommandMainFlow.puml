@@ -75,9 +75,9 @@ loop for each category
     end
 end
 
-SummaryCommand -> UI: showInventorySummary(summaries, summaryType)
+SummaryCommand --> UI: showInventorySummary(summaries, summaryType)
 activate UI
-UI -> User: display summary view
+UI --> User: display summary view
 deactivate UI
 
 deactivate SummaryCommand
